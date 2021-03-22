@@ -2,16 +2,16 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const treeSchema = new Schema({
-    treeID: {
+    _id: {
         type: String,
         required: true
     },
     stemCount: {
-        type: Integer,
+        type: Number,
         required: true
     },
     circumf: {
-        type: Float,
+        type: Number,
         required: true
     },
     tappingDate: {
@@ -19,7 +19,7 @@ const treeSchema = new Schema({
         required: true
     },
     tapHeight: {
-        type: Float,
+        type: Number,
         required: true
     },
     // firstflowDate: {
