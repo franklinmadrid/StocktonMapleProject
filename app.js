@@ -6,10 +6,11 @@ const userRoutes = require('./routes/userRoutes.js');
 
 
 //connect to local database & listen to requests on port 3000
-const url = "mongodb://localhost:27017/MapleProject";
-mongoose.connect(url,{useNewUrlParser:true, useUnifiedTopology:true})
+let uri = "mongodb://localhost:27017/Maple";
+mongoose.connect(uri,{useNewUrlParser:true, useUnifiedTopology:true})
     .then((result) =>app.listen(3000))
     .catch((error) => console.log(error));
+console.log("DB:" + uri);
 
 //register view engine
 app.set('view engine', 'ejs');
@@ -28,12 +29,10 @@ app.get('/register',(req,res) =>{
     res.render('register');
 });
 
-app.get('/registerTree', (req,res) => {
-    res.render('registerTree');
-});
+
 
 //User Routes
-app.use()
+app.use(userRoutes)
 
 
 app.use((req, res) => {
