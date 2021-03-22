@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 
 
 //connect to local database & listen to requests on port 3000
-const url = "mongodb://localhost:27017/UserPool";
+const url = "mongodb://localhost:27017/MapleProject";
 mongoose.connect(url,{useNewUrlParser:true, useUnifiedTopology:true})
     .then((result) =>app.listen(3000))
     .catch((error) => console.log(error));
@@ -25,9 +25,12 @@ app.get('/', (req, res) => {
     res.render('index')
 });
 
-
 app.get('/register',(req,res) =>{
     res.render('register');
+});
+
+app.get('/registerTree', (req,res) => {
+    res.render('registerTree');
 });
 
 app.post('/users',async (req,res) =>{
