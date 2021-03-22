@@ -21,7 +21,7 @@ router.post('/users',async (req,res) =>{
 
 router.post('/users/login', async (req,res) =>{
     console.log(req.body);
-    User.find({username : req.body.username}, async (err, data) =>{
+    User.find({_id : req.body._id}, async (err, data) =>{
         if(err){
             console.log(err)
         }else if(data.length == 0){
@@ -66,7 +66,7 @@ router.get('/users/:id', async (req,res) =>{
             if(result == null){
                 res.status(404).send('404 error') ;
             }
-            res.render('user',{user: result, title: result.username + "'s profile"})
+            res.render('user',{user: result, title: result._id + "'s profile"})
         })
         .catch(err => {
             console.log(err);
