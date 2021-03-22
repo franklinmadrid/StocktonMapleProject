@@ -3,6 +3,7 @@ const app = express();
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes.js');
+const session = require('express-session');
 
 
 //connect to local database & listen to requests on port 3000
@@ -17,8 +18,14 @@ app.set('view engine', 'ejs');
 
 //middleware & static files
 app.use(express.static("public")); //allows you to use static css file with views
+app.use(express.json());//allows to parse JSON from req
 app.use(express.urlencoded({extended:true})) // allows you to pass request object from POST
 app.use(morgan('dev')); // auto server logger
+app.use(session({
+    secret : "secret-key",
+    resave : false,
+    saveUninitialized : false
+}));
 
 
 app.get('/', (req, res) => {
