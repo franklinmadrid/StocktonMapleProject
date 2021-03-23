@@ -4,6 +4,10 @@ const User = require("../models/user");
 const Tree = require("../models/tree");
 const router = express.Router();
 
+// github link that might help with node sessions using express:
+// https://github.com/robmyers82/uitTutorialNodeSessions/blob/master/server.js
+// linked from corresponding YouTube video (5 min length): https://www.youtube.com/watch?v=aT98NMdAXyk&ab_channel=UITStartupImmersion
+
 router.post('/users',async (req,res) =>{
     try{
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
