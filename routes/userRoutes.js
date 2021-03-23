@@ -23,7 +23,7 @@ router.post('/users',async (req,res) =>{
 
 
 //uncomment statements below to have login working again
-// router.post('/users/login', async (req,res) =>{
+// router.post('/login', async (req,res) =>{
 //     console.log(req.body);
 //     User.find({_id : req.body._id}, async (err, data) =>{
 //         if(err){
