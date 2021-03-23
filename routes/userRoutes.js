@@ -3,10 +3,8 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const Tree = require("../models/tree");
 const router = express.Router();
+const passport = require('passport');
 
-// github link that might help with node sessions using express:
-// https://github.com/robmyers82/uitTutorialNodeSessions/blob/master/server.js
-// linked from corresponding YouTube video (5 min length): https://www.youtube.com/watch?v=aT98NMdAXyk&ab_channel=UITStartupImmersion
 
 router.post('/users',async (req,res) =>{
     try{
@@ -23,34 +21,46 @@ router.post('/users',async (req,res) =>{
     }
 });
 
-router.post('/users/login', async (req,res) =>{
-    console.log(req.body);
-    User.find({_id : req.body._id}, async (err, data) =>{
-        if(err){
-            console.log(err)
-        }else if(data.length == 0){
-            console.log('User Doesnt exist')
-            return res.status(400).send("User doesn't exist")
-        }else{
-            try{
-                if(await bcrypt.compare(req.body.password,data[0].password)){
-                    res.redirect("/users/" + data[0]._id);
-                }else{
-                    res.send('wrong password');
-                }
-            } catch{
-                res.status(500).send();
-            }
-        }
+
+//uncomment statements below to have login working again
+// router.post('/users/login', async (req,res) =>{
+//     console.log(req.body);
+//     User.find({_id : req.body._id}, async (err, data) =>{
+//         if(err){
+//             console.log(err)
+//         }else if(data.length == 0){
+//             console.log('User Doesnt exist')
+//             return res.status(400).send("User doesn't exist")
+//         }else{
+//             try{
+//                 if(await bcrypt.compare(req.body.password,data[0].password)){
+//                     res.redirect("/users/" + data[0]._id);
+//                 }else{
+//                     res.send('wrong password');
+//                 }
+//             } catch{
+//                 res.status(500).send();
+//             }
+//         }
+//
+//
+//     });
+// });
+
+//comment statement below to have login working
+router.post('/login',
+    passport.authenticate('local',{failureRedirect: "/failure-login",
+                                                  successRedirect:"/success-login",
+                                                  failureFlash: true})
+);
+//to here
 
 
-    });
-});
 router.get('/users/registerTree', (req,res) => {
     res.render('registerTree');
 });
 
-router.post('/users/trees',async (req, res) => {
+router.post('/users/registerTrees',async (req, res) => {
     try{
         const tree = new Tree(req.body);
         tree.save()
