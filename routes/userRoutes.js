@@ -6,14 +6,23 @@ const router = express.Router();
 const passport = require('passport');
 
 
-router.post('/users',async (req,res) =>{
+//-------------Post routes--------------------//
+
+router.post('/login',
+    passport.authenticate('local',{failureRedirect: "/", failureFlash: true}), (req,res) => {
+        res.redirect("/users/" + req.user._id);
+    }
+);
+
+router.post('/users/registerTrees',async (req, res) => {
     try{
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        req.body.password = hashedPassword;
-        const user = new User(req.body);
-        user.save()
+        req.body.user= req.user._id;
+        const tree = new Tree(req.body);
+        tree.save()
             .then((result) => {
-                res.redirect("/");
+                console.log(req.user);
+                //console.log(req.session.Session);
+                res.redirect("/users/" + req.user._id);
             })
             .catch((err) => console.log(err));
     } catch{
@@ -21,57 +30,12 @@ router.post('/users',async (req,res) =>{
     }
 });
 
-
-//uncomment statements below to have login working again
-// router.post('/login', async (req,res) =>{
-//     console.log(req.body);
-//     User.find({_id : req.body._id}, async (err, data) =>{
-//         if(err){
-//             console.log(err)
-//         }else if(data.length == 0){
-//             console.log('User Doesnt exist')
-//             return res.status(400).send("User doesn't exist")
-//         }else{
-//             try{
-//                 if(await bcrypt.compare(req.body.password,data[0].password)){
-//                     res.redirect("/users/" + data[0]._id);
-//                 }else{
-//                     res.send('wrong password');
-//                 }
-//             } catch{
-//                 res.status(500).send();
-//             }
-//         }
-//
-//
-//     });
-// });
-
-//comment statement below to have login working
-router.post('/login',
-    passport.authenticate('local',{failureRedirect: "/failure-login",
-                                                  successRedirect:"/success-login",
-                                                  failureFlash: true})
-);
-//to here
-
+//-----------------------get routes--------------------------//
 
 router.get('/users/registerTree', (req,res) => {
     res.render('registerTree');
 });
 
-router.post('/users/registerTrees',async (req, res) => {
-    try{
-        const tree = new Tree(req.body);
-        tree.save()
-            .then((result) => {
-                res.redirect("/users");
-            })
-            .catch((err) => console.log(err));
-    } catch{
-        res.status(500);
-    }
-});
 
 router.get('/users/:id', async (req,res) =>{
     const id = req.params.id;

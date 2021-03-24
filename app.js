@@ -29,7 +29,6 @@ app.use(express.json());//allows to parse JSON from req
 app.use(express.urlencoded({extended:true})) // allows you to pass request object from POST
 app.use(morgan('dev')); // auto server logger
 app.use(flash());
-
 //---------------Session Setup-------------------//
 
 //create session store and link to mongodb Maple database
@@ -46,6 +45,12 @@ app.use(session({
     }
 }));
 
+app.use(function(req, res, next){
+    res.locals.success_messages = req.flash('success_messages');
+    res.locals.error_messages = req.flash('error_messages');
+    next();
+});
+
 //--------------Passport Authentication-------------//
 require('./config/passport');
 app.use(passport.initialize());
@@ -58,7 +63,7 @@ app.use(registerRoutes);
 
 
 app.get('/', (req, res) => {
-    res.render('index')
+    res.render('index',{message: req.flash("error")});
 });
 
 app.use((req, res) => {

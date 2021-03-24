@@ -6,6 +6,10 @@ const treeSchema = new Schema({
         type: String,
         required: true
     },
+    user:{
+        type: String,
+        required: true
+    },
     stemCount: {
         type: Number,
         required: true

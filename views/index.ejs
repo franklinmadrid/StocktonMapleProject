@@ -10,6 +10,9 @@
 <br>
 <h5>Login</h5>
 <div>
+    <% if(message) {%>
+    <%= message%>
+    <%}%>
     <form action="/login" method="POST">
         <label>UserName</label><br>
         <input type="text" id="username" name="username"><br>
