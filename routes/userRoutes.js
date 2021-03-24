@@ -4,7 +4,9 @@ const User = require("../models/user");
 const Tree = require("../models/tree");
 const router = express.Router();
 const passport = require('passport');
+const {isAuth, isAdmin} = require('./authMiddleware');
 
+// /user/* routes and user-related routes such as /login, /logout
 
 //-------------Post routes--------------------//
 
@@ -14,7 +16,7 @@ router.post('/login',
     }
 );
 
-router.post('/users/registerTrees',async (req, res) => {
+router.post('/users/registerTree', async (req, res) => {
     try{
         req.body.user= req.user._id;
         const tree = new Tree(req.body);
@@ -31,11 +33,10 @@ router.post('/users/registerTrees',async (req, res) => {
 });
 
 //-----------------------get routes--------------------------//
-
-router.get('/users/registerTree', (req,res) => {
-    res.render('registerTree',{link:req.user._id});
+router.get('/logout',(req, res) => {
+    req.logout();
+    res.redirect('/');
 });
-
 
 router.get('/users/:id', async (req,res) =>{
     const id = req.params.id;
@@ -44,11 +45,17 @@ router.get('/users/:id', async (req,res) =>{
             if(result == null){
                 res.status(404).send('404 error') ;
             }
+            console.log('result',result);
             res.render('user',{user: result, title: result._id + "'s profile"})
         })
         .catch(err => {
             console.log(err);
         });
 });
+
+router.get('/registerTree',isAuth, (req,res) => {
+    res.render('registerTree',{link:'users/' + req.user._id});
+});
+
 
 module.exports= router;

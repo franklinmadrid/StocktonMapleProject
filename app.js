@@ -54,6 +54,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
+//debugging middleware
+app.use(((req, res, next) => {
+    console.log(req.user);
+    console.log(req.session)
+    next();
+}));
 
 //---------------------Routes------------------------//
 app.use(userRoutes);

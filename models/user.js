@@ -4,15 +4,28 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     _id: {
         type: String,
-        required: true
+        required: true,
     },
     password: {
         type: String,
         required: true
+    },
+    moderator:{
+      type: Boolean,
+      required: false
+    },
+    modCategories:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category'
+    }],
+    admin: {
+        type: Boolean,
+        required: false
     }
     },{timestamps: true});
 
