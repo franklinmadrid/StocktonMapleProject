@@ -23,13 +23,13 @@ console.log("DB:" + uri);
 //register view engine
 app.set('view engine', 'ejs');
 
-//middleware & static files
+//----------------------middleware--------------------------//
 app.use(express.static("public")); //allows you to use static css file with views
 app.use(express.json());//allows to parse JSON from req
 app.use(express.urlencoded({extended:true})) // allows you to pass request object from POST
-app.use(morgan('dev')); // auto server logger
-app.use(flash());
-//---------------Session Setup-------------------//
+app.use(morgan('dev')); // auto server logger\
+
+    //---------Session Setup---------//
 
 //create session store and link to mongodb Maple database
 app.use(session({
@@ -45,19 +45,17 @@ app.use(session({
     }
 }));
 
-app.use(function(req, res, next){
-    res.locals.success_messages = req.flash('success_messages');
-    res.locals.error_messages = req.flash('error_messages');
-    next();
-});
+//flash must be used after session middleware
+app.use(flash());
 
-//--------------Passport Authentication-------------//
+    //--------Passport Authentication----------//
 require('./config/passport');
 app.use(passport.initialize());
 app.use(passport.session());
 
 
-//Routes
+
+//---------------------Routes------------------------//
 app.use(userRoutes);
 app.use(registerRoutes);
 

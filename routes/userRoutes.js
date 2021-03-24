@@ -33,7 +33,7 @@ router.post('/users/registerTrees',async (req, res) => {
 //-----------------------get routes--------------------------//
 
 router.get('/users/registerTree', (req,res) => {
-    res.render('registerTree');
+    res.render('registerTree',{link:req.user._id});
 });
 
 
