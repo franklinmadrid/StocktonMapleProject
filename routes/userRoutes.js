@@ -45,13 +45,19 @@ router.get('/users/:id', async (req,res) =>{
             if(result == null){
                 res.status(404).send('404 error') ;
             }
-            console.log('result',result);
-            res.render('user',{user: result, title: result._id + "'s profile"})
+            Tree.find({"user":id})
+                .then(treeList =>{
+                    res.render('user',{user: result, title: result._id + "'s profile", trees: treeList});
+                })
         })
         .catch(err => {
             console.log(err);
         });
 });
+
+
+
+
 
 router.get('/registerTree',isAuth, (req,res) => {
     res.render('registerTree',{link:'users/' + req.user._id});

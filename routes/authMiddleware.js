@@ -6,7 +6,14 @@ function isAuth(req, res, next){
     }
 }
 
-//NOT YET IMPLEMENTED
-function isAdmin(req, res, next) {}
+
+function isAdmin(req, res, next) {
+    if (req.isAuthenticated()) {
+        if (req.user.admin) {
+            next();
+        }
+    }
+    res.status(401).send('You are not authorized to view this resource');
+}
 
 module.exports = {isAuth, isAdmin};
