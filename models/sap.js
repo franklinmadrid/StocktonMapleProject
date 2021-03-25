@@ -18,10 +18,10 @@ const sapSchema = new Schema({
         type: Number,
         required: true
     },
-    // harvestLocation: {
-    //     type: GeolocationCoordinates,
-    //     required: true
-    // }
+    harvestLocation: {
+        type: String,
+        required: true
+    }
 },{timestamps: true});
 
 const Sap = mongoose.model('Sap', sapSchema);
