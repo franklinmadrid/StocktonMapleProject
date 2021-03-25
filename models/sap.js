@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const sapSchema = new Schema({
+    tree: {
+        type: String,
+        required: true
+    },
     harvestDate: {
         type: Date,
         required: true
@@ -10,8 +14,15 @@ const sapSchema = new Schema({
         type: Number,
         required: true
     },
-    
-    },{timestamps: true});
+    harvestTemp: {
+        type: Number,
+        required: true
+    },
+    // harvestLocation: {
+    //     type: GeolocationCoordinates,
+    //     required: true
+    // }
+},{timestamps: true});
 
 const Sap = mongoose.model('Sap', sapSchema);
 module.exports = Sap;
