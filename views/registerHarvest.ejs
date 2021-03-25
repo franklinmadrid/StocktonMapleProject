@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register a Sap Harvest</title>
+    <link rel="stylesheet" href="/bootstrap.min.css" >
+</head>
+<body>
+<div style="margin-left: 10px">
+    <h3>Register a Sap Harvest</h3><br>
+    <form action="/users/registerHarvest" method="POST">
+        <label>Sap Volume</label><br>
+        <input type="text" id="sapVolume" name="sapVolume"><br>
+        <label>Date of Sap Harvest</label><br>
+        <input type="date" id="harvestDate" name="harvestDate"><br>
+        <label>Temperature at Time of Harvest</label><br>
+        <input type="text" id="harvestTemp" name="harvestTemp"><br>
+        <input type="submit" value="Register">
+    </form>
+    <p><a href="<%= link %>">Back to profile</a></p>
+
+</div>
+
+
+
+</body>
+</html>
