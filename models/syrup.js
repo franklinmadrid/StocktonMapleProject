@@ -29,7 +29,7 @@ const syrupSchema = new Schema({
         type: Number,
         required: true
     },
-    fueltType: {
+    fuelType: {
         type: String,
         required: true
     },
