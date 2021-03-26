@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+</head>
+<body style="margin-left: 20px">
+<div style="margin-left: 20px">
+    <p>UserName: <%=user._id%></p>
+    <p>Email: <%= user.email%></p>
+    <p>Hashed Password: <%=user.password%></p><br>
+    <a href="/logout">Logout</a>
+    <a style="margin-left: 10px" href='/registerTree'>Register a Tree</a>
+</div>
+<div class="container">
+    <table id="sapTable" class="display center">
+        <thead>
+        <tr>
+            <th>Sap Volume</th>
+            <th>Harvest Temp</th>
+            <th>Harvest Date</th>
+        </tr>
+        </thead>
+        <tbody style="text-align:center">
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

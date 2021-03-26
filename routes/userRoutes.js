@@ -102,10 +102,13 @@ router.get('/registerTree',isAuth, (req,res) => {
     res.render('registerTree',{link:'users/' + req.user._id});
 });
 
-// route=  /treeID/registerHarvest
-router.get('/:id/registerHarvest',isAuth, (req,res) => {
+
+router.get('/trees/:id/registerHarvest',isAuth, (req,res) => {
     res.render('registerHarvest',{link:'users/' + req.user._id, treeID: req.params.id});
 });
 
+router.get('/trees/:id',isAuth, (req,res) => {
+    res.render('tree',{link:'users/' + req.user._id, treeID: req.params.id});
+});
 
 module.exports= router;
