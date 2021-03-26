@@ -10,12 +10,21 @@
 
     <script type="text/javascript" class="init">
         $(document).ready(function() {
-            $('#treeTable').DataTable( {
+            var table = $('#treeTable').DataTable( {
                 autoWidth: false,
                 lengthChange: false,
                 ordering: false,
                 pageLength: 5,
+                columnDefs: [
+                    {className: "dt-head-center", targets: "_all"}
+                ]
             } );
+            $("#treeTable tbody").on('click', 'tr', function (){
+                var data = table.row(this).data();
+                // This is probably not how it works i have no idea how the express routes operate
+                // data[0] will be the id of whichever tree you clicked on
+                window.location.href = '/trees/' + data[0];
+            });
         } );
     </script>
 </head>
