@@ -14,16 +14,13 @@ const syrupSchema = new Schema({
         type: Date,
         required: true
     },
-    // might be incorrect?
-    timeToProcess: {
-        hours: {
-            type: Number,
-            required: true
-        },
-        minutes: {
-            type: Number,
-            required: true
-        }
+    hours: {
+        type: Number,
+        required: true
+    },
+    minutes: {
+        type: Number,
+        required: true
     },
     syrupProduced: {
         type: Number,
@@ -38,6 +35,10 @@ const syrupSchema = new Schema({
         type: Number,
         required: false
     },
+    user: {
+        type: String,
+        required: true
+    }
 },{timestamps: true});
 
 const Syrup = mongoose.model('Syrup', syrupSchema);

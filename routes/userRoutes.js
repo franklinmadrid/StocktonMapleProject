@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const Tree = require("../models/tree");
 const Sap = require("../models/sap");
+const Syrup = require("../models/syrup");
 const router = express.Router();
 const passport = require('passport');
 const {isAuth, isAdmin} = require('./authMiddleware');
@@ -17,7 +18,7 @@ router.post('/login',
     }
 );
 
-router.post('/users/registerTree', async (req, res) => {
+router.post('/users/registerTree',isAuth, async (req, res) => {
     try{
         req.body.user= req.user._id;
         const tree = new Tree(req.body);
@@ -31,7 +32,7 @@ router.post('/users/registerTree', async (req, res) => {
     }
 });
 
-router.post('/users/registerHarvest', async (req, res) => {
+router.post('/users/registerHarvest',isAuth, async (req, res) => {
     console.log(req.body);
     const sap = new Sap(req.body);
     sap.save()
@@ -40,6 +41,21 @@ router.post('/users/registerHarvest', async (req, res) => {
         })
         .catch((err) => console.log(err));
 });
+
+router.post('/registerSyrup',isAuth, ((req, res) => {
+    console.log(req.body);
+    req.body.user = req.user._id;
+    console.log(req.body);
+    const syrup = new Syrup(req.body);
+    console.log(syrup);
+    syrup.save()
+        .then(() =>{
+           res.redirect('http://localhost:3000/users/' + req.user._id);
+        })
+        .catch(err =>{
+            console.log(err);
+        });
+}));
 
 //-----------------------get routes--------------------------//
 router.get('/logout',(req, res) => {
