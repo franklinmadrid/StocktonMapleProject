@@ -6,12 +6,12 @@ const sapSchema = new Schema({
         type: String,
         required: true
     },
-    harvestDate: {
-        type: Date,
-        required: true
-    },
     sapVolume: {
         type: Number,
+        required: true
+    },
+    harvestDate: {
+        type: Date,
         required: true
     },
     harvestTemp: {

@@ -9,23 +9,18 @@
 <div style="margin-left: 10px">
     <h3>Register a Sap Harvest</h3><br>
     <form action="/users/registerHarvest" method="POST">
+        <input type="text" id="tree" name="tree" hidden>
         <label>Sap Volume</label><br>
         <input type="text" id="sapVolume" name="sapVolume"><br>
         <label>Date of Sap Harvest</label><br>
         <input type="date" id="harvestDate" name="harvestDate"><br>
         <!-- <label>Retrieve my Current Location and Temperature</label>
         <input type="button" value="TempLocation"> -->
-        <label>Temperature at Time of Harvest</label><br>
-        <input type="text" id="harvestTemp" name="harvestTemp"><br>
-        <label>Location of Harvest</label><br>
-        <input type="text" id="harvestLocation" name="harvestLocation"><br>
-        <input type="submit" value="Register">
+        <input type="text" id="harvestTemp" name="harvestTemp" hidden><br>
     </form>
     <p><a href="<%= link %>">Back to profile</a></p>
 
 </div>
-
-
-
+<%document.getElementById('tree').value = treeID%>
 </body>
 </html>
