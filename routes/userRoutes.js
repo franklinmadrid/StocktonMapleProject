@@ -32,47 +32,13 @@ router.post('/users/registerTree', async (req, res) => {
 });
 
 router.post('/users/registerHarvest', async (req, res) => {
-    try{
-        //gets harvestTemp from api.weather.gov using tree coords
-        let harvestTemp;
-        await Tree.findById(req.body.tree)
-            .then(result =>{
-                let url = "https://api.weather.gov/points/";
-                url.concat(result.latitude,',',result.longitude);
-                $.getJSON(url, data =>{
-                    const forecastURL = data.properties.forecast;
-                    $.getJSON(forecastURL,data =>{
-                        harvestTemp = data.properties.periods[0].temparature;
-                    });
-                });
-            });
-        req.body.harvestTemp = harvestTemp;
-        console.log(req.body);
-        const sap = new Sap(req.body);
-        sap.save()
-            .then((result) => {
-                res.redirect("/users/" + req.user._id);
-            })
-            .catch((err) => console.log(err));
-    } catch{
-        res.status(500);
-    }
-});
-
-router.post('/:id/registerHarvest', async (req, res) => {
-    try{
-
-        req.body.harvestTemp=
-        console.log(req.body);
-        const tree = new Tree(req.body);
-        tree.save()
-            .then((result) => {
-                res.redirect("/users/" + req.user._id);
-            })
-            .catch((err) => console.log(err));
-    } catch{
-        res.status(500);
-    }
+    console.log(req.body);
+    const sap = new Sap(req.body);
+    sap.save()
+        .then(() => {
+            res.redirect("/trees/" + sap.tree);
+        })
+        .catch((err) => console.log(err));
 });
 
 //-----------------------get routes--------------------------//
@@ -104,20 +70,31 @@ router.get('/registerTree',isAuth, (req,res) => {
 });
 
 
-router.get('/trees/:id/registerHarvest',isAuth, (req,res) => {
-    res.render('registerHarvest',{link:'users/' + req.user._id, treeID: req.params.id});
+router.get('/trees/:id/registerHarvest',isAuth, async (req,res) => {
+    const id = req.params.id;
+    await Tree.findById(id)
+        .then(result => {
+            res.render('registerHarvest', {
+                link: 'http://localhost:3000/users/' + req.user._id,
+                treeID: req.params.id,
+                coords: [result.latitude,result.longitude]})
+        })
+        .catch(err =>{console.log(err)});
 });
 
 router.get('/trees/:id',isAuth, async (req,res) => {
+    const id = req.params.id;
     await Tree.findById(id)
         .then(async result => {
             if(result == null){
                 res.status(404).send('404 error') ;
             }
-            if (result.user == req.user_id){
+            console.log(result.user,req.user._id)
+            if (result.user == req.user._id){
                 await Sap.find({'tree' : id})
                     .then(sapList =>{
-                        res.render('tree',{link:'users/' + req.user._id, treeID: req.params.id, saps: sapList});
+                        let entryLink = 'trees/' + id + 'registerHarvest';
+                        res.render('tree',{link:'users/' + req.user._id,entryLink: entryLink, treeID: req.params.id, saps: sapList});
                     });
             }else{
                 res.status(401).send('Not authorized to access this resource.') ;
