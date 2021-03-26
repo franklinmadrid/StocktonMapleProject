@@ -44,14 +44,17 @@
         </table>
     </div>
 <script>
-    trees.forEach(e =>{
-        $('#treeTable > tbody').append("<tr></tr>");
-        $("#treeTable > tbody > :last").append("<td>"+ e._id +"</td>");
-        $("#treeTable > tbody > :last").append("<td>"+ e.circumf +"</td>");
-        $("#treeTable > tbody > :last").append("<td>"+ e.stemCount +"</td>");
-        $("#treeTable > tbody > :last").append("<td>"+ e.tappingDate +"</td>");
-        $("#treeTable > tbody > :last").append("<td>"+ e.tapHeight +"</td>");
-    });
+    let data = JSON.parse('<%-JSON.stringify(trees)%>');
+    if(data) {
+        data.forEach(e => {
+            $('#treeTable > tbody').append("<tr></tr>");
+            $("#treeTable > tbody > :last").append("<td>" + e._id + "</td>");
+            $("#treeTable > tbody > :last").append("<td>" + e.circumf + "</td>");
+            $("#treeTable > tbody > :last").append("<td>" + e.stemCount + "</td>");
+            $("#treeTable > tbody > :last").append("<td>" + e.tappingDate + "</td>");
+            $("#treeTable > tbody > :last").append("<td>" + e.tapHeight + "</td>");
+        });
+    }
 </script>
 </body>
 </html>
