@@ -5,6 +5,22 @@
     <title><%= `${treeID}'s sap entries`%></title>
     <link rel="stylesheet" href="/bootstrap.min.css">
     <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+
+    <script type="text/javascript" class="init">
+        $(document).ready(function() {
+            $('#sapTable').DataTable( {
+                autoWidth: false,
+                lengthChange: false,
+                ordering: false,
+                pageLength: 10,
+                columnDefs: [
+                    {className: "dt-head-center", targets: "_all"}
+                ]
+            } );
+        } );
+    </script>
 </head>
 <body style="margin-left: 20px">
 <div style="margin-left: 20px">
@@ -12,19 +28,21 @@
     <p><a href="<%= link %>" >Back to profile</a>
     <a href="<%= `${treeID}/registerHarvest` %>" style="margin-left: 10px" >Register sap harvest</a></p>
 </div>
-<div class="container">
-    <table id="sapTable" class="display center">
-        <thead>
-        <tr>
-            <th>Sap Volume</th>
-            <th>Harvest Temp</th>
-            <th>Harvest Date</th>
-        </tr>
-        </thead>
-        <tbody style="text-align:center">
-        </tbody>
-    </table>
-</div>
+
+    <div class="container">
+        <table id="sapTable" class="display center">
+            <thead>
+                <tr>
+                    <th>Sap Volume</th>
+                    <th>Harvest Temp</th>
+                    <th>Harvest Date</th>
+                </tr>
+            </thead>
+            <tbody style="text-align:center">
+            </tbody>
+        </table>
+    </div>
+
 <script>
     let initData = JSON.parse('<%-JSON.stringify(saps)%>');
     if(initData){
