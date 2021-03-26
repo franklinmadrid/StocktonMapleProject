@@ -19,11 +19,10 @@ router.post('/login',
 router.post('/users/registerTree', async (req, res) => {
     try{
         req.body.user= req.user._id;
+        console.log(req.body);
         const tree = new Tree(req.body);
         tree.save()
             .then((result) => {
-                console.log(req.user);
-                //console.log(req.session.Session);
                 res.redirect("/users/" + req.user._id);
             })
             .catch((err) => console.log(err));
@@ -60,7 +59,7 @@ router.get('/users/:id', async (req,res) =>{
 
 
 router.get('/registerTree',isAuth, (req,res) => {
-    res.render('registerTree',{link:'users/' + req.user._id});
+    res.render('registerTree',{link:'users/' + req.user._id, coords:Object});
 });
 
 

@@ -26,6 +26,14 @@ const treeSchema = new Schema({
         type: Number,
         required: true
     },
+    latitude: {
+        type: Number,
+        required: true
+    },
+    longitude: {
+        type: Number,
+        required: true
+    },
     // firstflowDate: {
     //     type: Date,
     //     required: true
