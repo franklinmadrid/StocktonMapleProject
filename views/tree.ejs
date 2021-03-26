@@ -2,16 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home Page</title>
+    <title><%= `${treeID}'s sap entries`%></title>
     <link rel="stylesheet" href="/bootstrap.min.css">
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
 </head>
 <body style="margin-left: 20px">
 <div style="margin-left: 20px">
-    <p>UserName: <%=user._id%></p>
-    <p>Email: <%= user.email%></p>
-    <p>Hashed Password: <%=user.password%></p><br>
-    <a href="/logout">Logout</a>
-    <a style="margin-left: 10px" href='/registerTree'>Register a Tree</a>
+    <h3><%=`${treeID}'s sap entries`%></h3>
+    <p><a href="<%= link %>" >Back to profile</a></p>
 </div>
 <div class="container">
     <table id="sapTable" class="display center">
@@ -26,5 +24,14 @@
         </tbody>
     </table>
 </div>
+<script>
+    saps.forEach(e =>{
+        $('#sapTable > tbody').append("<tr></tr>");
+        $("#sapTable > tbody > :last").append("<td>"+ e.sapVolume +"</td>");
+        $("#sapTable > tbody > :last").append("<td>"+ e.harvestTemp +"</td>");
+        $("#sapTable > tbody > :last").append("<td>"+ e.harvestDate +"</td>");
+
+    });
+</script>
 </body>
 </html>
