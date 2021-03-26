@@ -4,23 +4,44 @@
     <meta charset="UTF-8">
     <title>Register a Sap Harvest</title>
     <link rel="stylesheet" href="/bootstrap.min.css" >
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous">
+
+    </script>
 </head>
 <body>
 <div style="margin-left: 10px">
     <h3>Register a Sap Harvest</h3><br>
     <form action="/users/registerHarvest" method="POST">
-        <input type="text" id="tree" name="tree" hidden>
+        <input type="text" id="tree" name="tree" value=<%=treeID%> hidden>
         <label>Sap Volume</label><br>
-        <input type="text" id="sapVolume" name="sapVolume"><br>
+        <input type="text" id="sapVolume" name="sapVolume" size="2" required> gal<br>
         <label>Date of Sap Harvest</label><br>
-        <input type="date" id="harvestDate" name="harvestDate"><br>
+        <input type="date" id="harvestDate" name="harvestDate" required><br>
         <!-- <label>Retrieve my Current Location and Temperature</label>
         <input type="button" value="TempLocation"> -->
-        <input type="text" id="harvestTemp" name="harvestTemp" hidden><br>
+        <label>Temperature</label><br>
+        <input type="text" id="harvestTemp" name="harvestTemp" size="1"> F<br>
+        <div style="float: top; font-size: small; color: gray">Auto-fills to current Temperature</div>
+        <input type="submit" value="submit">
+
     </form>
     <p><a href="<%= link %>">Back to profile</a></p>
 
 </div>
-<%document.getElementById('tree').value = treeID%>
+<script>
+    let url = "https://api.weather.gov/points/";
+    url = url + <%= coords[0]%> + ',' +  <%= coords[1]%>;
+    $.getJSON(url, data =>{
+       const forecastURL = data.properties.forecast;
+        $.getJSON(forecastURL,data =>{
+            const temp = data.properties.periods[0].temperature;
+            $("#harvestTemp").val(temp);
+        });
+    });
+</script>
+
 </body>
 </html>
