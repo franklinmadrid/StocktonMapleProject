@@ -72,9 +72,11 @@ router.get('/users/:id', async (req,res) =>{
             }
             Tree.find({"user":id})
                 .then(treeList =>{
-                    console.log(treeList);
                     res.render('user',{user: result, title: result._id + "'s profile", trees: treeList});
                 })
+                .catch((err) =>{
+                    console.log(err);
+                });
         })
         .catch(err => {
             console.log(err);
@@ -110,7 +112,7 @@ router.get('/trees/:id',isAuth, async (req,res) => {
                 await Sap.find({'tree' : id})
                     .then(sapList =>{
                         let entryLink = 'trees/' + id + 'registerHarvest';
-                        res.render('tree',{link:'users/' + req.user._id,entryLink: entryLink, treeID: req.params.id, saps: sapList});
+                        res.render('tree',{link:'http://localhost:3000/users/' + req.user._id,entryLink: entryLink, treeID: req.params.id, saps: sapList});
                     });
             }else{
                 res.status(401).send('Not authorized to access this resource.') ;

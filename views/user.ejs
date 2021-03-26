@@ -7,7 +7,11 @@
     <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
-
+    <style>
+        tr.clickable-row {
+            cursor: pointer;
+        }
+    </style>
     <script type="text/javascript" class="init">
         $(document).ready(function() {
             $('#treeTable').DataTable( {
@@ -47,7 +51,13 @@
     let data = JSON.parse('<%-JSON.stringify(trees)%>');
     if(data) {
         data.forEach(e => {
-            $('#treeTable > tbody').append("<tr></tr>");
+            console.log("id",e._id);
+            let url = 'http://localhost:3000/trees/' + e._id;
+            console.log(url);
+            let tr = document.createElement('tr');
+            tr.setAttribute("class",'clickable-row');
+            tr.setAttribute("data-href", url);
+            $('#treeTable > tbody').append(tr);
             $("#treeTable > tbody > :last").append("<td>" + e._id + "</td>");
             $("#treeTable > tbody > :last").append("<td>" + e.circumf + "</td>");
             $("#treeTable > tbody > :last").append("<td>" + e.stemCount + "</td>");
@@ -55,6 +65,11 @@
             $("#treeTable > tbody > :last").append("<td>" + e.tapHeight + "</td>");
         });
     }
+    $(document).ready(function($) {
+        $('*[data-href]').on('click', function() {
+            window.location = $(this).data("href");
+        });
+    });
 </script>
 </body>
 </html>
