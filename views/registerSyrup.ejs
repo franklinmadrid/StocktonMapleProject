@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Syrup</title>
+    <link rel="stylesheet" href="/bootstrap.min.css" >
+</head>
+<body>
+<div style="margin-left: 10px">
+    <h3>Register Syrup Processing</h3><br>
+    <form action="/register" method="POST">
+        <label>Amount of Syrup Produced</label><br>
+        <input type="text" id="syrupProduced" name="syrupProduced"><br>
+        <label>Amount of Sap Processed</label><br>
+        <input type="text" id="sapProcessed" name="sapProcessed"><br>
+        <label>Amount of Sap Lost During Processing</label><br>
+        <input type="text" id="sapLost" name="sapLost"><br>
+        <label>Processing Date</label><br>
+        <input type="date" id="processingDate" name="processingDate"><br>
+        <label>Amount of Time to Process</label><br>
+        <label>Hours:</label>
+        <input type="text" size=1px id="hours" name="hours">
+        <label>Minutes:</label>
+        <input type="text" size=1px id="minutes" name="minutes"></br>
+        <label>Type of Fuel Used</label><br>
+        <input type="text" name="fuelType" list="fuelType">
+        <datalist id="fuelType">
+            <option value="Propane"></option>
+            <option value="Oil"></option>
+            <option value="Wood"></option>
+        </datalist><br>
+        <!-- <select id="fuelType">
+            <option value="Propane">Propane</option>
+            <option value="Oil">Oil</option>
+            <option value="Wood">Wood</option>
+            <option value="Other">Other</option>
+        </select> -->
+        <input type="submit" value="Register">
+    </form>
+</div>
+</body>
+</html>
