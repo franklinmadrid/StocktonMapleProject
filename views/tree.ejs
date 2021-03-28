@@ -22,12 +22,20 @@
         } );
     </script>
 </head>
-<body style="margin-left: 20px">
-<div style="margin-left: 20px">
-    <h3><%=`${treeID}'s sap entries`%></h3>
-    <p><a href="<%= link %>" >Back to profile</a>
-    <a href="<%= `${treeID}/registerHarvest` %>" style="margin-left: 10px" >Register sap harvest</a></p>
-</div>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ff8c00;">
+        <b class="navbar-brand"><%=`${treeID}'s sap entries`%></b>
+        <div id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%= `${treeID}/registerHarvest` %>">Register Sap Harvest</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%= link %>">Back To Profile</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
     <div class="container">
         <table id="sapTable" class="display center">
@@ -50,7 +58,7 @@
             $('#sapTable > tbody').append("<tr></tr>");
             $("#sapTable > tbody > :last").append("<td>"+ e.sapVolume +"</td>");
             $("#sapTable > tbody > :last").append("<td>"+ e.harvestTemp +"</td>");
-            $("#sapTable > tbody > :last").append("<td>"+ e.harvestDate +"</td>");
+            $("#sapTable > tbody > :last").append("<td>"+ e.harvestDate.substring(0,10) +"</td>");
         })
     }
 </script>

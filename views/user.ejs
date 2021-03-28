@@ -27,13 +27,25 @@
     </script>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ff8c00;">
+        <b class="navbar-brand"><%=user._id%>'s Profile</b>
+        <div id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="/registerTree">Register a Tree</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="/registerSyrup">Register Syrup Processing</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
     <div style="margin-left: 20px">
-        <p>UserName: <%=user._id%></p>
+        <p style="margin-top:20px">UserName: <%=user._id%></p>
         <p>Email: <%= user.email%></p>
-        <p>Hashed Password: <%=user.password%></p><br>
-        <a href="/logout">Logout</a>
-        <a style="margin-left: 10px" href='/registerTree'>Register a Tree</a>
-        <a style="margin-left: 10px" href='/registerSyrup'>Register Syrup Processing</a>
     </div>
     <div class="container">
         <table id="treeTable" class="display center">
@@ -43,7 +55,7 @@
                     <th>Circumference (Inches)</th>
                     <th>Stem Count</th>
                     <th>Tapping Date</th>
-                    <th>Tap Height</th>
+                    <th>Tap Height (Inches)</th>
                 </tr>
             </thead>
             <tbody style="text-align:center">
@@ -64,7 +76,7 @@
             $("#treeTable > tbody > :last").append("<td>" + e._id + "</td>");
             $("#treeTable > tbody > :last").append("<td>" + e.circumf + "</td>");
             $("#treeTable > tbody > :last").append("<td>" + e.stemCount + "</td>");
-            $("#treeTable > tbody > :last").append("<td>" + e.tappingDate + "</td>");
+            $("#treeTable > tbody > :last").append("<td>" + e.tappingDate.substring(0, 10) + "</td>");
             $("#treeTable > tbody > :last").append("<td>" + e.tapHeight + "</td>");
         });
     }
