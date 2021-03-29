@@ -8,29 +8,63 @@
             src="https://code.jquery.com/jquery-3.6.0.min.js"
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
             crossorigin="anonymous">
-
     </script>
 </head>
 <body>
-<div style="margin-left: 10px">
-    <h3>Register a Sap Harvest</h3><br>
-    <form action="/users/registerHarvest" method="POST">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ff8c00;">
+        <b class="navbar-brand">Register Sap Harvest</b>
+        <div id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%= link %>">Back to profile</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+<div class="container-fluid" style="margin-top: 10px">
+    <form action="/users/registerHarvest" method="POST" role="form">
         <input type="text" id="tree" name="tree" value=<%=treeID%> hidden>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Sap Volume</label>
+                <input type="text" class="form-control" id="sapVolume" name="sapVolume" required>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Date of Syrup Harvest</label>
+                <input type="date" class="form-control" id="harvestDate" name="harvestDate" required>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Temperature (Fahrenheit)</label>
+                <input type="text" class="form-control" id="harvestTemp" name="harvestTemp" required>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <button type="submit" class="form-control btn btn-primary" style="background-color: #ff8c00">Register</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--
+<div style="margin-left: 10px">
+    <form action="/users/registerHarvest" method="POST">
         <label>Sap Volume</label><br>
         <input type="text" id="sapVolume" name="sapVolume" size="2" required> gal<br>
         <label>Date of Sap Harvest</label><br>
         <input type="date" id="harvestDate" name="harvestDate" required><br>
-        <!-- <label>Retrieve my Current Location and Temperature</label>
-        <input type="button" value="TempLocation"> -->
+        <label>Retrieve my Current Location and Temperature</label>
+        <input type="button" value="TempLocation">
         <label>Temperature</label><br>
         <input type="text" id="harvestTemp" name="harvestTemp" size="1"> F<br>
         <div style="float: top; font-size: small; color: gray">Auto-fills to current Temperature</div>
         <input type="submit" value="submit">
-
     </form>
-    <p><a href="<%= link %>">Back to profile</a></p>
-
 </div>
+-->
 <script>
     let url = "https://api.weather.gov/points/";
     url = url + <%= coords[0]%> + ',' +  <%= coords[1]%>;
