@@ -5,22 +5,38 @@
     <title>Register</title>
     <link rel="stylesheet" href="/bootstrap.min.css" >
 </head>
-<body>
-<div style="margin-left: 10px">
-    <h3>Register</h3><br>
-    <form action="/register" method="POST">
-        <label>Email</label><br>
-        <input type="text" id="email" name="email"><br>
-        <label>UserName</label><br>
-        <input type="text" id="_id" name="_id"><br>
-        <label>Password</label><br>
-        <input type="password" id="password" name="password"><br>
-        <input type="submit" value="Register">
-    </form>
-    <a href="/">Already have an account?</a>
-</div>
-
-
+<body class="text-center">
+    <div class="main">
+        <div class="wrapper">
+            <h3>Register</h3><br>
+            <form class="form-signin col-lg-6 offset-lg-3" action="/register" method="POST">
+                <div class="row justify-content-center">
+                    <div class="form-group">
+                        <label for="username" class="sr-only">Email</label>
+                        <input type="text" id="email" name="email" class="form-control" placeholder="Email" required autofocus>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="form-group">
+                        <label for="password" class="sr-only">Username</label>
+                        <input type="text" id="_id" name="_id" class="form-control" placeholder="Username" required>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="form-group">
+                        <label for="password" class="sr-only">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-block" type="submit" value="Register" style="background-color: #ff8c00">Register</button>
+                    </div>
+                </div>
+            </form>
+            <a href="/">Already have an account?</a>
+        </div>
+    </div>
 </body>
 </html>
 

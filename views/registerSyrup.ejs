@@ -18,6 +18,65 @@
         </div>
         -->
     </nav>
+<div class="container-fluid" style="margin-top: 10px">
+    <form action="/registerSyrup" method="POST" role="form">
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Amount of Syrup Produced</label>
+                <input type="text" class="form-control" id="syrupProduced" name="syrupProduced">
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Amount of Sap Processed</label>
+                <input type="text" class="form-control" id="sapProcessed" name="sapProcessed">
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Amount of Sap Lost During Processing</label>
+                <input type="text" class="form-control" id="sapLost" name="sapLost">
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Processing Date</label>
+                <input type="date" class="form-control" id="processingDate" name="processingDate">
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <label>Amount of Time to Process</label>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Hours:</label>
+                <input type="text" class="form-control" id="hours" name="hours">
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Minutes:</label>
+                <input type="text" class="form-control" id="minutes" name="minutes">
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Type of Fuel Used</label>
+                <select id="fuelType" name="fuelType" class="form-control">
+                    <option value="Propane" selected>Propane</option>
+                    <option value="Oil">Oil</option>
+                    <option value="Wood">Wood</option>
+                </select>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <button type="submit" class="form-control btn btn-primary" style="background-color: #ff8c00">Register</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--
 <div style="margin-left: 10px">
     <h3>Register Syrup Processing</h3><br>
     <form action="/registerSyrup" method="POST">
@@ -41,16 +100,15 @@
             <option value="Oil"></option>
             <option value="Wood"></option>
         </datalist><br>
-        <!--
         <select id="fuelType">
             <option value="Propane">Propane</option>
             <option value="Oil">Oil</option>
             <option value="Wood">Wood</option>
             <option value="Other">Other</option>
         </select>
-        -->
         <input type="submit" value="Register">
     </form>
 </div>
+-->
 </body>
 </html>
