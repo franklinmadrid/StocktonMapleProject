@@ -3,33 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
     <link rel="stylesheet" href="/bootstrap.min.css">
+    <link href="signin.css" rel="stylesheet">
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+        .main {
+            height: 100%;
+            width: 100%;
+            display: table;
+        }
+        .wrapper {
+            display: table-cell;
+            height: 100%;
+            vertical-align: middle;
+        }
+    </style>
 </head>
-<body style="margin-left: 20px">
-<h1> Welcome to the Maple Project</h1>
-<br>
-<h5>Login</h5>
-<div>
-    <% if(message) {%>
-    <%= message%>
-    <%}%>
-    <form action="/login" method="POST">
-        <label>UserName</label><br>
-        <input type="text" id="username" name="username"><br>
-        <label>Password</label><br>
-        <input type="password" id="password" name="password"><br>
-        <input type="submit" value="login">
-    </form>
-    <br>
-    <a href="/register">Register</a>
-    <br>
-    <a href="/registerSyrup">Register Syrup</a>
-</div>
-
-
+<body class="text-center">
+    <div class="main">
+        <div class="wrapper">
+            <h1 class="h3 mb-3">Welcome to the Maple Project</h1><br>
+            <h5>Login</h5>
+            <form class="form-signin col-lg-6 offset-lg-3" action="/login" method="POST">
+                <div class="row justify-content-center">
+                    <div class="form-group">
+                        <label for="username" class="sr-only">Username</label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="form-group">
+                        <label for="password" class="sr-only">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-block" type="submit" value="login" style="background-color: #ff8c00">Sign In</button>
+                    </div>
+                </div>
+            </form>
+            <br>
+            <a href="/register">Register</a>
+            <br>
+            <a href="/registerSyrup">Register Syrup</a>
+        </div>
+    </div>
 </body>
 </html>
-
-
-
-
