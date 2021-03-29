@@ -6,29 +6,68 @@
     <link rel="stylesheet" href="/bootstrap.min.css" >
 </head>
 <body>
-<div style="margin-left: 10px">
-    <h3>Register a Tree</h3><br>
-    <form action="/users/registerTree" method="POST">
-        <label>Tree ID</label><br>
-        <input type="text" id="_id" name="_id" required><br>
-        <label>Tree Circumference</label><br>
-        <input type="text" id="circumf" name="circumf" required><br>
-        <label>Stem Count</label><br>
-        <input type="text" id="stemCount" name="stemCount" required><br>
-        <label>Date of Tree Tapping</label><br>
-        <input type="date" id="tappingDate" name="tappingDate" required><br>
-        <label>Height of Tree Tapping</label><br>
-        <input type="text" id="tapHeight" name="tapHeight" required><br>
-        <label>Latitude</label><br>
-        <input type="text" id="latitude" name="latitude" placeholder="Accept geolocation to auto-fill" required><br>
-        <div style="float: top; font-size: small; color: gray">Round to nearest 4th decimal</div>
-        <label>Longitude</label><br>
-        <input type="text" id="longitude" name="longitude" placeholder="Accept geolocation to auto-fill" required><br>
-        <div style="float: top; font-size: small; color: gray">Round to nearest 4th decimal</div>
-        <input type="submit" value="Register">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ff8c00;">
+        <b class="navbar-brand">Register a Tree</b>
+        <div id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%= link %>">Back to profile</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+<div class="container-fluid" style="margin-top: 10px">
+    <form action="/users/registerTree" method="POST" role="form">
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Tree ID</label>
+                <input type="text" class="form-control" id="_id" name="_id" required>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Tree Circumference</label>
+                <input type="text" class="form-control" id="circumf" name="circumf" required>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Stem Count</label>
+                <input type="text" class="form-control" id="stemCount" name="stemCount" required>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Date of Tree Tapping</label>
+                <input type="date" class="form-control" id="tappingDate" name="tappingDate" required>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Height of Tree Tapping</label>
+                <input type="text" class="form-control" id="tapHeight" name="tapHeight" required>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Latitude</label>
+                <input type="text" class="form-control" id="latitude" name="latitude" placeholder="Accept geolocation to auto-fill" required>
+                <div style="float: top; font-size: small; color: gray">Round to nearest 4th decimal</div>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Longitude</label>
+                <input type="text" class="form-control" id="longitude" name="longitude" placeholder="Accept geolocation to auto-fill" required>
+                <div style="float: top; font-size: small; color: gray">Round to nearest 4th decimal</div>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <button type="submit" class="form-control btn btn-primary" style="background-color: #ff8c00">Register</button>
+            </div>
+        </div>
     </form>
-    <p><a href="<%= link %>" >Back to profile</a></p>
-
 </div>
 <!-- Gets Geolocation with user permission -->
 <script>
