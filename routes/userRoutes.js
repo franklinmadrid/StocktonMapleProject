@@ -100,6 +100,10 @@ router.get('/trees/:id/registerHarvest',isAuth, async (req,res) => {
         .catch(err =>{console.log(err)});
 });
 
+router.get('/registerSyrup', isAuth,(req,res) => {
+    res.render('registerSyrup');
+});
+
 router.get('/trees/:id',isAuth, async (req,res) => {
     const id = req.params.id;
     await Tree.findById(id)

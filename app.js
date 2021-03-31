@@ -65,10 +65,6 @@ app.use(passport.session());
 app.use(userRoutes);
 app.use(registerRoutes);
 
-app.get('/registerSyrup', (req,res) => {
-    res.render('registerSyrup');
-});
-
 app.get('/', (req, res) => {
     res.render('index',{message: req.flash("error")});
 });
