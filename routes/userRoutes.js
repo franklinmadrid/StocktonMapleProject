@@ -63,6 +63,10 @@ router.get('/logout',(req, res) => {
     res.redirect('/');
 });
 
+router.get('/login', (req, res) => {
+    res.render('login',{message: req.flash("error")});
+});
+
 router.get('/users/:id', async (req,res) =>{
     const id = req.params.id;
     await User.findById(id)
