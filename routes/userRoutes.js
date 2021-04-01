@@ -146,11 +146,16 @@ router.get('/trees/:id',isAuth, async (req,res) => {
                 res.status(404).send('404 error') ;
             }
             if (result.user == req.user._id){
-                const season = result.season;
-                await Sap.find({'tree' : id, 'season': season})
+                const currentSeason = result.season;
+                await Sap.find({'tree' : id})
                     .then(sapList =>{
                         let entryLink = 'trees/' + id + 'registerHarvest';
-                        res.render('tree',{link:'http://localhost:3000/users/' + req.user._id,entryLink: entryLink, treeID: req.params.id, saps: sapList});
+                        res.render('tree',{link:'http://localhost:3000/users/' + req.user._id,
+                            entryLink: entryLink,
+                            treeID: req.params.id,
+                            saps: sapList,
+                            currentSeason: currentSeason
+                        });
                     });
             }else{
                 res.status(401).send('Not authorized to access this resource.') ;
@@ -162,7 +167,8 @@ router.get('/trees/:id',isAuth, async (req,res) => {
 });
 
 router.get("/logs", isAuth, (req, res) =>{
-   res.render("logs");
+
+   res.render("logs",{user:req.user._id});
 });
 
 module.exports= router;
