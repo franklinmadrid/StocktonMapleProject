@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%=user%>'s Syrup Entries</title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ff8c00;">
+        <b class="navbar-brand"><%=user%>'s Syrup Entries</b>
+        <div id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%= link %>">Back to profile</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid" style="margin-top: 30px">
+        <table id="syrupData" class="display center">
+            <thead>
+                <tr>
+                    <th>Amount of Syrup Produced (Gallons)</th>
+                    <th>Amount of Sap Processed (Gallons)</th>
+                    <th>Amount of Sap Lost During Processing (Gallons)</th>
+                    <th>Processing Date</th>
+                    <th>Amount of Time to Process (Hours:Minutes)</th>
+                    <th>Type of Fuel Used</th>
+                </tr>
+            </thead>
+            <tbody style="text-align:center">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let syrupData = JSON.parse('<%-JSON.stringify(syrupData)%>');
+        syrupData.forEach(e => {
+            $('#syrupData > tbody').append("<tr></tr>");
+            $("#syrupData > tbody > :last").append("<td>" + e.syrupProduced + "</td>");
+            $("#syrupData > tbody > :last").append("<td>" + e.sapProcessed + "</td>");
+            $("#syrupData > tbody > :last").append("<td>" + e.sapLost + "</td>");
+            $("#syrupData > tbody > :last").append("<td>" + e.processingDate.substring(0, 10) + "</td>");
+            $("#syrupData > tbody > :last").append("<td>" + e.hours + ":" + e.minutes + "</td>");
+            $("#syrupData > tbody > :last").append("<td>" + e.fuelType + "</td>");
+        });
+    </script>
+
+    <script type="text/javascript" class="init">
+        $(document).ready(function() {
+            $('#syrupData').DataTable( {
+                autoWidth: false,
+                lengthChange: false,
+                ordering: false,
+                pageLength: 10,
+                columnDefs: [
+                    {className: "dt-head-center", targets: "_all"}
+                ]
+            } );
+        } );
+    </script>
+</body>
+</head>
+</html>

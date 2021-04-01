@@ -138,6 +138,18 @@ router.get('/registerSyrup', isAuth,(req,res) => {
     res.render('registerSyrup');
 });
 
+router.get('/users/:id/syrup', isAuth, async (req,res) => {
+    const id = req.params.id;
+    await Syrup.find({user: id})
+        .then(result => {
+            res.render('syrup', {
+                link: 'http://localhost:3000/users/' + id,
+                user: id,
+                syrupData: result
+            });
+        })
+});
+
 router.get('/trees/:id',isAuth, async (req,res) => {
     const id = req.params.id;
     await Tree.findById(id)
