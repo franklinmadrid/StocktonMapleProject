@@ -166,9 +166,4 @@ router.get('/trees/:id',isAuth, async (req,res) => {
         });
 });
 
-router.get("/logs", isAuth, (req, res) =>{
-
-   res.render("logs",{user:req.user._id});
-});
-
 module.exports= router;
