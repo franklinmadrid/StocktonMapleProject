@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>End of Season</title>
+    <link rel="stylesheet" href="/bootstrap.min.css" >
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ff8c00;">
+        <b class="navbar-brand">Register a Tree</b>
+        <div id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%= link %>">Back to Tree</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid" style="margin-top: 10px">
+        <form action="/trees/:id/endTreeSeason" method="POST" role="form" id="endSeasonForm">
+            <div class="row" style="margin-left: 1px">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="_id" name="_id" value="<%= treeID %>" hidden>
+                </div>
+            </div>
+            <div class="row" style="margin-left: 1px">
+                <div class="form-group">
+                    <label>Date of Season's Last Sap Flow </label>
+                    <input type="date" class="form-control" id="lastFlowDate" name="lastFlowDate" required>
+                </div>
+            </div>
+            <div class="row" style="margin-left: 1px">
+                <div class="form-group">
+                    <label>Notes</label><br>
+                    <textarea class="text" cols="70" rows ="10" form="endSeasonForm" id="endNotes" name="endNotes" ></textarea>
+                </div>
+            </div>
+            <div class="row" style="margin-left: 1px">
+                <div class="form-group">
+                    <button type="submit" class="form-control btn btn-primary" style="background-color: #ff8c00">End Season</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

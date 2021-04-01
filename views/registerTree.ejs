@@ -17,7 +17,7 @@
         </div>
     </nav>
 <div class="container-fluid" style="margin-top: 10px">
-    <form action="/users/registerTree" method="POST" role="form">
+    <form action="/users/registerTree" method="POST" role="form" id="registerForm">
         <div class="row" style="margin-left: 1px">
             <div class="form-group">
                 <label>Tree ID</label>
@@ -27,13 +27,13 @@
         <div class="row" style="margin-left: 1px">
             <div class="form-group">
                 <label>Tree Circumference (Inches)</label>
-                <input type="text" class="form-control" id="circumf" name="circumf" required>
+                <input type="number" class="form-control" id="circumf" name="circumf" required>
             </div>
         </div>
         <div class="row" style="margin-left: 1px">
             <div class="form-group">
                 <label>Stem Count</label>
-                <input type="text" class="form-control" id="stemCount" name="stemCount" required>
+                <input type="number" class="form-control" id="stemCount" name="stemCount" required>
             </div>
         </div>
         <div class="row" style="margin-left: 1px">
@@ -45,7 +45,7 @@
         <div class="row" style="margin-left: 1px">
             <div class="form-group">
                 <label>Height of Tree Tapping (Inches)</label>
-                <input type="text" class="form-control" id="tapHeight" name="tapHeight" required>
+                <input type="number" class="form-control" id="tapHeight" name="tapHeight" required>
             </div>
         </div>
         <div class="row" style="margin-left: 1px">
@@ -60,6 +60,17 @@
                 <label>Longitude</label>
                 <input type="text" class="form-control" id="longitude" name="longitude" placeholder="Accept geolocation to auto-fill" required>
                 <div style="float: top; font-size: small; color: gray">Round to nearest 4th decimal</div>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <label>Notes</label><br>
+                <textarea class="text" cols="70" rows ="10" form="registerForm" id="startNotes" name="startNotes" ></textarea>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 1px">
+            <div class="form-group">
+                <input type="number" class="form-control" id="season" name="season" value="1" hidden>
             </div>
         </div>
         <div class="row" style="margin-left: 1px">

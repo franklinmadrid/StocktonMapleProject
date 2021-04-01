@@ -18,6 +18,10 @@ const sapSchema = new Schema({
         type: Number,
         required: true
     },
+    season: {
+        type: Number,
+        required: true
+    }
 },{timestamps: true});
 
 const Sap = mongoose.model('Sap', sapSchema);

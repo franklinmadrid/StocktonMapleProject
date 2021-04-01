@@ -34,15 +34,26 @@ router.post('/users/registerTree',isAuth, async (req, res) => {
 
 router.post('/users/registerHarvest',isAuth, async (req, res) => {
     console.log(req.body);
-    const sap = new Sap(req.body);
-    sap.save()
-        .then(() => {
-            res.redirect("/trees/" + sap.tree);
+    const treeID = req.body.tree;
+    await Tree.findById(treeID)
+        .then(result =>{
+            const season = result.season;
+            let sap = new Sap(req.body);
+            sap.season = season;
+            sap.save()
+                .then(() => {
+                    res.redirect("/trees/" + sap.tree);
+                })
+                .catch((err) => console.log(err));
         })
-        .catch((err) => console.log(err));
+        .catch(err =>{
+            console.log(err);
+        });
+
+
 });
 
-router.post('/registerSyrup',isAuth, ((req, res) => {
+router.post('/registerSyrup',isAuth, (req, res) => {
     console.log(req.body);
     req.body.user = req.user._id;
     console.log(req.body);
@@ -55,7 +66,14 @@ router.post('/registerSyrup',isAuth, ((req, res) => {
         .catch(err =>{
             console.log(err);
         });
-}));
+});
+
+router.post('/trees/:id/endTreeSeason',isAuth, async (req, res) => {
+    const id = req.body._id;
+    console.log(id);
+    await Tree.updateOne({_id:id}, {$inc: { season: 1}, lastFlowDate: req.body.lastFlowDate, endNotes: req.body.endNotes});
+    res.redirect('http://localhost:3000/trees/' + id);
+});
 
 //-----------------------get routes--------------------------//
 router.get('/logout',(req, res) => {
@@ -71,7 +89,7 @@ router.get('/users/:id', async (req,res) =>{
     const id = req.params.id;
     await User.findById(id)
         .then(result => {
-            if(result == null){
+            if(!result){
                 res.status(404).send('404 error') ;
             }
             Tree.find({"user":id})
@@ -104,6 +122,18 @@ router.get('/trees/:id/registerHarvest',isAuth, async (req,res) => {
         .catch(err =>{console.log(err)});
 });
 
+router.get('/trees/:id/endTreeSeason', isAuth, async (req,res) => {
+    const id = req.params.id;
+    await Tree.findById(id)
+        .then(result => {
+            res.render('endTreeSeason', {
+                link: 'http://localhost:3000/trees/' + id,
+                treeID: req.params.id,
+                });
+        })
+        .catch(err =>{console.log(err)});
+});
+
 router.get('/registerSyrup', isAuth,(req,res) => {
     res.render('registerSyrup');
 });
@@ -115,9 +145,9 @@ router.get('/trees/:id',isAuth, async (req,res) => {
             if(result == null){
                 res.status(404).send('404 error') ;
             }
-            console.log(result.user,req.user._id)
             if (result.user == req.user._id){
-                await Sap.find({'tree' : id})
+                const season = result.season;
+                await Sap.find({'tree' : id, 'season': season})
                     .then(sapList =>{
                         let entryLink = 'trees/' + id + 'registerHarvest';
                         res.render('tree',{link:'http://localhost:3000/users/' + req.user._id,entryLink: entryLink, treeID: req.params.id, saps: sapList});
@@ -129,6 +159,10 @@ router.get('/trees/:id',isAuth, async (req,res) => {
         .catch(err => {
             console.log(err);
         });
+});
+
+router.get("/logs", isAuth, (req, res) =>{
+   res.render("logs");
 });
 
 module.exports= router;

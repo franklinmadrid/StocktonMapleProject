@@ -22,6 +22,10 @@ const treeSchema = new Schema({
         type: Date, // ?
         required: true
     },
+    lastFlowDate: {
+        type: Date, // ?
+        required: false
+    },
     tapHeight: {
         type: Number,
         required: true
@@ -34,14 +38,22 @@ const treeSchema = new Schema({
         type: Number,
         required: true
     },
+    season: {
+        type: Number,
+        required: true
+    },
+    startNotes:{
+        type: String,
+        required: false
+    },
+    endNotes:{
+        type: String,
+        required: false
+    },
     // firstflowDate: {
     //     type: Date,
     //     required: true
     // },
-    // lastflowDate: {
-    //     type: Date,
-    //     required: true
-    // }
     },{timestamps: true});
 
 const Tree = mongoose.model('Tree', treeSchema);
