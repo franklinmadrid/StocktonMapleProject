@@ -154,7 +154,8 @@ router.get('/trees/:id',isAuth, async (req,res) => {
                             entryLink: entryLink,
                             treeID: req.params.id,
                             saps: sapList,
-                            currentSeason: currentSeason
+                            currentSeason: currentSeason,
+                            tree: result
                         });
                     });
             }else{
