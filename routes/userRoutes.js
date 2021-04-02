@@ -151,7 +151,9 @@ router.get('/users/:id/syrup', isAuth, async (req,res) => {
 });
 
 router.get('/forumHome', isAuth, (req, res) => {
-    res.render('forumHome');
+    res.render('forumHome', {
+        link: 'http://localhost:3000/'
+    });
 });
 
 router.get('/trees/:id',isAuth, async (req,res) => {
