@@ -135,7 +135,9 @@ router.get('/trees/:id/endTreeSeason', isAuth, async (req,res) => {
 });
 
 router.get('/registerSyrup', isAuth,(req,res) => {
-    res.render('registerSyrup');
+    res.render('registerSyrup',{
+            profileLink: 'http://localhost:3000/users/' + req.user._id
+    });
 });
 
 router.get('/users/:id/syrup', isAuth, async (req,res) => {
