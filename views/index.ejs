@@ -26,7 +26,11 @@
           <nav class="nav nav-masthead justify-content-center">
             <a class="nav-link active" href="/home">Home</a>
             <a class="nav-link" href="/forumHome">Forum</a>
-            <a class="nav-link" href="/login">Login</a>
+            <%if(loggedIn){ %>
+              <a class="nav-link" href="/logout">Logout</a>
+            <%}else{%>
+             <a class="nav-link" href="/login">Login</a>
+            <%}%>
           </nav>
         </div>
       </header>

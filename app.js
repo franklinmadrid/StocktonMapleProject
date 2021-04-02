@@ -66,7 +66,9 @@ app.use(userRoutes);
 app.use(registerRoutes);
 
 app.get('/', (req, res) => {
-    res.render('index',{message: req.flash("error")});
+    let loggedIn = req.isAuthenticated();
+    console.log(loggedIn);
+    res.render('index',{message: req.flash("error"), loggedIn: loggedIn});
 });
 
 app.use((req, res) => {
