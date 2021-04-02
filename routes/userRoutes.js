@@ -150,6 +150,10 @@ router.get('/users/:id/syrup', isAuth, async (req,res) => {
         })
 });
 
+router.get('/forumHome', isAuth, (req, res) => {
+    res.render('forumHome');
+});
+
 router.get('/trees/:id',isAuth, async (req,res) => {
     const id = req.params.id;
     await Tree.findById(id)
