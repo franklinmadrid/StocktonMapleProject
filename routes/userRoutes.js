@@ -37,6 +37,7 @@ router.post('/users/registerHarvest',isAuth, async (req, res) => {
     const treeID = req.body.tree;
     await Tree.findById(treeID)
         .then(result =>{
+            console.log(result);
             const season = result.season;
             let sap = new Sap(req.body);
             sap.season = season;

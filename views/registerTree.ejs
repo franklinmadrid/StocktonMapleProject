@@ -20,8 +20,8 @@
     <form action="/users/registerTree" method="POST" role="form" id="registerForm">
         <div class="row" style="margin-left: 1px">
             <div class="form-group">
-                <label>Tree ID</label>
-                <input type="text" class="form-control" id="_id" name="_id" required>
+                <label>Tree ID</label><div style="float: top; font-size: small; color: gray">(No spaces, use underscores or dashes)</div>
+                <input type="text" class="form-control" id="_id" name="_id" required onkeypress="return event.charCode != 32">
             </div>
         </div>
         <div class="row" style="margin-left: 1px">
