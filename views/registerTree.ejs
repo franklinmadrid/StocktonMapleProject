@@ -1,103 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+
+  <head>
     <meta charset="UTF-8">
-    <title>Register a Tree</title>
-    <link rel="stylesheet" href="/bootstrap.min.css" >
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Title Page-->
+        <title>Register a Tree</title>
+
+        <!-- Main CSS-->
+        <link href="/register.css" rel="stylesheet" media="all">
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ff8c00;">
-        <b class="navbar-brand">Register a Tree</b>
-        <div id="navbarText">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%= link %>">Back to profile</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-<div class="container-fluid" style="margin-top: 10px">
-    <form action="/users/registerTree" method="POST" role="form" id="registerForm">
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Tree ID</label><div style="float: top; font-size: small; color: gray">(No spaces, use underscores or dashes)</div>
-                <input type="text" class="form-control" id="_id" name="_id" required onkeypress="return event.charCode != 32">
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Tree Circumference (Inches)</label>
-                <input type="number" class="form-control" id="circumf" name="circumf" required>
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Stem Count</label>
-                <input type="number" class="form-control" id="stemCount" name="stemCount" required>
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Date of Tree Tapping</label>
-                <input type="date" class="form-control" id="tappingDate" name="tappingDate" required>
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Height of Tree Tapping (Inches)</label>
-                <input type="number" class="form-control" id="tapHeight" name="tapHeight" required>
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Latitude</label>
-                <input type="text" class="form-control" id="latitude" name="latitude" placeholder="Accept geolocation to auto-fill" required>
-                <div style="float: top; font-size: small; color: gray">Round to nearest 4th decimal</div>
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Longitude</label>
-                <input type="text" class="form-control" id="longitude" name="longitude" placeholder="Accept geolocation to auto-fill" required>
-                <div style="float: top; font-size: small; color: gray">Round to nearest 4th decimal</div>
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Notes</label><br>
-                <textarea class="text" cols="70" rows ="10" form="registerForm" id="startNotes" name="startNotes" ></textarea>
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <input type="number" class="form-control" id="season" name="season" value="1" hidden>
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <button type="submit" class="form-control btn btn-primary" style="background-color: #ff8c00">Register</button>
-            </div>
-        </div>
-    </form>
-</div>
-<!-- Gets Geolocation with user permission -->
-<script>
-    function success(pos) {
-        pos.coords;
-        document.getElementById('latitude').value = pos.coords.latitude.toFixed(4);
-        pos.coords.latitude;
-        document.getElementById('longitude').value = pos.coords.longitude.toFixed(4);
-    }
 
-    function error(err) {
-        console.warn(`ERROR(${err.code}): ${err.message}`);
-    }
+  <body>
+    <!--Form-->
+    <div class="page-wrapper bg-gra p-t-130 p-b-100">
+      <div class="wrapper wrapper--w680">
+        <div class="card card-4">
+          <div class="card-body">
+            <!--Title of Form-->
+            <h2 class="title">Tree Registration</h2>
+            <form action="/users/registerTree" method="POST" role="form" id="registerForm">
 
-    navigator.geolocation.getCurrentPosition(success, error, {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0
-    });
-</script>
-</body>
+              <!-- First row -->
+              <div class="row row-space">
+                <div class="col-2">
+                  <div class="form-group">
+                    <div style="float: top; font-size: small; color: gray">
+                      (No spaces, use underscores or dashes)
+                    </div>
+                    <label>Tree ID</label>
+                    <input type="text" class="input--style-4" id="_id" name="_id" required="" onkeypress="return event.charCode != 32">
+								</div>
+                </div>
+                <div class="col-2">
+                  <div class="form-group">
+                    <div>
+                      <!-- Used for spacing purposes -->
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      &nbsp;
+                    </div>
+                    <label>Tree Circumference (Inches)</label>
+                    <input type="number" class="input--style-4" id="circumf" name="circumf" required="">
+								</div>
+                </div>
+              </div>
+
+              <!--Second Row-->
+              <div class="row row-space">
+                <div class="col-2">
+                  <div class="form-group">
+                    <label>Stem Count</label>
+                    <input type="number" class="input--style-4" id="stemCount" name="stemCount" required="">
+								</div>
+                </div>
+                <div class="col-2">
+                  <div class="form-group">
+                    <label>Date of Tree Tapping</label>
+                    <input type="date" class="input--style-4" id="tappingDate" name="tappingDate" required="">
+								</div>
+                </div>
+              </div>
+
+              <!--Tap Height Row-->
+              <div class="row row-space">
+                <div class="col-2">
+                  <div class="form-group">
+                    <label>Height of Tree Tapping (Inches)</label>
+                    <input type="number" class="input--style-4" id="tapHeight" name="tapHeight" required="">
+								</div>
+                </div>
+              </div>
+
+              <!--Location row-->
+              <div class="row row-space">
+                <div class="col-2">
+                  <div class="form-group">
+                    <label>Latitude</label>
+                    <input type="text" class="input--style-4" id="latitude" name="latitude" placeholder="Accept geolocation to auto-fill" required="">
+                      <div style="float: top; font-size: small; color: gray">Round to nearest 4th decimal</div>
+                    </div>
+                </div>
+                <div class="col-2">
+                  <div class="form-group">
+                    <label>Longitude</label>
+                    <input type="text" class="input--style-4" id="longitude" name="longitude" placeholder="Accept geolocation to auto-fill" required="">
+                      <div style="float: top; font-size: small; color: gray">Round to nearest 4th decimal</div>
+                    </div>
+                </div>
+              </div>
+
+              <!--Notes Row-->
+              <div class="row" style="margin-left: 1px">
+                <div class="form-group">
+                  <label>Notes</label>
+                  <br>
+                    <textarea class="text" cols="70" rows ="10" form="registerForm" id="startNotes" name="startNotes" ></textarea>
+                  </div>
+              </div>
+              <div >
+                <div class="form-group">
+                  <input type="number" class="form-control" id="season" name="season" value="1" hidden="">
+							</div>
+              </div>
+
+              <!--Button Row-->
+              <div class="row row-space">
+                <div class="col-2">
+                  <div class="form-group">
+                    <button type="submit" class="btn btn--radius btn--orange">Register</button>
+                  </div>
+                </div>
+                <div class="col-2">
+                  <div class="form-group">
+                    <a href="<%= link %>" class="btn btn--radius btn--orange">Back
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Gets Geolocation with user permission -->
+    <script>
+      function success(pos) {
+      pos.coords;
+      document.getElementById('latitude').value = pos.coords.latitude.toFixed(4);
+      pos.coords.latitude;
+      document.getElementById('longitude').value = pos.coords.longitude.toFixed(4);
+      }
+
+      function error(err) {
+      console.warn(`ERROR(${err.code}): ${err.message}`);
+      }
+
+      navigator.geolocation.getCurrentPosition(success, error, {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0
+      });
+    </script>
+  </body>
 </html>
