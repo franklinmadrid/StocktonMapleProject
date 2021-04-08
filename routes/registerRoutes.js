@@ -44,7 +44,6 @@ router.post('/register', urlencodedParser, [
     }
     else {
         try{
-            console.log('inside try');
             const hashedPassword = await bcrypt.hash(req.body.password, 10);
             req.body.password = hashedPassword;
             req.body.admin = false;
