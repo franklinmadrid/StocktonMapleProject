@@ -4,24 +4,59 @@ const User = require("../models/user");
 const Tree = require("../models/tree");
 const router = express.Router();
 const passport = require('passport');
+const bodyParser = require('body-parser');
+const {check, validationResult} = require('express-validator');
+
+const urlencodedParser = bodyParser.urlencoded({extended:false});
 
 //-----------Post Routes---------------------//
 
 //saves new user to db
-router.post('/register',async (req,res) =>{
-    try{
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        req.body.password = hashedPassword;
-        req.body.admin = false;
-        req.body.moderator = false;
-        const user = new User(req.body);
-        user.save()
-            .then((result) => {
-                res.redirect("/");
-            })
-            .catch((err) => console.log(err));
-    } catch{
-        res.status(500);
+router.post('/register', urlencodedParser, [
+    check('_id', 'The username must be 4+ characters long')
+        .exists()
+        .isLength({min:4}),
+    check('email', 'Email is not valid')
+        .isEmail()
+        .normalizeEmail()
+], async (req,res) =>{
+    const errors = validationResult(req);
+    let alert = errors.array();
+    await User.find({email: req.body.email})
+        .then(result => {
+            if(result.length > 0){
+                alert.push({msg: 'This email is already in use'});
+            }
+        });
+    await User.find({_id: req.body._id})
+        .then(result => {
+            if(result.length > 0){
+                alert.push({msg: 'This username is already in use'});
+            }
+        });
+    if(req.body.password !== req.body.password1) {
+        alert.push({msg: 'Passwords do not match'});
+    }
+    if(alert.length > 0) {
+        res.render('register', {
+            alert
+        })
+    }
+    else {
+        try{
+            const hashedPassword = await bcrypt.hash(req.body.password, 10);
+            req.body.password = hashedPassword;
+            req.body.admin = false;
+            req.body.moderator = false;
+            const user = new User(req.body);
+            user.save()
+                .then((result) => {
+                    res.redirect("/");
+                })
+                .catch((err) => console.log(err));
+        } catch{
+            res.status(500);
+        }
     }
 });
 

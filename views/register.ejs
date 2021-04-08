@@ -24,6 +24,14 @@
     <div class="main">
         <div class="wrapper">
             <h3>Register</h3><br>
+            <% if(typeof alert != 'undefined') { %>
+                <% alert.forEach(function(error) { %>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert" style='width: 750px; margin-left:auto; margin-right:auto'>
+                        <%= error.msg %>
+                      </div>
+                <% }) %>
+                <% alert = [] %>
+            <% } %>
             <form class="form-signin col-lg-6 offset-lg-3" action="/register" method="POST">
                 <div class="row justify-content-center">
                     <div class="form-group">
@@ -41,6 +49,12 @@
                     <div class="form-group">
                         <label for="password" class="sr-only">Password</label>
                         <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="form-group">
+                        <label for="password1" class="sr-only">Confirm Password</label>
+                        <input type="password" id="password1" name="password1" class="form-control" placeholder="Confirm Password" required>
                     </div>
                 </div>
                 <div class="row justify-content-center">
