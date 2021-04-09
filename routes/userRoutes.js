@@ -77,6 +77,72 @@ router.post('/trees/:id/endTreeSeason',isAuth, async (req, res) => {
     res.redirect('http://localhost:3000/trees/' + id);
 });
 
+router.post("/admin/makeAdmin", async (req,res) =>{
+    let alert=[];
+   const username = req.body.username;
+   User.findById(username)
+       .then(result =>{
+           if(!result){
+               alert.push({msg:"Username not Found"})
+               res.render("admin",{user:req.user._id, alert})
+           }else{
+               result.admin = true;
+               result.save();
+               res.render("admin",{user:req.user._id, alert})
+           }
+       })
+});
+
+router.post("/admin/makeMod", async (req,res) =>{
+    let alert=[];
+    const username = req.body.username;
+    User.findById(username)
+        .then(result =>{
+            if(!result){
+                alert.push({msg:"Username not Found"})
+                res.render("admin",{user:req.user._id, alert})
+            }else{
+                result.moderator = true;
+                result.save();
+                res.render("admin",{user:req.user._id, alert})
+            }
+        })
+});
+
+router.post("/admin/removeMod", async (req,res) =>{
+    let alert=[];
+    const username = req.body.username;
+    User.findById(username)
+        .then(result =>{
+            console.log(result);
+            if(!result){
+                alert.push({msg:"Username not Found"})
+                res.render("admin",{user:req.user._id, alert})
+            }else{
+                result.moderator = false;
+                result.save();
+                res.render("admin",{user:req.user._id, alert})
+            }
+        })
+});
+
+router.post("/admin/removeAdmin", async (req,res) =>{
+    console.log(req.body);
+    let alert=[];
+    const username = req.body.username;
+    User.findById(username)
+        .then(result =>{
+            console.log(result);
+            if(!result){
+                alert.push({msg:"Username not Found"})
+                res.render("admin",{user:req.user._id, alert})
+            }else{
+                result.admin = false;
+                result.save();
+                res.render("admin",{user:req.user._id, alert})
+            }
+        })
+});
 //-----------------------get routes--------------------------//
 router.get('/logout',(req, res) => {
     req.logout();
@@ -112,7 +178,7 @@ router.get('/registerTree',isAuth, (req,res) => {
 });
 
 router.get('/admin',isAdmin, (req,res) => {
-    res.render('admin',{user: req.user._id });
+    res.render('admin',{user: req.user._id});
 });
 
 router.get('/admin/download', isAdmin, async (req,res) =>{
