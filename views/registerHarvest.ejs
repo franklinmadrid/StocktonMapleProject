@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Register a Sap Harvest</title>
-    <link rel="stylesheet" href="/bootstrap.min.css" >
+    <link href="/register.css" rel="stylesheet" media="all">
     <script
             src="https://code.jquery.com/jquery-3.6.0.min.js"
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
@@ -11,12 +11,77 @@
     </script>
 </head>
 <body>
+
+    <div class="page-wrapper bg-gra p-t-130 p-b-100">
+      <div class="wrapper wrapper--w680">
+        <div class="card card-4">
+          <div class="card-body">
+            <!--Title of Form-->
+            <input type="text" id="tree" name="tree" value=<%=treeID%> hidden>
+            <h2 class="title">Register Harvest</h2>
+            <form action="/users/registerHarvest" method="POST" role="form" id="registerForm">
+              <!-- First row -->
+              <div class="row row-space">
+                <div class="col-2">
+                  <div class="form-group">
+                      <div style="float: top; font-size: small; color: gray">
+                        (Please record all volumes in gallons)
+                      </div>
+                    <label>Sap Volume</label>
+                    <input type="text" class="input--style-4" id="sapVolume" name="sapVolume" required="" onkeypress="return event.charCode != 32">
+			      </div>
+                </div>
+                <div class="col-2">
+                  <div class="form-group">
+                  <div>
+                    <!-- Used for spacing purposes -->
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;
+                  </div>
+                    <label>Harvest Date</label>
+                    <input type="date" class="input--style-4" id="harvestDate" name="harvestDate" required="">
+                    </div>
+                </div>
+              </div>
+
+              <!--Time Processed Row-->
+              <div class="row row-space" style="margin-top: 10px">
+                <div class="col-2">
+                  <div class="form-group">
+                    <label>Temperature (Fahrenheit)</label>
+                    <input type="text" class="input--style-4" id="harvestTemp" name="harvestTemp" required="">
+				  </div>
+                </div>
+              </div>
+
+              <!--Button Row-->
+              <div class="row row-space" style="margin-top: 10px">
+                <div class="col-2">
+                  <div class="form-group">
+                    <button type="submit" class="btn btn--radius btn--orange">Register</button>
+                  </div>
+                </div>
+                <div class="col-2">
+                  <div class="form-group">
+                    <a href="<%= link %>" class="btn btn--radius btn--orange">Back
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!--
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ff8c00;">
         <b class="navbar-brand">Register Sap Harvest</b>
         <div id="navbarText">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%= link %>">Back to profile</a>
+                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="">Back to profile</a>
                 </li>
             </ul>
         </div>
@@ -47,21 +112,6 @@
                 <button type="submit" class="form-control btn btn-primary" style="background-color: #ff8c00">Register</button>
             </div>
         </div>
-    </form>
-</div>
-<!--
-<div style="margin-left: 10px">
-    <form action="/users/registerHarvest" method="POST">
-        <label>Sap Volume</label><br>
-        <input type="text" id="sapVolume" name="sapVolume" size="2" required> gal<br>
-        <label>Date of Sap Harvest</label><br>
-        <input type="date" id="harvestDate" name="harvestDate" required><br>
-        <label>Retrieve my Current Location and Temperature</label>
-        <input type="button" value="TempLocation">
-        <label>Temperature</label><br>
-        <input type="text" id="harvestTemp" name="harvestTemp" size="1"> F<br>
-        <div style="float: top; font-size: small; color: gray">Auto-fills to current Temperature</div>
-        <input type="submit" value="submit">
     </form>
 </div>
 -->

@@ -2,113 +2,116 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Register Syrup</title>
-    <link rel="stylesheet" href="/bootstrap.min.css" >
+    <link href="/register.css" rel="stylesheet" media="all">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ff8c00;">
-        <b class="navbar-brand">Register Syrup Processing</b>
 
-        <div id="navbarText">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%=profileLink%>">Back to profile</a>
-                </li>
-            </ul>
-        </div>
+    <div class="page-wrapper bg-gra p-t-130 p-b-100">
+      <div class="wrapper wrapper--w680">
+        <div class="card card-4">
+          <div class="card-body">
+            <!--Title of Form-->
+            <h2 class="title">Syrup Processing</h2>
+            <form action="/registerSyrup" method="POST" role="form" id="registerForm">
+              <!-- First row -->
+              <div class="row row-space">
+                <div class="col-2">
+                  <div class="form-group">
+                      <div style="float: top; font-size: small; color: gray">
+                        (Please record all volumes in gallons)
+                      </div>
+                    <label>Amount of Syrup Produced</label>
+                    <input type="text" class="input--style-4" id="syrupProduced" name="syrupProduced" required="" onkeypress="return event.charCode != 32">
+			      </div>
+                </div>
+                <div class="col-2">
+                  <div class="form-group">
+                    <div>
+                      <!-- Used for spacing purposes -->
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      &nbsp;
+                    </div>
+                    <label>Amount of Sap Processed</label>
+                    <input type="number" class="input--style-4" id="sapProcessed" name="sapProcessed" required="">
+					</div>
+                </div>
+              </div>
 
-    </nav>
-<div class="container-fluid" style="margin-top: 10px">
-    <form action="/registerSyrup" method="POST" role="form">
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Amount of Syrup Produced (Gallons)</label>
-                <input type="text" class="form-control" id="syrupProduced" name="syrupProduced">
-            </div>
+              <!--Second Row-->
+              <div class="row row-space" style="margin-top: 10px">
+                <div class="col-2">
+                  <div class="form-group">
+                    <label>Amount of Sap Lost During Processing</label>
+                    <input type="number" class="input--style-4" id="sapLost" name="sapLost" required="">
+					</div>
+                </div>
+                <div class="col-2">
+                  <div class="form-group">
+                    <label>Processing Date</label>
+                    <input type="date" class="input--style-4" id="processingDate" name="processingDate" required="">
+					</div>
+                </div>
+              </div>
+
+              <!--Time Processed Row-->
+              <div class="row row-space" style="margin-top: 10px">
+                <div class="col-2">
+                  <div class="form-group">
+                    <label>Amount of Time to Process:</label>
+				  </div>
+                </div>
+              </div>
+              <div class="row row-space" style="margin-top: 10px">
+                <div class="col-2">
+                  <div class="form-group">
+                    <label>Hours</label>
+                    <input type="number" class="input--style-4" id="hours" name="hours" required="">
+                  </div>
+                </div>
+                <div class="col-2">
+                  <div class="form-group">
+                    <label>Minutes</label>
+                    <input type="number" class="input--style-4" id="minutes" name="minutes" required="">
+                  </div>
+                </div>
+              </div>
+
+              <!--Fuel Type row-->
+              <div class="row row-space" style="margin-top: 10px">
+                <div class="col-2">
+                    <div class="form-group">
+                        <label>Type of Fuel Used</label>
+                        <select id="fuelType" name="fuelType" class="form-control">
+                            <option value="Propane" selected>Propane</option>
+                            <option value="Oil">Oil</option>
+                            <option value="Wood">Wood</option>
+                        </select>
+                    </div>
+                </div>
+              </div>
+            <input type="number" class="form-control" id="season" name="season" value="1" hidden="">
+
+              <!--Button Row-->
+              <div class="row row-space" style="margin-top: 10px">
+                <div class="col-2">
+                  <div class="form-group">
+                    <button type="submit" class="btn btn--radius btn--orange">Register</button>
+                  </div>
+                </div>
+                <div class="col-2">
+                  <div class="form-group">
+                    <a href="<%= profileLink %>" class="btn btn--radius btn--orange">Back
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Amount of Sap Processed (Gallons)</label>
-                <input type="text" class="form-control" id="sapProcessed" name="sapProcessed">
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Amount of Sap Lost During Processing (Gallons)</label>
-                <input type="text" class="form-control" id="sapLost" name="sapLost">
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Processing Date</label>
-                <input type="date" class="form-control" id="processingDate" name="processingDate">
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <label>Amount of Time to Process</label>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Hours:</label>
-                <input type="text" class="form-control" id="hours" name="hours">
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Minutes:</label>
-                <input type="text" class="form-control" id="minutes" name="minutes">
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Type of Fuel Used</label>
-                <select id="fuelType" name="fuelType" class="form-control">
-                    <option value="Propane" selected>Propane</option>
-                    <option value="Oil">Oil</option>
-                    <option value="Wood">Wood</option>
-                </select>
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <button type="submit" class="form-control btn btn-primary" style="background-color: #ff8c00">Register</button>
-            </div>
-        </div>
-    </form>
-</div>
-<!--
-<div style="margin-left: 10px">
-    <h3>Register Syrup Processing</h3><br>
-    <form action="/registerSyrup" method="POST">
-        <label>Amount of Syrup Produced</label><br>
-        <input type="text" id="syrupProduced" name="syrupProduced"><br>
-        <label>Amount of Sap Processed</label><br>
-        <input type="text" id="sapProcessed" name="sapProcessed"><br>
-        <label>Amount of Sap Lost During Processing</label><br>
-        <input type="text" id="sapLost" name="sapLost"><br>
-        <label>Processing Date</label><br>
-        <input type="date" id="processingDate" name="processingDate"><br>
-        <label>Amount of Time to Process</label><br>
-        <label>Hours:</label>
-        <input type="text" size=1px id="hours" name="hours">
-        <label>Minutes:</label>
-        <input type="text" size=1px id="minutes" name="minutes"></br>
-        <label>Type of Fuel Used</label><br>
-        <input type="text" name="fuelType" list="fuelType">
-        <datalist id="fuelType">
-            <option value="Propane"></option>
-            <option value="Oil"></option>
-            <option value="Wood"></option>
-        </datalist><br>
-        <select id="fuelType">
-            <option value="Propane">Propane</option>
-            <option value="Oil">Oil</option>
-            <option value="Wood">Wood</option>
-            <option value="Other">Other</option>
-        </select>
-        <input type="submit" value="Register">
-    </form>
-</div>
--->
+      </div>
+    </div>
 </body>
 </html>
