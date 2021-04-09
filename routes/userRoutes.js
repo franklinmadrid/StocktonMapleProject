@@ -188,9 +188,9 @@ router.get('/admin/download', isAdmin, async (req,res) =>{
     let syrups = workbook.addWorksheet('Syrups');
     //  WorkSheet Header
     trees.columns = [
-        { header: 'Name', key: '_id', width: 10 },
+        { header: 'User', key: 'user', width: 10 },
+        { header: 'Tree ID', key: '_id', width: 10 },
         { header: 'Circumf', key: 'circumf', width: 10 },
-        { header: 'Stem Count', key: 'stemCount', width: 10},
         { header: 'Tapping Date', key: 'tappingDate', width: 10},
         { header: 'Tap Height', key: 'tapHeight', width: 10 },
         { header: 'Latitude', key: 'latitude', width: 10 },
