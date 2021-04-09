@@ -277,7 +277,7 @@ router.get('/users/:id/syrup', isAuth, async (req,res) => {
         })
 });
 
-router.get('/forumHome', isAuth, (req, res) => {
+router.get('/forumHome', (req, res) => {
     res.render('forumHome', {
         link: 'http://localhost:3000/',
         profileLink: 'http://localhost:3000/users/' + req.user._id
