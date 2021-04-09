@@ -7,6 +7,7 @@ const Syrup = require("../models/syrup");
 const router = express.Router();
 const passport = require('passport');
 const {isAuth, isAdmin} = require('./authMiddleware');
+const excel = require('exceljs');
 
 // /user/* routes and user-related routes such as /login, /logout
 
@@ -108,6 +109,63 @@ router.get('/users/:id', async (req,res) =>{
 
 router.get('/registerTree',isAuth, (req,res) => {
     res.render('registerTree',{link:'users/' + req.user._id});
+});
+
+router.get('/admin',isAdmin, (req,res) => {
+    res.render('admin',{user: req.user._id });
+});
+
+router.get('/admin/download', isAdmin, async (req,res) =>{
+    let workbook = new excel.Workbook(); //creating workbook
+    let trees = workbook.addWorksheet('Trees'); //creating worksheet
+    let saps = workbook.addWorksheet('Saps');
+    let syrups = workbook.addWorksheet('Syrups');
+    //  WorkSheet Header
+    trees.columns = [
+        { header: 'Name', key: '_id', width: 10 },
+        { header: 'Circumf', key: 'circumf', width: 10 },
+        { header: 'Stem Count', key: 'stemCount', width: 10},
+        { header: 'Tapping Date', key: 'tappingDate', width: 10},
+        { header: 'Tap Height', key: 'tapHeight', width: 10 },
+        { header: 'Latitude', key: 'latitude', width: 10 },
+        { header: 'Longitude', key: 'longitude', width: 10},
+        { header: 'Start of Season Notes', key: 'startNotes', width: 30},
+        { header: 'End of Season Notes', key: 'endNotes', width: 30}
+
+    ];
+    saps.columns = [
+        { header: 'Tree', key: 'tree', width: 10 },
+        { header: 'Volume', key: 'sapVolume', width: 10 },
+        { header: 'Harvest Date', key: 'harvestDate', width: 10},
+        { header: 'Harvest Temp', key: 'harvestTemp', width: 10},
+    ];
+    syrups.columns = [
+        { header: 'Syrup produced', key: 'syrupProduced', width: 10 },
+        { header: 'Sap Processed', key: 'sapProcessed', width: 10 },
+        { header: 'Sap Lost', key: 'sapLost', width: 10},
+        { header: 'Processing Date', key: 'processingDate', width: 15},
+        { header: 'Hours', key: 'hours', width: 10},
+        { header: 'Minutes', key: 'minutes', width: 10},
+        { header: 'Fuel Type', key: 'fuelType', width: 15}
+    ]
+    await Tree.find({})
+        .then(result =>{
+            trees.addRows(result);
+        });
+    await Sap.find({})
+        .then(result =>{
+            saps.addRows(result);
+        });
+    await Syrup.find({})
+        .then(result =>{
+            syrups.addRows(result);
+        });
+    workbook.xlsx.writeFile("./Data/Data.xlsx")
+        .then(function() {
+            console.log("file saved!");
+            res.download("./Data/Data.xlsx");
+        });
+
 });
 
 

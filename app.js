@@ -15,10 +15,9 @@ const flash = require('connect-flash');
 //connect to local database & listen to requests on port 3000
 let uri = "mongodb://localhost:27017/Maple";
 mongoose.connect(uri,{useNewUrlParser:true, useUnifiedTopology:true})
-    .then((result) =>app.listen(3000))
+    .then((result) =>  app.listen(3000))
     .catch((error) => console.log(error));
 console.log("DB:" + uri);
-
 
 //register view engine
 app.set('view engine', 'ejs');

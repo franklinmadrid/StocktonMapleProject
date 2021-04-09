@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Page</title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ff8c00;">
+        <b class="navbar-brand"><%=user%>'s Profile</b>
+        <div id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <%let link = "/users/" + user%>
+                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%= link %>">Back to profile</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="row justify-content-center">
+        <div class="form-group">
+            <form action="admin/download" method="get">
+                <span>Download database as excel</span>
+                <button class="btn btn-primary btn-block" type="submit" value="Download" style="background-color: #ff8c00">Download</button>
+            </form>
+        </div>
+    </div>
+</body>
+</head>
+</html>

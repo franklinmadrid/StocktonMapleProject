@@ -55,6 +55,11 @@
                 <li class="nav-item">
                     <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="/users/<%=user._id%>/syrup">View Syrup Data</a>
                 </li>
+                <%if(user.admin){%>
+                <li class="nav-item">
+                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="/admin">Admin</a>
+                </li>
+                <%}%>
                 <li class="nav-item">
                     <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="/logout">Logout</a>
                 </li>
