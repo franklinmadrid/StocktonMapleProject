@@ -30,6 +30,10 @@ const syrupSchema = new Schema({
         type: String,
         required: true
     },
+    units: {
+        type: String,
+        required: true
+    },
     // left req = false not sure if necessary
     fuelAmount: {
         type: Number,

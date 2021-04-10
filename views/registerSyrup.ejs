@@ -15,25 +15,28 @@
             <!--Title of Form-->
             <h2 class="title">Syrup Processing</h2>
             <form action="/registerSyrup" method="POST" role="form" id="registerForm">
+
+              <div class="row row-space" style="margin-bottom: 15px">
+                <div class="col-2">
+                    <div class="form-group">
+                        <label>Units:</label>
+                        <select id="units" name="units" class="form-control">
+                            <option value="oz" selected>Ounces</option>
+                            <option value="gal">Gallons</option>
+                        </select>
+                    </div>
+                </div>
+              </div>
               <!-- First row -->
               <div class="row row-space">
                 <div class="col-2">
                   <div class="form-group">
-                      <div style="float: top; font-size: small; color: gray">
-                        (Please record all volumes in gallons)
-                      </div>
                     <label>Amount of Syrup Produced</label>
                     <input type="text" class="input--style-4" id="syrupProduced" name="syrupProduced" required="" onkeypress="return event.charCode != 32">
 			      </div>
                 </div>
                 <div class="col-2">
                   <div class="form-group">
-                    <div>
-                      <!-- Used for spacing purposes -->
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      &nbsp;
-                    </div>
                     <label>Amount of Sap Processed</label>
                     <input type="number" class="input--style-4" id="sapProcessed" name="sapProcessed" required="">
 					</div>
@@ -59,9 +62,7 @@
               <!--Time Processed Row-->
               <div class="row row-space" style="margin-top: 10px">
                 <div class="col-2">
-                  <div class="form-group">
-                    <label>Amount of Time to Process:</label>
-				  </div>
+                  <label>Amount of Time to Process:</label>
                 </div>
               </div>
               <div class="row row-space" style="margin-top: 10px">

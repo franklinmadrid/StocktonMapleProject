@@ -32,9 +32,9 @@
         <table id="syrupData" class="display center">
             <thead>
                 <tr>
-                    <th>Amount of Syrup Produced (Gallons)</th>
-                    <th>Amount of Sap Processed (Gallons)</th>
-                    <th>Amount of Sap Lost During Processing (Gallons)</th>
+                    <th>Amount of Syrup Produced</th>
+                    <th>Amount of Sap Processed</th>
+                    <th>Amount of Sap Lost During Processing</th>
                     <th>Processing Date</th>
                     <th>Amount of Time to Process (Hours:Minutes)</th>
                     <th>Type of Fuel Used</th>
@@ -49,9 +49,9 @@
         let syrupData = JSON.parse('<%-JSON.stringify(syrupData)%>');
         syrupData.forEach(e => {
             $('#syrupData > tbody').append("<tr></tr>");
-            $("#syrupData > tbody > :last").append("<td>" + e.syrupProduced + "</td>");
-            $("#syrupData > tbody > :last").append("<td>" + e.sapProcessed + "</td>");
-            $("#syrupData > tbody > :last").append("<td>" + e.sapLost + "</td>");
+            $("#syrupData > tbody > :last").append("<td>" + e.syrupProduced + " " + e.units + "</td>");
+            $("#syrupData > tbody > :last").append("<td>" + e.sapProcessed + " " + e.units + "</td>");
+            $("#syrupData > tbody > :last").append("<td>" + e.sapLost + " " + e.units + "</td>");
             $("#syrupData > tbody > :last").append("<td>" + e.processingDate.substring(0, 10) + "</td>");
             $("#syrupData > tbody > :last").append("<td>" + e.hours + ":" + e.minutes + "</td>");
             $("#syrupData > tbody > :last").append("<td>" + e.fuelType + "</td>");
