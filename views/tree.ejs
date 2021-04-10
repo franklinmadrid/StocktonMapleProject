@@ -13,6 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css" type="text/css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css">
@@ -79,6 +80,8 @@
             </tbody>
         </table>
     </div>
+
+    <div id="chartContainer"></div>
 
     <h3 style="text-align: center; margin-top: 100px"><%=`${treeID}'s Sap Table`%></h3>
 
@@ -148,15 +151,17 @@
         }
     </script>
     <script>
-        let initData = JSON.parse('<%-JSON.stringify(saps)%>');
-        if(initData){
-            initData.forEach(e =>{
-                $(`#sapTable${e.season} > tbody`).append("<tr></tr>");
-                $(`#sapTable${e.season} > tbody > :last`).append("<td>"+ e.sapVolume +"</td>");
-                $(`#sapTable${e.season} > tbody > :last`).append("<td>"+ e.harvestTemp +"</td>");
-                $(`#sapTable${e.season} tbody > :last`).append("<td>"+ e.harvestDate.substring(0,10) +"</td>");
-            })
-        }
+        $(document).ready(function() {
+            let initData = JSON.parse('<%-JSON.stringify(saps)%>');
+            if(initData){
+                initData.forEach(e =>{
+                    $(`#sapTable${e.season} > tbody`).append("<tr></tr>");
+                    $(`#sapTable${e.season} > tbody > :last`).append("<td>"+ e.sapVolume +"</td>");
+                    $(`#sapTable${e.season} > tbody > :last`).append("<td>"+ e.harvestTemp +"</td>");
+                    $(`#sapTable${e.season} tbody > :last`).append("<td>"+ e.harvestDate.substring(0,10) +"</td>");
+                })
+            }
+        });
     </script>
 
     <script>
@@ -175,12 +180,17 @@
                         'copy', 'excel', 'csv', 'pdf'
                     ]
                 });
+                let btn = 'graphBtn'+i
+                $("#sapTable" + i +"_wrapper")
+                    .children(".dt-buttons")
+                    .append(`<button class=\"dt-button buttons-copy buttons-html5\" id=`+ btn +` tabindex=\"0\" aria-controls=\"sapTable3\" type=\"button\"><span>Graph</span></button>`);
             }
         });
     </script>
 
     <script>
-        let treeData = JSON.parse('<%-JSON.stringify(tree)%>');
+        $(document).ready(function() {
+            let treeData = JSON.parse('<%-JSON.stringify(tree)%>');
             console.log("id",treeData._id);
             $('#treeData > tbody').append("<tr></tr>");
             $("#treeData > tbody > :last").append("<td>" + treeData._id + "</td>");
@@ -188,6 +198,123 @@
             $("#treeData > tbody > :last").append("<td>" + treeData.stemCount + "</td>");
             $("#treeData > tbody > :last").append("<td>" + treeData.tappingDate.substring(0, 10) + "</td>");
             $("#treeData > tbody > :last").append("<td>" + treeData.tapHeight + "</td>");
+        });
     </script>
+
+    <script>
+        $(document).ready(function() {
+            for(let i = 1; i <= <%=currentSeason%>; i++){
+                $("#graphBtn" + i).click( ()=> {
+                    let jsonData = JSON.parse('<%-JSON.stringify(saps)%>');
+                    let data =[]
+                    let maxY = 0;
+                    jsonData.forEach(entry =>{
+                        if(entry.season == i){
+                            let date = new Date(entry.harvestDate);
+                            let vol = entry.sapVolume;
+                            if(vol > maxY){
+                                maxY = vol;
+                            }
+                            data.push({date, vol});
+                        }
+                    });
+                    data = data.sort((a, b) => b.date - a.date);
+                    let margin = {top: 50, right: 50, bottom: 50, left: 50}
+                    let width = window.innerWidth - margin.left - margin.right // Use the window's width
+                    let height = window.innerHeight - margin.top - margin.bottom; // Use the window's height
+                    let x = d3.scaleTime().rangeRound([0, width]);
+                    let y = d3.scaleLinear().rangeRound([height, 5]);
+                    let line = d3.line()
+                        .x(function(d) { return x(d.date)})
+                        .y(function(d) { return y(d.vol)})
+                    x.domain(d3.extent(data, function(d) { return d.date }));
+                    y.domain(d3.extent(data, function(d) { return d.vol }));
+
+                    let svg = d3.select("#chartContainer").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                    svg.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(d3.axisBottom(x)) // Create an axis component with d3.axisBottom
+                        .select(".domain");
+
+
+                    svg.append("g")
+                        .attr("class", "y axis")
+                        .call(d3.axisLeft(y)); // Create an axis component with d3.axisLeft
+
+                    svg.append("path")
+                        .datum(data)
+                        .attr("fill", "none")
+                        .attr("stroke", "steelblue")
+                        .attr("stroke-linejoin", "round")
+                        .attr("stroke-linecap", "round")
+                        .attr("stroke-width", 1.5)
+                        .attr("d", line);
+
+                    svg.selectAll(".dot")
+                        .data(data)
+                        .enter().append("circle") // Uses the enter().append() method
+                        .attr("class", "dot") // Assign a class for styling
+                        .attr("cx", function(d) { return x(d.date) })
+                        .attr("cy", function(d) { return y(d.vol) })
+                        .attr("r", 5)
+
+
+
+
+
+
+                    //initialize svg and set attributes
+                    // let margin = {top: 50, right: 50, bottom: 50, left: 50}
+                    //  let width = window.innerWidth - margin.left - margin.right // Use the window's width
+                    //  let height = window.innerHeight - margin.top - margin.bottom; // Use the window's height
+                    // let svg = d3.select("#chartContainer").append("svg")
+                    //     .attr("width",width).attr("height", height).attr("id","graph"+i)
+                    //
+                    // let g = svg.append("g").attr("transform", "translate(50,50)");
+                    // let x = d3.scaleTime().rangeRound([0, width]);
+                    // let y = d3.scaleLinear().rangeRound([height, 5]);
+                    // let line = d3.line()
+                    //     .x(function(d) { return x(d.date)})
+                    //     .y(function(d) { return y(d.vol)})
+                    // x.domain(d3.extent(data, function(d) { return d.date }));
+                    // y.domain(d3.extent(data, function(d) { return d.vol }));
+                    // svg.append("g")
+                    //     .attr("class", "x axis")
+                    //     .attr("transform", "translate(0," + height + ")")
+                    //     .call(d3.axisBottom(x)); // Create an axis component with d3.axisBottom
+                    // g.append("g")
+                    //     .attr("transform", "translate(0,"+ (height)  +")")
+                    //     .call(d3.axisBottom(x))
+                    //     .select(".domain")
+                    //     .remove();
+                    // g.append("g")
+                    //     .call(d3.axisLeft(y))
+                    //     .append("text")
+                    //     .attr("fill", "#000")
+                    //     .attr("transform", "rotate(-90)")
+                    //     .attr("y", 6)
+                    //     .attr("dy", "0.71em")
+                    //     .attr("text-anchor", "end")
+                    //     .text("Volume");
+                    // g.append("path")
+                    //     .datum(data)
+                    //     .attr("fill", "none")
+                    //     .attr("stroke", "steelblue")
+                    //     .attr("stroke-linejoin", "round")
+                    //     .attr("stroke-linecap", "round")
+                    //     .attr("stroke-width", 1.5)
+                    //     .attr("d", line);
+                })
+            }
+
+        });
+    </script>
+
 </body>
 </html>
