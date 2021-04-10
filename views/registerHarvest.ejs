@@ -9,6 +9,13 @@
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
             crossorigin="anonymous">
     </script>
+    <style>
+        select#sapCharacteristic {
+            height: 50px;
+            width: 260px !important;
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
 
@@ -50,9 +57,19 @@
                 <div class="col-2">
                   <div class="form-group">
                     <label>Temperature (Fahrenheit)</label>
-                    <input type="text" class="input--style-4" id="harvestTemp" name="harvestTemp" required="">
+                    <input type="text" class="input--style-4" id="harvestTemp" name="harvestTemp">
                     <input type="text"  id="tree" name="tree" value="<%=treeID%>" hidden>
-
+                  </div>
+                </div>
+                <div class="col-2">
+                  <div class="form-group">
+                    <label>Sap Characteristic</label><br>
+                    <select id="sapCharacteristic" name="sapCharacteristic" class="form-control" required="">
+                        <option value="Clear" selected>Clear</option>
+                        <option value="Opaque">Opaque</option>
+                        <option value="Yellow">Yellow</option>
+                        <option value="Other">Other</option>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -76,47 +93,6 @@
         </div>
       </div>
     </div>
-
-<!--
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ff8c00;">
-        <b class="navbar-brand">Register Sap Harvest</b>
-        <div id="navbarText">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="">Back to profile</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-<div class="container-fluid" style="margin-top: 10px">
-    <form action="/users/registerHarvest" method="POST" role="form">
-        <input type="text" id="tree" name="tree" value=<%=treeID%> hidden>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Sap Volume (Gallons)</label>
-                <input type="number" class="form-control" id="sapVolume" name="sapVolume" required>
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Date of Syrup Harvest</label>
-                <input type="date" class="form-control" id="harvestDate" name="harvestDate" required>
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <label>Temperature (Fahrenheit)</label>
-                <input type="number" class="form-control" id="harvestTemp" name="harvestTemp" required>
-            </div>
-        </div>
-        <div class="row" style="margin-left: 1px">
-            <div class="form-group">
-                <button type="submit" class="form-control btn btn-primary" style="background-color: #ff8c00">Register</button>
-            </div>
-        </div>
-    </form>
-</div>
--->
 <script>
     let url = "https://api.weather.gov/points/";
     url = url + <%= coords[0]%> + ',' +  <%= coords[1]%>;

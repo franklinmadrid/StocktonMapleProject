@@ -16,7 +16,11 @@ const sapSchema = new Schema({
     },
     harvestTemp: {
         type: Number,
-        required: true
+        required: false
+    },
+    sapCharacteristic: {
+        type: String,
+        require: true
     },
     season: {
         type: Number,
