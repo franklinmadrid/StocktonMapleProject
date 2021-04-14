@@ -8,6 +8,20 @@ const router = express.Router();
 const passport = require('passport');
 const {isAuth, isAdmin} = require('./authMiddleware');
 const excel = require('exceljs');
+const async = require('async');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+const {google} = require('googleapis');
+
+require('dotenv').config();
+
+// Password reset
+const CLIENT_ID = '967810289324-2naaq6ubumf71n5gcfeqbvd80ekqvack.apps.googleusercontent.com';
+const CLIENT_SECRET = 'OKvY4Lyk6Y-pnNMtIffYshK8';
+const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
+const REFRESH_TOKEN = '1//04ZAprT5OjSQfCgYIARAAGAQSNgF-L9IrzJI4yGXIH-_3aJploJr99Ap_EnjVY3zUF6p4NZpzi6P8tpZ1kmmjZ2cLGPUQ_AJjIw';
+const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+oAuth2Client.setCredentials({refresh_token: REFRESH_TOKEN});
 
 // /user/* routes and user-related routes such as /login, /logout
 
@@ -51,8 +65,6 @@ router.post('/users/registerHarvest',isAuth, async (req, res) => {
         .catch(err =>{
             console.log(err);
         });
-
-
 });
 
 router.post('/registerSyrup',isAuth, (req, res) => {
@@ -143,7 +155,131 @@ router.post("/admin/removeAdmin", async (req,res) =>{
             }
         })
 });
+
+router.post('/forgotPass', async (req,res,next) => {
+    accessToken = await oAuth2Client.getAccessToken();
+    // waterfall = array of functions called in sequence
+    async.waterfall([
+        // function(done) {
+        //     crypto.randomBytes(20, function(err, buf) {
+        //         var token = buf.toString('hex');
+        //         done(err, token);
+        //     });
+        // },
+        function(accessToken, done) {
+            User.findOne({email: req.body.email}, function(err, user) {
+                if (!user) {
+                    req.flash('error', 'No account with that email address exists.');
+                    return res.redirect('/forgotPass');
+                }
+
+                user.resetPasswordToken = accessToken;
+                user.resetPasswordExpires = Date.now() + 3600000; // 1 hour in ms
+                user.save(function(err) {
+                    done(err, accessToken, user);
+                });
+            });
+        },
+        function(accessToken, user, done) {
+            //console.log(token);
+            var smtpTransport = nodemailer.createTransport({
+                // This service can be changed if buggy. Bugs w/ Gmail+nodemailer have been reported
+                // This is also the part I'm having trouble with (auth)
+                // Error: Missing credentials for "PLAIN"
+                service: 'Gmail',
+                auth: {
+                    type: 'OAuth2',
+                    user: 'gogetmeseashells@gmail.com',
+                    clientId: CLIENT_ID,
+                    clientSecret: CLIENT_SECRET,
+                    refreshToken: REFRESH_TOKEN,
+                    accessToken: accessToken
+                }
+                // auth: {
+                //     user: 'gogetmeseashells@gmail.com',
+                //     pass: process.env.GMAILPW
+                // }
+            });
+            var mailOptions = {
+                to: user.email,
+                from: 'gogetmeseashells@gmail.com',
+                subject: 'Stockton Maple Password Reset',
+                text: 'You are receiving this email because you have requested the reset of your Stockton Maple password. ' +
+                    'Please click the following link to complete this process:\n' +
+                    'http://' + req.headers.host + '/resetPass/' + token
+            };
+            smtpTransport.sendMail(mailOptions, function(err) {
+                console.log('mail sent');
+                req.flash('sucecess', 'An email has been sent to ' + user.email);
+                done(err, 'done');
+            });
+        }
+    ], function(err) {
+        if (err) return next(err);
+        res.redirect('/forgotPass');
+    });
+});
+
+router.post('/resetPass/:accessToken', function(req, res) {
+    async.waterfall([
+      function(done) {
+        User.findOne({ resetPasswordToken: req.params.accessToken, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+          if (!user) {
+            req.flash('error', 'Password reset token is invalid or has expired.');
+            return res.redirect('/login');
+          }
+          if(req.body.password === req.body.confirm) {
+            const hashedPassword = bcrypt.hash(req.body.password, 10);
+            User.password = hashedPassword;
+            User.save().then(() => {
+                res.redirect('/login');
+            })
+          } else {
+              req.flash("error", "Passwords do not match.");
+              return res.redirect('/login');
+          }
+        });
+      },
+      function(user, done) {
+        var smtpTransport = nodemailer.createTransport({
+          service: 'Gmail', 
+          auth: {
+            user: 'gogetmeseashells@gmail.com',
+            pass: process.env.GMAILPW
+          }
+        });
+        var mailOptions = {
+          to: user.email,
+          from: 'gogetmeseashells@gmail.com',
+          subject: 'Your password has been changed',
+          text: 'Hello,\n\n' +
+            'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+        };
+        smtpTransport.sendMail(mailOptions, function(err) {
+          req.flash('success', 'Success! Your password has been changed.');
+          done(err);
+        });
+      }
+    ], function(err) {
+      res.redirect('/login');
+    });
+  });
+
 //-----------------------get routes--------------------------//
+router.get('/forgotPass', (req,res) => {
+    res.render('forgotPass');
+});
+
+router.get('/resetPass/:token', function(req, res) {
+    User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+      if (!user) {
+        req.flash('error', 'Password reset token is invalid or has expired.');
+        return res.redirect('/forgotPass');
+      }
+      res.render('resetPass', {token: req.params.token});
+    });
+  });
+
 router.get('/logout',(req, res) => {
     req.logout();
     res.redirect('/');
@@ -312,5 +448,7 @@ router.get('/trees/:id',isAuth, async (req,res) => {
             console.log(err);
         });
 });
+
+
 
 module.exports= router;

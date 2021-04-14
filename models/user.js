@@ -5,15 +5,19 @@ const userSchema = new Schema({
     email: {
         type: String,
         required: true,
+        //unique = true
     },
     _id: {
         type: String,
         required: true,
+        //unique = true
     },
     password: {
         type: String,
         required: true
     },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
     moderator:{
       type: Boolean,
       required: false

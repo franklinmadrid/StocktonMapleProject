@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Forgot Password</title>
+    <link rel="stylesheet" href="/bootstrap.min.css" >
+    <style>
+        html, body {
+            height: 100%;
+        }
+        .main {
+            height: 100%;
+            width: 100%;
+            display: table;
+        }
+        .wrapper {
+            display: table-cell;
+            height: 100%;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="text-center">
+    <div class="main">
+        <div class="wrapper">
+            <h4>Enter email associated with your username</h4><br><br>
+            <form class="form-signin col-lg-6 offset-lg-3" action="/forgotPass" method="POST">
+                <div class="row justify-content-center">
+                    <div class="form-group">
+                        <label for="email" class="sr-only">Email</label>
+                        <input type="text" id="email" name="email" class="form-control" placeholder="Email" required autofocus>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-block" type="submit" value="login" style="background-color: #ff8c00">Send Reset Email</button>
+                    </div>
+                </div>
+            </form>
+            <br><br><a href="/login">Back to Login</a>
+        </div>
+    </div>
+</body>
+</html>
