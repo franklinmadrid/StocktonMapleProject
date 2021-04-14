@@ -157,112 +157,140 @@ router.post("/admin/removeAdmin", async (req,res) =>{
 });
 
 router.post('/forgotPass', async (req,res,next) => {
-    accessToken = await oAuth2Client.getAccessToken();
+    let accessToken = await oAuth2Client.getAccessToken();
+    console.log(accessToken.token);
     // waterfall = array of functions called in sequence
-    async.waterfall([
         // function(done) {
         //     crypto.randomBytes(20, function(err, buf) {
         //         var token = buf.toString('hex');
         //         done(err, token);
         //     });
         // },
-        function(accessToken, done) {
-            User.findOne({email: req.body.email}, function(err, user) {
-                if (!user) {
-                    req.flash('error', 'No account with that email address exists.');
-                    return res.redirect('/forgotPass');
-                }
-
-                user.resetPasswordToken = accessToken;
-                user.resetPasswordExpires = Date.now() + 3600000; // 1 hour in ms
-                user.save(function(err) {
-                    done(err, accessToken, user);
-                });
-            });
-        },
-        function(accessToken, user, done) {
-            //console.log(token);
-            var smtpTransport = nodemailer.createTransport({
-                // This service can be changed if buggy. Bugs w/ Gmail+nodemailer have been reported
-                // This is also the part I'm having trouble with (auth)
-                // Error: Missing credentials for "PLAIN"
-                service: 'Gmail',
-                auth: {
-                    type: 'OAuth2',
-                    user: 'gogetmeseashells@gmail.com',
-                    clientId: CLIENT_ID,
-                    clientSecret: CLIENT_SECRET,
-                    refreshToken: REFRESH_TOKEN,
-                    accessToken: accessToken
-                }
-                // auth: {
-                //     user: 'gogetmeseashells@gmail.com',
-                //     pass: process.env.GMAILPW
-                // }
-            });
-            var mailOptions = {
-                to: user.email,
-                from: 'gogetmeseashells@gmail.com',
-                subject: 'Stockton Maple Password Reset',
-                text: 'You are receiving this email because you have requested the reset of your Stockton Maple password. ' +
-                    'Please click the following link to complete this process:\n' +
-                    'http://' + req.headers.host + '/resetPass/' + token
-            };
-            smtpTransport.sendMail(mailOptions, function(err) {
-                console.log('mail sent');
-                req.flash('sucecess', 'An email has been sent to ' + user.email);
-                done(err, 'done');
-            });
-        }
-    ], function(err) {
-        if (err) return next(err);
-        res.redirect('/forgotPass');
+    User.findOne({email: req.body.email})
+        .then(result => {
+            if (!result) {
+                req.flash('error', 'No account with that email address exists.');
+                return res.redirect('/forgotPass');
+            }else{
+                result.resetPasswordToken = accessToken.token;
+                result.resetPasswordExpires = Date.now() + 3600000; // 1 hour in ms
+                console.log("updated",result);
+                result.save()
+                    .then(()=>{
+                        let smtpTransport = nodemailer.createTransport({
+                            // This service can be changed if buggy. Bugs w/ Gmail+nodemailer have been reported
+                            // This is also the part I'm having trouble with (auth)
+                            // Error: Missing credentials for "PLAIN"
+                            service: 'Gmail',
+                            auth: {
+                                type: 'OAuth2',
+                                user: 'gogetmeseashells@gmail.com',
+                                clientId: CLIENT_ID,
+                                clientSecret: CLIENT_SECRET,
+                                refreshToken: REFRESH_TOKEN,
+                                accessToken: accessToken.token
+                            }
+                            // auth: {
+                            //     user: 'gogetmeseashells@gmail.com',
+                            //     pass: process.env.GMAILPW
+                            // }
+                        });
+                        let mailOptions = {
+                            to: result.email,
+                            from: 'gogetmeseashells@gmail.com',
+                            subject: 'Stockton Maple Password Reset',
+                            text: 'You are receiving this email because you have requested the reset of your Stockton Maple password. ' +
+                                'Please click the following link to complete this process:\n' +
+                                'http://' + req.headers.host + '/resetPass/' + accessToken.token
+                        }
+                        smtpTransport.sendMail(mailOptions, (err) => {
+                            console.log('mail sent');
+                            req.flash('success', 'An email has been sent to ' + result.email);
+                        });
+                        res.redirect("/");
+                    });
+            }
+        });
     });
-});
 
 router.post('/resetPass/:accessToken', function(req, res) {
-    async.waterfall([
-      function(done) {
-        User.findOne({ resetPasswordToken: req.params.accessToken, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
-          if (!user) {
-            req.flash('error', 'Password reset token is invalid or has expired.');
-            return res.redirect('/login');
-          }
-          if(req.body.password === req.body.confirm) {
-            const hashedPassword = bcrypt.hash(req.body.password, 10);
-            User.password = hashedPassword;
-            User.save().then(() => {
-                res.redirect('/login');
-            })
-          } else {
-              req.flash("error", "Passwords do not match.");
-              return res.redirect('/login');
-          }
+    User.findOne({ resetPasswordToken: req.params.accessToken, resetPasswordExpires: { $gt: Date.now() } })
+        .then(async result =>{
+            console.log("results",result);
+            if (!result) {
+                req.flash('error', 'Password reset token is invalid or has expired.');
+                return res.redirect('/login');
+            }else {
+                if (req.body.password === req.body.confirm) {
+                    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+                    result.password = hashedPassword;
+                    result.save().then(() => {
+                        let smtpTransport = nodemailer.createTransport({
+                            service: 'Gmail',
+                            auth: {
+                                user: 'gogetmeseashells@gmail.com',
+                                pass: process.env.GMAILPW
+                            }
+                        });
+                        let mailOptions = {
+                            to: result.email,
+                            from: 'gogetmeseashells@gmail.com',
+                            subject: 'Your password has been changed',
+                            text: 'Hello,\n\n' +
+                                'This is a confirmation that the password for your account ' + result.email + ' has just been changed.\n'
+                        };
+                        smtpTransport.sendMail(mailOptions, () => {
+                            req.flash('success', 'Success! Your password has been changed.');
+                        });
+                        res.redirect('/login');
+                    });
+                }
+            }
         });
-      },
-      function(user, done) {
-        var smtpTransport = nodemailer.createTransport({
-          service: 'Gmail', 
-          auth: {
-            user: 'gogetmeseashells@gmail.com',
-            pass: process.env.GMAILPW
-          }
-        });
-        var mailOptions = {
-          to: user.email,
-          from: 'gogetmeseashells@gmail.com',
-          subject: 'Your password has been changed',
-          text: 'Hello,\n\n' +
-            'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
-        };
-        smtpTransport.sendMail(mailOptions, function(err) {
-          req.flash('success', 'Success! Your password has been changed.');
-          done(err);
-        });
-      }
-    ], function(err) {
-      res.redirect('/login');
-    });
+
+
+    // async.waterfall([
+    //   function(done) {
+    //     User.findOne({ resetPasswordToken: req.params.accessToken, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+    //       if (!user) {
+    //         req.flash('error', 'Password reset token is invalid or has expired.');
+    //         return res.redirect('/login');
+    //       }
+    //       if(req.body.password === req.body.confirm) {
+    //         const hashedPassword = bcrypt.hash(req.body.password, 10);
+    //         User.password = hashedPassword;
+    //         User.save().then(() => {
+    //             res.redirect('/login');
+    //         })
+    //       } else {
+    //           req.flash("error", "Passwords do not match.");
+    //           return res.redirect('/login');
+    //       }
+    //     });
+    //   },
+    //   function(user, done) {
+    //     var smtpTransport = nodemailer.createTransport({
+    //       service: 'Gmail',
+    //       auth: {
+    //         user: 'gogetmeseashells@gmail.com',
+    //         pass: process.env.GMAILPW
+    //       }
+    //     });
+    //     var mailOptions = {
+    //       to: user.email,
+    //       from: 'gogetmeseashells@gmail.com',
+    //       subject: 'Your password has been changed',
+    //       text: 'Hello,\n\n' +
+    //         'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+    //     };
+    //     smtpTransport.sendMail(mailOptions, function(err) {
+    //       req.flash('success', 'Success! Your password has been changed.');
+    //       done(err);
+    //     });
+    //   }
+    // ], function(err) {
+    //   res.redirect('/login');
+    // });
   });
 
 //-----------------------get routes--------------------------//

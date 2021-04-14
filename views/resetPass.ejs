@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Forgot Password</title>
     <link rel="stylesheet" href="/bootstrap.min.css" >
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <style>
         html, body {
             height: 100%;
@@ -24,7 +25,7 @@
     <div class="main">
         <div class="wrapper">
             <h4>Reset Password</h4><br><br>
-            <form class="form-signin col-lg-6 offset-lg-3" action="/resetPass/<% token %>" method="POST">
+            <form class="form-signin col-lg-6 offset-lg-3" action="" method="POST" id="form1">
                 <div class="row justify-content-center">
                     <div class="form-group">
                         <label for="password" class="sr-only">New Password</label>
@@ -46,5 +47,13 @@
             <br><br><a href="/login">Back to Login</a>
         </div>
     </div>
+<script>
+    $(document).ready( () => {
+        let url = window.location.toString();
+        console.log(url);
+        console.log(url.substring(21));
+        $("#form1").attr("action",url.substring(21));
+    });
+</script>
 </body>
 </html>
