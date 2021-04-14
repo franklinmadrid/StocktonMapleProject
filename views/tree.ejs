@@ -35,32 +35,22 @@
                 <li class="nav-item">
                     <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%= `${treeID}/registerHarvest` %>">Register Sap Harvest</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%= `${treeID}/endTreeSeason` %>">End Tree Season</a>
-                </li>
+                <%if (tree.Tapped){%>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%= `${treeID}/endTreeSeason` %>">End Tree Season</a>
+                    </li>
+                <%}else{%>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%= `${treeID}/startTreeSeason` %>">Start Tree Season</a>
+                    </li>
+                <%}%>
+
                 <li class="nav-item">
                     <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%= link %>">Back To Profile</a>
                 </li>
             </ul>
         </div>
     </nav>
-
-    <script type="text/javascript" class="init">
-        $(document).ready(function() {
-            $('#treeData').DataTable( {
-                autoWidth: false,
-                lengthChange: false,
-                ordering: false,
-                searching: false,
-                info: false,
-                paging: false,
-                columnDefs: [
-                    {className: "dt-head-center", targets: "_all"}
-                ]
-            } );
-        } );
-    </script>
-
     <div id="map" class="map" style="margin-top: 20px"></div>
 
     <h3 style="text-align: center; margin-top: 30px;"><%=`${treeID}'s Tree Data`%></h3>
@@ -75,6 +65,22 @@
                     <th>Tapping Date</th>
                     <th>Tap Height (Inches)</th>
                 </tr>
+            </thead>
+            <tbody style="text-align:center">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container" style="margin-top: 30px">
+        <h3 style="text-align: center; margin-top: 100px"><%=`${treeID}'s Season Info`%></h3>
+        <table id="treeSeasonInfo" class="display center">
+            <thead>
+            <tr>
+                <th>Season</th>
+                <th>Tap Date</th>
+                <th>Start of Season Notes</th>
+                <th>End of Season Notes</th>
+            </tr>
             </thead>
             <tbody style="text-align:center">
             </tbody>
@@ -114,43 +120,27 @@
         });
     </script>
     <script>
-        for(let i = <%=currentSeason%> ; i >= 1 ; i--){
-            if(i == <%=currentSeason%> ){
-                $('body').append('<div class="container" style="margin-top: 30px; text-align:center">\n' +
-                    `<h3>Current Season</h3>` +
-                    '        <table class="display center">\n' +
-                    '            <thead>\n' +
-                    '                <tr>\n' +
-                    '                    <th>Sap Volume (Gallons)</th>\n' +
-                    '                    <th>Harvest Temp (Fahrenheit)</th>\n' +
-                    '                    <th>Harvest Date</th>\n' +
-                    '                </tr>\n' +
-                    '            </thead>\n' +
-                    '            <tbody style="text-align:center">\n' +
-                    '            </tbody>\n' +
-                    '        </table>\n' +
-                    '    </div>')
-                $('body > div > :last').attr('id','sapTable' + i);
-            }else{
-                $('body').append('<div class="container" style="margin-top: 30px; text-align:center">\n' +
-                    `<h3>Season ${i}</h3>` +
-                    '        <table class="display center">\n' +
-                    '            <thead>\n' +
-                    '                <tr>\n' +
-                    '                    <th>Sap Volume (Gallons)</th>\n' +
-                    '                    <th>Harvest Temp (Fahrenheit)</th>\n' +
-                    '                    <th>Harvest Date</th>\n' +
-                    '                </tr>\n' +
-                    '            </thead>\n' +
-                    '            <tbody style="text-align:center">\n' +
-                    '            </tbody>\n' +
-                    '        </table>\n' +
-                    '    </div>')
-                $('body > div > :last').attr('id','sapTable' + i);
-            }
+        //creating sap tables
+        for(let i = <%=tree.season[tree.season.length - 1]%> ; i >= <%=tree.season[0]%>  ; i--){
+            $('body').append('<div class="container" style="margin-top: 30px; text-align:center">\n' +
+                `<h3>Season ${i}</h3>` +
+                '        <table class="display center">\n' +
+                '            <thead>\n' +
+                '                <tr>\n' +
+                '                    <th>Sap Volume (Gallons)</th>\n' +
+                '                    <th>Harvest Temp (Fahrenheit)</th>\n' +
+                '                    <th>Harvest Date</th>\n' +
+                '                </tr>\n' +
+                '            </thead>\n' +
+                '            <tbody style="text-align:center">\n' +
+                '            </tbody>\n' +
+                '        </table>\n' +
+                '    </div>')
+            $('body > div > :last').attr('id','sapTable' + i);
         }
     </script>
     <script>
+        //populating sap tables with data
         $(document).ready(function() {
             let initData = JSON.parse('<%-JSON.stringify(saps)%>');
             if(initData){
@@ -165,8 +155,46 @@
     </script>
 
     <script>
+        //creating Season info table
         $(document).ready(function() {
-            for(let i = 1; i <= <%=currentSeason%>; i++){
+            let treeData = JSON.parse('<%-JSON.stringify(tree)%>');
+            if(treeData){
+                for(let i = 0; i < <%=tree.season.length%>; i++){
+                    $("#treeSeasonInfo").append("<tr></tr>");
+                    $("#treeSeasonInfo > tbody > :last").append("<td>" + treeData.season[i] + "</td>")
+                    $("#treeSeasonInfo > tbody > :last").append("<td>" + treeData.tappingDates[i].toString().substring(0,10) + "</td>")
+                    if(treeData.startNotes[i] == null){
+                        $("#treeSeasonInfo > tbody > :last").append("<td> Empty </td>")
+                    }else{
+                        $("#treeSeasonInfo > tbody > :last").append("<td>" + treeData.startNotes[i] + "</td>")
+                    }
+                    if(treeData.endNotes[i] == null){
+                        $("#treeSeasonInfo > tbody > :last").append("<td> Empty </td>")
+                    }else{
+                        $("#treeSeasonInfo > tbody > :last").append("<td>" + treeData.endNotes[i] + "</td>")
+                    }
+                }
+            }
+            $('#treeSeasonInfo').DataTable({
+                autoWidth: false,
+                lengthChange: false,
+                order: [2,'asc'],
+                pageLength: 10,
+                columnDefs: [
+                    {className: "dt-head-center", targets: "_all"}
+                ],
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'excel', 'csv', 'pdf'
+                ]
+            });
+        });
+    </script>
+
+    <script>
+        //calling datatable for each sap table
+        $(document).ready(function() {
+            for(let i = <%=tree.season[0]%>; i <= <%=tree.season[tree.season.length - 1]%>; i++){
                 $('#sapTable' + i).DataTable({
                     autoWidth: false,
                     lengthChange: false,
@@ -189,6 +217,7 @@
     </script>
 
     <script>
+        //tree information table
         $(document).ready(function() {
             let treeData = JSON.parse('<%-JSON.stringify(tree)%>');
             console.log("id",treeData._id);
@@ -196,14 +225,26 @@
             $("#treeData > tbody > :last").append("<td>" + treeData._id + "</td>");
             $("#treeData > tbody > :last").append("<td>" + treeData.circumf + "</td>");
             $("#treeData > tbody > :last").append("<td>" + treeData.stemCount + "</td>");
-            $("#treeData > tbody > :last").append("<td>" + treeData.tappingDate.substring(0, 10) + "</td>");
+            $("#treeData > tbody > :last").append("<td>" + treeData.tappingDates[treeData.tappingDates.length - 1].substring(0, 10) + "</td>");
             $("#treeData > tbody > :last").append("<td>" + treeData.tapHeight + "</td>");
+            $('#treeData').DataTable({
+                autoWidth: false,
+                lengthChange: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                paging: false,
+                columnDefs: [
+                    {className: "dt-head-center", targets: "_all"}
+                ]
+            });
         });
     </script>
 
     <script>
+        //Graph
         $(document).ready(function() {
-            for(let i = 1; i <= <%=currentSeason%>; i++){
+            for(let i = <%=tree.season[0]%>; i <= <%=tree.season[tree.season.length - 1]%>; i++){
                 $("#graphBtn" + i).click( ()=> {
                     let jsonData = JSON.parse('<%-JSON.stringify(saps)%>');
                     let data =[]

@@ -35,8 +35,23 @@ router.post('/login',
 
 router.post('/users/registerTree',isAuth, async (req, res) => {
     try{
+        console.log('inside users/registerTree');
         req.body.user= req.user._id;
+        let tapDate = req.body.tappingDate;
+        req.body.tappingDate = null;
+        let startNotes = req.body.startNotes
+        req.body.startNotes = [];
+        console.log(req.body);
         const tree = new Tree(req.body);
+        console.log(tree);
+        tree.Tapped = true;
+        tree.tappingDates.push(tapDate);
+        console.log('pushed date',tree);
+        tree.startNotes.push(startNotes);
+        let year = tapDate.toString().substr(0,4)
+        console.log(tapDate.toString().substr(0,4));
+        tree.season.push(year);
+        console.log("updated Tree",tree);
         tree.save()
             .then((result) => {
                 res.redirect("/users/" + req.user._id);
@@ -53,7 +68,7 @@ router.post('/users/registerHarvest',isAuth, async (req, res) => {
     await Tree.findById(treeID)
         .then(result =>{
             console.log(result);
-            const season = result.season;
+            const season = result.season[result.season.length -1];
             let sap = new Sap(req.body);
             sap.season = season;
             sap.save()
@@ -464,7 +479,6 @@ router.get('/trees/:id',isAuth, async (req,res) => {
                             entryLink: entryLink,
                             treeID: req.params.id,
                             saps: sapList,
-                            currentSeason: currentSeason,
                             tree: result
                         });
                     });

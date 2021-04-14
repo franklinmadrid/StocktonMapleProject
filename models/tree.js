@@ -18,13 +18,11 @@ const treeSchema = new Schema({
         type: Number,
         required: true
     },
-    tappingDate: {
+    tappingDates: [{
         type: Date, // ?
-        required: true
-    },
+    }],
     lastFlowDate: {
         type: Date, // ?
-        required: false
     },
     tapHeight: {
         type: Number,
@@ -38,22 +36,21 @@ const treeSchema = new Schema({
         type: Number,
         required: true
     },
-    season: {
+    season: [{
         type: Number,
-        required: true
-    },
-    startNotes:{
+    }],
+    startNotes: [{
         type: String,
-        required: false
-    },
-    endNotes:{
+    }],
+    endNotes: [{
         type: String,
-        required: false
+    }],
+    firstFlowDate: {
+        type: Date,
     },
-    // firstflowDate: {
-    //     type: Date,
-    //     required: true
-    // },
+    Tapped:{
+        type: Boolean
+    }
     },{timestamps: true});
 
 const Tree = mongoose.model('Tree', treeSchema);

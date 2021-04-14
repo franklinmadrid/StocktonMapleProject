@@ -88,6 +88,7 @@
 <script>
     let data = JSON.parse('<%-JSON.stringify(trees)%>');
     if(data) {
+        console.log(data);
         data.forEach(e => {
             console.log("id",e._id);
             let url = 'http://localhost:3000/trees/' + e._id;
@@ -99,7 +100,8 @@
             $("#treeTable > tbody > :last").append("<td>" + e._id + "</td>");
             $("#treeTable > tbody > :last").append("<td>" + e.circumf + "</td>");
             $("#treeTable > tbody > :last").append("<td>" + e.stemCount + "</td>");
-            $("#treeTable > tbody > :last").append("<td>" + e.tappingDate.substring(0, 10) + "</td>");
+            console.log(e.tappingDate)
+            $("#treeTable > tbody > :last").append("<td>" + e.tappingDates[e.tappingDates.length - 1].substring(0, 10) + "</td>");
             $("#treeTable > tbody > :last").append("<td>" + e.tapHeight + "</td>");
         });
     }
