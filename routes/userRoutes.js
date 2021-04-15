@@ -119,20 +119,23 @@ router.post('/trees/:id/endTreeSeason',isAuth, async (req, res) => {
     console.log(id);
     await Tree.findById(id)
         .then( async result =>{
-            await Sap.find({tree:id}).sort({harvestDate:-1}).limit(1)
+            await Sap.find({tree:id,season:result.season[result.season.length - 1]}).sort({harvestDate:-1}).limit(1)
                 .then(sap =>{
                     console.log(sap);
-                    if(sap){// has sap entries
+                    if(sap.length > 0){// has sap entries
                         console.log("has sap entries");
                         result.lastFlowDate.push(sap[0].harvestDate);
                         result.Tapped = false;
+                        result.endNotes.push(req.body.endNotes);
                         console.log("after tapped")
                         result.save()
                         console.log("after saved")
                         res.redirect("/trees/" + id);
                     }else{
                         console.log("does not have sap entries");
+                        result.firstFlowDate.push(null);
                         result.lastFlowDate.push(null);
+                        result.endNotes.push(req.body.endNotes);
                         result.Tapped = false;
                         result.save()
                         res.redirect("/trees/" + id);
@@ -146,6 +149,27 @@ router.post('/trees/:id/endTreeSeason',isAuth, async (req, res) => {
         .catch(err => {
         console.log(err);
     })
+    res.redirect('http://localhost:3000/trees/' + id);
+});
+
+router.post('/trees/:id/startTreeSeason',isAuth, async (req, res) => {
+    const id = req.body._id;
+    console.log(id);
+    await Tree.findById(id)
+        .then( async result =>{
+            result.tappingDates.push(req.body.tappingDate);
+            result.startNotes.push(req.body.startNotes);
+            let year = req.body.tappingDate.toString().substring(0,4)
+            result.season.push(year);
+            result.Tapped = true;
+            result.save()
+                .then( () =>{
+                   res.redirect('http://localhost:3000/trees/' + id);
+                });
+        })
+        .catch(err => {
+            console.log(err);
+        })
     res.redirect('http://localhost:3000/trees/' + id);
 });
 
@@ -479,6 +503,18 @@ router.get('/trees/:id/endTreeSeason', isAuth, async (req,res) => {
                 link: 'http://localhost:3000/trees/' + id,
                 treeID: req.params.id,
                 });
+        })
+        .catch(err =>{console.log(err)});
+});
+
+router.get('/trees/:id/startTreeSeason', isAuth, async (req,res) => {
+    const id = req.params.id;
+    await Tree.findById(id)
+        .then(result => {
+            res.render('startTreeSeason', {
+                link: 'http://localhost:3000/trees/' + id,
+                treeID: req.params.id,
+            });
         })
         .catch(err =>{console.log(err)});
 });
