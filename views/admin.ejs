@@ -30,6 +30,12 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" id="idAlert" style="display: none">
+                Data ID is Empty
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" id="alertIdBtn">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             <% if(typeof alert != 'undefined') { %>
                 <% alert.forEach(function(error) { %>
                     <div class="alert alert-warning alert-dismissible fade show" role="alert" id="alertNotFound">
@@ -43,7 +49,7 @@
             <% } %>
             <form action="/admin/makeAdmin" method="post" id="mkAdminForm">
                 <span>Enter username of who you want to modify privileges</span><br>
-                <input type="text" id="username" placeholder="username" name="username" style="margin-bottom: 10px; margin-left: 55px; margin-right: auto">
+                <input type="text" id="username" placeholder="Username" name="username" style="margin-bottom: 10px; margin-left: 55px; margin-right: auto">
                 <button class="btn btn-primary btn-block" type="submit" id="mkAdminBtn" style="background-color: #ff8c00">Make Admin</button>
                 <button class="btn btn-primary btn-block" type="button" id="mkModBtn" style="background-color: #ff8c00">Make Mod</button>
                 <button class="btn btn-primary btn-block" type="button" id="rmAdminBtn" style="background-color: #ff8c00">Remove Admin</button>
@@ -57,6 +63,11 @@
             </form>
             <form action="/admin/removeAdmin" method="post" id="rmAdmin">
                 <input type="text" id="usernameRmAdmin" placeholder="username" name="username" hidden>
+            </form>
+            <form action="/admin/delete" method="post" id="deleteForm">
+                <span>Enter Username, Tree ID, Sap ID, Syrup ID to delete</span><br>
+                <input type="text" id="idDelete" placeholder="Data ID" name="idDelete" style="margin-bottom: 10px; margin-left: 55px; margin-right: auto">
+                <button class="btn btn-primary btn-block" type="submit" id="idDeleteBtn" style="background-color: #ff8c00">Delete</button>
             </form>
         </div>
     </div>
@@ -97,7 +108,16 @@
                     $('#rmAdmin').submit();
                 }
             });
+            $("#idDeleteBtn").click( (e)=>{
+                if($("#idDelete").val().length == 0){
+                    e.preventDefault();
+                    $("#idAlert").show();
+                }else{
+                    $('#deleteForm').submit();
+                }
+            });
             $("#alertUsernameBtn").click(()=>{$("#usernameAlert").hide()});
+            $("#alertIdBtn").click(()=>{$("#idAlert").hide()});
             $("#alertNotFoundBtn").click(()=>{$("#alertNotFound").hide()})
         });
     </script>

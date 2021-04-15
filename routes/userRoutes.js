@@ -462,12 +462,15 @@ router.get('/admin/download', isAdmin, async (req,res) =>{
 
     ];
     saps.columns = [
+        { header: 'SapID', key: 'SapID', width: 10 },
         { header: 'Tree', key: 'tree', width: 10 },
         { header: 'Volume', key: 'sapVolume', width: 10 },
         { header: 'Harvest Date', key: 'harvestDate', width: 10},
         { header: 'Harvest Temp', key: 'harvestTemp', width: 10},
     ];
     syrups.columns = [
+        { header: 'Syrup ID', key: 'syrupID', width: 10 },
+        { header: 'User', key: 'user', width: 10 },
         { header: 'Syrup produced', key: 'syrupProduced', width: 10 },
         { header: 'Sap Processed', key: 'sapProcessed', width: 10 },
         { header: 'Sap Lost', key: 'sapLost', width: 10},
@@ -479,7 +482,6 @@ router.get('/admin/download', isAdmin, async (req,res) =>{
     await Tree.find({})
         .then(result =>{
             result.forEach(tree => {
-                console.log("tree",tree);
                 let season = tree.season[tree.season.length -1];
                 let tappingDate = tree.tappingDates[tree.tappingDates.length -1];
                 let firstFlowDate = tree.firstFlowDate[tree.firstFlowDate.length -1];
@@ -556,11 +558,32 @@ router.get('/admin/download', isAdmin, async (req,res) =>{
         });
     await Sap.find({})
         .then(result =>{
-            saps.addRows(result);
+            result.forEach(sap => {
+                console.log(sap);
+                saps.addRow( {
+                    SapID: sap._id,
+                    tree: sap.tree,
+                    sapVolume:sap.sapVolume,
+                    harvestDate: sap.harvestDate,
+                    harvestTemp: sap.harvestTemp,
+                });
+            });
         });
     await Syrup.find({})
-        .then(result =>{
-            syrups.addRows(result);
+        .then(results =>{
+            results.forEach(result =>{
+                syrups.addRow({
+                    syrupID: result._id,
+                    user: result.user,
+                    syrupProduced: result.syrupProduced,
+                    sapProcessed: result.sapProcessed,
+                    sapLost: result.sapLost,
+                    processingDate: result.processingDate,
+                    hours: result.hours,
+                    minutes: result.minutes,
+                    fuelType: result.fuelType
+                });
+            });
         });
     workbook.xlsx.writeFile("./Data/Data.xlsx")
         .then(function() {
