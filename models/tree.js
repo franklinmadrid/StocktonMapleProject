@@ -19,11 +19,14 @@ const treeSchema = new Schema({
         required: true
     },
     tappingDates: [{
-        type: Date, // ?
+        type: Date,
     }],
-    lastFlowDate: {
-        type: Date, // ?
-    },
+    firstFlowDate: [{
+        type: Date,
+    }],
+    lastFlowDate: [{
+        type: Date,
+    }],
     tapHeight: {
         type: Number,
         required: true
@@ -45,9 +48,6 @@ const treeSchema = new Schema({
     endNotes: [{
         type: String,
     }],
-    firstFlowDate: {
-        type: Date,
-    },
     Tapped:{
         type: Boolean
     }
