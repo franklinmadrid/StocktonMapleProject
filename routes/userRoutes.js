@@ -62,26 +62,26 @@ router.post('/users/registerTree',isAuth, async (req, res) => {
 });
 
 router.post('/users/registerHarvest',isAuth, async (req, res) => {
-    console.log(req.body);
     const treeID = req.body.tree;
     await Tree.findById(treeID)
         .then(async result =>{
-            console.log(result);
-            const season = result.season[result.season.length -1];
-            await Sap.find({user:treeID,season:season})
+            const currentSeason = result.season[result.season.length -1];
+            await Sap.find({tree:treeID,season:currentSeason})
                 .then(sapResult =>{
-                    console.log(sapResult);
+                    console.log("sapResult:",sapResult);
                     if(sapResult.length > 0){//not first sap entry for the season
+                        console.log("inside not first sap entry");
                         let sap = new Sap(req.body);
-                        sap.season = season;
+                        sap.season = currentSeason;
                         sap.save()
                             .then(() => {
                                 res.redirect("/trees/" + sap.tree);
                             })
                             .catch((err) => console.log(err));
                     }else{//first sap entry for the season
+                        console.log("inside first sap entry");
                         let sap = new Sap(req.body);
-                        sap.season = season;
+                        sap.season = currentSeason;
                         result.firstFlowDate.push(sap.harvestDate);
                         result.save()
                             .then(()=>{
@@ -119,21 +119,33 @@ router.post('/trees/:id/endTreeSeason',isAuth, async (req, res) => {
     console.log(id);
     await Tree.findById(id)
         .then( async result =>{
-            await Sap.find({user:_id}).sort({harvestDate:-1}).limit(1)
+            await Sap.find({tree:id}).sort({harvestDate:-1}).limit(1)
                 .then(sap =>{
-                    if(sap){
-                        result.lastFlowDate.push(sap.harvestDate);
+                    console.log(sap);
+                    if(sap){// has sap entries
+                        console.log("has sap entries");
+                        result.lastFlowDate.push(sap[0].harvestDate);
+                        result.Tapped = false;
+                        console.log("after tapped")
                         result.save()
-                        res.redirect("/trees/" + req.params.id);
+                        console.log("after saved")
+                        res.redirect("/trees/" + id);
                     }else{
+                        console.log("does not have sap entries");
                         result.lastFlowDate.push(null);
+                        result.Tapped = false;
                         result.save()
-                        res.redirect("/trees/" + req.params.id);
+                        res.redirect("/trees/" + id);
                     }
 
+                }).catch(err =>{
+                   console.log(err);
                 });
+
         })
-    await Tree.updateOne({_id:id}, {$inc: { season: 1}, lastFlowDate: req.body.lastFlowDate, $push: { endNotes: req.body.endNotes}} );
+        .catch(err => {
+        console.log(err);
+    })
     res.redirect('http://localhost:3000/trees/' + id);
 });
 
