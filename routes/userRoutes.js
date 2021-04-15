@@ -432,6 +432,7 @@ router.get('/admin',isAdmin, (req,res) => {
 router.get('/admin/download', isAdmin, async (req,res) =>{
     let workbook = new excel.Workbook(); //creating workbook
     let trees = workbook.addWorksheet('Trees'); //creating worksheet
+    let seasons = workbook.addWorksheet('Seasons');
     let saps = workbook.addWorksheet('Saps');
     let syrups = workbook.addWorksheet('Syrups');
     //  WorkSheet Header
@@ -439,10 +440,23 @@ router.get('/admin/download', isAdmin, async (req,res) =>{
         { header: 'User', key: 'user', width: 10 },
         { header: 'Tree ID', key: '_id', width: 10 },
         { header: 'Circumf', key: 'circumf', width: 10 },
-        { header: 'Tapping Date', key: 'tappingDate', width: 10},
         { header: 'Tap Height', key: 'tapHeight', width: 10 },
+        { header: 'Tapping Date', key: 'tappingDate', width: 10},
+        { header: 'First Season Flow', key: 'firstFlowDate', width: 15},
+        { header: 'Last Season Flow', key: 'lastFlowDate', width: 15},
         { header: 'Latitude', key: 'latitude', width: 10 },
         { header: 'Longitude', key: 'longitude', width: 10},
+        { header: 'Start of Season Notes', key: 'startNotes', width: 30},
+        { header: 'End of Season Notes', key: 'endNotes', width: 30}
+
+    ];
+    seasons.columns = [
+        { header: 'User', key: 'user', width: 10 },
+        { header: 'Tree ID', key: '_id', width: 10 },
+        { header: 'Season', key: 'season', width: 10 },
+        { header: 'Tapping Date', key: 'tappingDates', width: 10},
+        { header: 'First Season Flow', key: 'firstFlowDate', width: 15},
+        { header: 'Last Season Flow', key: 'lastFlowDate', width: 15},
         { header: 'Start of Season Notes', key: 'startNotes', width: 30},
         { header: 'End of Season Notes', key: 'endNotes', width: 30}
 
@@ -464,7 +478,81 @@ router.get('/admin/download', isAdmin, async (req,res) =>{
     ]
     await Tree.find({})
         .then(result =>{
-            trees.addRows(result);
+            result.forEach(tree => {
+                console.log("tree",tree);
+                let season = tree.season[tree.season.length -1];
+                let tappingDate = tree.tappingDates[tree.tappingDates.length -1];
+                let firstFlowDate = tree.firstFlowDate[tree.firstFlowDate.length -1];
+                let lastFlowDate = tree.lastFlowDate[tree.lastFlowDate.length -1];
+                let startNote = tree.startNotes[tree.startNotes.length -1];
+                let endNote = tree.endNotes[tree.endNotes.length -1];
+                if(tree.season[tree.season.length -1] == undefined){
+                    season = "N/A"
+                }
+                if(tree.tappingDates[tree.tappingDates.length -1] == undefined){
+                    tappingDate = "N/A";
+                }
+                if(tree.firstFlowDate[tree.firstFlowDate.length -1] == undefined){
+                    firstFlowDate = "N/A"
+                }
+                if(tree.lastFlowDate[tree.lastFlowDate.length -1] == undefined){
+                    lastFlowDate = "N/A"
+                }
+                if(tree.startNotes[tree.startNotes.length -1] == undefined){
+                    startNote = "N/A"
+                }
+                if(tree.endNotes[tree.endNotes.length -1] == undefined){
+                    endNote = "N/A"
+                }
+                trees.addRows( [{
+                    user: tree.user,
+                    _id: tree._id,
+                    season: season,
+                    circumf: tree.circumf,
+                    tappingDate: tappingDate,
+                    firstFlowDate: firstFlowDate,
+                    lastFlowDate: lastFlowDate,
+                    tapHeight:tree.tapHeight,
+                    latitude: tree.latitude,
+                    longitude:tree.longitude,
+                    startNotes: startNote,
+                    endNotes: endNote
+                }]);
+            });
+        });
+    await Tree.find({})
+        .then(result =>{
+            result.forEach( tree => {
+                for(let i = 0; i < tree.season.length; i++){
+                    let firstFlowDate = tree.firstFlowDate[i];
+                    let lastFlowDate = tree.lastFlowDate[i];
+                    let endNote = tree.endNotes[i];
+                    let startNote = tree.startNotes[i];
+                    if(tree.startNotes[i] == undefined){
+                        startNote = "N/A"
+                    }
+                    if(tree.endNotes[i] == undefined){
+                        endNote = "N/A"
+                    }
+                    if(tree.firstFlowDate[i] == undefined){
+                        firstFlowDate = "N/A"
+                    }
+                    if(tree.lastFlowDate[i] == undefined){
+                        lastFlowDate = "N/A"
+                    }
+                    seasons.addRows( [{
+                        user:tree.user,
+                        _id: tree._id,
+                        season: tree.season[i],
+                        tappingDates: tree.tappingDates[i],
+                        firstFlowDate: firstFlowDate,
+                        lastFlowDate: lastFlowDate,
+                        startNotes: startNote,
+                        endNotes: endNote
+                    }]
+                   )
+                }
+            })
         });
     await Sap.find({})
         .then(result =>{
