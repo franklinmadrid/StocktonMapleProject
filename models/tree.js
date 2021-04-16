@@ -10,10 +10,6 @@ const treeSchema = new Schema({
         type: String,
         required: true
     },
-    stemCount: {
-        type: Number,
-        required: true
-    },
     circumf: {
         type: Number,
         required: true

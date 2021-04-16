@@ -76,7 +76,6 @@
                 <tr>
                     <th>Tree ID</th>
                     <th>Circumference (Inches)</th>
-                    <th>Stem Count</th>
                     <th>Tapping Date</th>
                     <th>Tap Height (Inches)</th>
                 </tr>
@@ -99,7 +98,6 @@
             $('#treeTable > tbody').append(tr);
             $("#treeTable > tbody > :last").append("<td>" + e._id + "</td>");
             $("#treeTable > tbody > :last").append("<td>" + e.circumf + "</td>");
-            $("#treeTable > tbody > :last").append("<td>" + e.stemCount + "</td>");
             console.log(e.tappingDate)
             $("#treeTable > tbody > :last").append("<td>" + e.tappingDates[e.tappingDates.length - 1].substring(0, 10) + "</td>");
             $("#treeTable > tbody > :last").append("<td>" + e.tapHeight + "</td>");
