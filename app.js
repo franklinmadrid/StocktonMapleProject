@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes.js');
 const registerRoutes = require('./routes/registerRoutes.js');
+const passResetRoutes = require('./routes/passResetRoutes.js');
 const session = require('express-session');
 const passport = require('passport');
 const MongoStore = require('connect-mongo');
@@ -63,6 +64,7 @@ app.use(passport.session());
 //---------------------Routes------------------------//
 app.use(userRoutes);
 app.use(registerRoutes);
+app.use(passResetRoutes);
 
 app.get('/', (req, res) => {
     let loggedIn = req.isAuthenticated();
