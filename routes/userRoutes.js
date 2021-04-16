@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const express = require('express');
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
@@ -45,12 +46,9 @@ router.post('/users/registerTree',isAuth, async (req, res) => {
         tree.firstFlowDate = [];
         tree.lastFlowDate = [];
         tree.tappingDates.push(tapDate);
-        console.log('pushed date',tree);
         tree.startNotes.push(startNotes);
         let year = tapDate.toString().substr(0,4)
-        console.log(tapDate.toString().substr(0,4));
         tree.season.push(year);
-        console.log("updated Tree",tree);
         tree.save()
             .then((result) => {
                 res.redirect("/users/" + req.user._id);
@@ -68,9 +66,7 @@ router.post('/users/registerHarvest',isAuth, async (req, res) => {
             const currentSeason = result.season[result.season.length -1];
             await Sap.find({tree:treeID,season:currentSeason})
                 .then(sapResult =>{
-                    console.log("sapResult:",sapResult);
                     if(sapResult.length > 0){//not first sap entry for the season
-                        console.log("inside not first sap entry");
                         let sap = new Sap(req.body);
                         sap.season = currentSeason;
                         sap.save()
@@ -79,7 +75,6 @@ router.post('/users/registerHarvest',isAuth, async (req, res) => {
                             })
                             .catch((err) => console.log(err));
                     }else{//first sap entry for the season
-                        console.log("inside first sap entry");
                         let sap = new Sap(req.body);
                         sap.season = currentSeason;
                         result.firstFlowDate.push(sap.harvestDate);
@@ -100,11 +95,8 @@ router.post('/users/registerHarvest',isAuth, async (req, res) => {
 });
 
 router.post('/registerSyrup',isAuth, (req, res) => {
-    console.log(req.body);
     req.body.user = req.user._id;
-    console.log(req.body);
     const syrup = new Syrup(req.body);
-    console.log(syrup);
     syrup.save()
         .then(() =>{
            res.redirect('http://localhost:3000/users/' + req.user._id);
@@ -116,23 +108,17 @@ router.post('/registerSyrup',isAuth, (req, res) => {
 
 router.post('/trees/:id/endTreeSeason',isAuth, async (req, res) => {
     const id = req.body._id;
-    console.log(id);
     await Tree.findById(id)
         .then( async result =>{
             await Sap.find({tree:id,season:result.season[result.season.length - 1]}).sort({harvestDate:-1}).limit(1)
                 .then(sap =>{
-                    console.log(sap);
                     if(sap.length > 0){// has sap entries
-                        console.log("has sap entries");
                         result.lastFlowDate.push(sap[0].harvestDate);
                         result.Tapped = false;
                         result.endNotes.push(req.body.endNotes);
-                        console.log("after tapped")
                         result.save()
-                        console.log("after saved")
                         res.redirect("/trees/" + id);
                     }else{
-                        console.log("does not have sap entries");
                         result.firstFlowDate.push(null);
                         result.lastFlowDate.push(null);
                         result.endNotes.push(req.body.endNotes);
@@ -154,7 +140,6 @@ router.post('/trees/:id/endTreeSeason',isAuth, async (req, res) => {
 
 router.post('/trees/:id/startTreeSeason',isAuth, async (req, res) => {
     const id = req.body._id;
-    console.log(id);
     await Tree.findById(id)
         .then( async result =>{
             result.tappingDates.push(req.body.tappingDate);
@@ -210,7 +195,6 @@ router.post("/admin/removeMod", async (req,res) =>{
     const username = req.body.username;
     User.findById(username)
         .then(result =>{
-            console.log(result);
             if(!result){
                 alert.push({msg:"Username not Found"})
                 res.render("admin",{user:req.user._id, alert})
@@ -223,12 +207,10 @@ router.post("/admin/removeMod", async (req,res) =>{
 });
 
 router.post("/admin/removeAdmin", async (req,res) =>{
-    console.log(req.body);
     let alert=[];
     const username = req.body.username;
     User.findById(username)
         .then(result =>{
-            console.log(result);
             if(!result){
                 alert.push({msg:"Username not Found"})
                 res.render("admin",{user:req.user._id, alert})
@@ -240,16 +222,74 @@ router.post("/admin/removeAdmin", async (req,res) =>{
         })
 });
 
+router.post("/admin/delete", async (req,res) =>{
+    let alert= [];
+    if(req.body.dataType == 'User'){
+        await User.findById(req.body.idDelete)
+            .then( async result =>{
+                if(!result){
+                    alert.push({msg:"Username Not Found"})
+                    res.render("admin",{user:req.user._id, alert})
+                }else{
+                    await Tree.find({user:result._id})
+                        .then( trees =>{
+                            trees.forEach(async tree =>{
+                                await Sap.deleteMany({tree: tree._id});
+                            })
+                        })
+                    await Tree.deleteMany({user:result._id})
+                    await Syrup.deleteMany({user:result._id})
+                    await User.deleteOne({_id: result._id})
+                }
+            })
+    }else if(req.body.dataType == 'Tree'){
+        await Tree.findById(req.body.idDelete)
+            .then( async result =>{
+                if(!result){
+                    alert.push({msg:"Tree Not Found"})
+                    res.render("admin",{user:req.user._id, alert})
+                }else{
+                    await Sap.deleteMany({tree: result._id});
+                    await Tree.deleteOne({_id: result._id})
+                }
+            })
+    }else if(req.body.dataType == 'Sap'){
+        if(mongoose.Types.ObjectId.isValid(req.body.idDelete)){
+            await Sap.findById(req.body.idDelete)
+                .then(async result =>{
+                    if(!result){
+                        alert.push({msg:"Sap Entry Not Found"})
+                        res.render("admin",{user:req.user._id, alert})
+                    }else{
+                        await Sap.deleteOne({_id:req.body.idDelete});
+                    }
+                })
+        }else{
+            alert.push({msg:"Sap ID is not Valid"})
+            res.render("admin",{user:req.user._id, alert})
+        }
+    }else if(req.body.dataType == 'Syrup'){
+        if(mongoose.Types.ObjectId.isValid(req.body.idDelete)){
+            await Syrup.findById(req.body.idDelete)
+                .then(async result =>{
+                    if(!result){
+                        alert.push({msg:"Syrup Entry Not Found"})
+                        res.render("admin",{user:req.user._id, alert})
+                    }else{
+                        await Syrup.deleteOne({_id:req.body.idDelete});
+                    }
+                })
+        }else{
+            alert.push({msg:"Syrup ID is not Valid"})
+            res.render("admin",{user:req.user._id, alert})
+        }
+
+    }
+    res.render("admin",{user:req.user._id, alert})
+});
+
 router.post('/forgotPass', async (req,res,next) => {
     let accessToken = await oAuth2Client.getAccessToken();
-    console.log(accessToken.token);
-    // waterfall = array of functions called in sequence
-        // function(done) {
-        //     crypto.randomBytes(20, function(err, buf) {
-        //         var token = buf.toString('hex');
-        //         done(err, token);
-        //     });
-        // },
     User.findOne({email: req.body.email})
         .then(result => {
             if (!result) {
@@ -258,7 +298,6 @@ router.post('/forgotPass', async (req,res,next) => {
             }else{
                 result.resetPasswordToken = accessToken.token;
                 result.resetPasswordExpires = Date.now() + 3600000; // 1 hour in ms
-                console.log("updated",result);
                 result.save()
                     .then(()=>{
                         let smtpTransport = nodemailer.createTransport({
@@ -300,7 +339,6 @@ router.post('/forgotPass', async (req,res,next) => {
 router.post('/resetPass/:accessToken', function(req, res) {
     User.findOne({ resetPasswordToken: req.params.accessToken, resetPasswordExpires: { $gt: Date.now() } })
         .then(async result =>{
-            console.log("results",result);
             if (!result) {
                 req.flash('error', 'Password reset token is invalid or has expired.');
                 return res.redirect('/login');
@@ -331,50 +369,6 @@ router.post('/resetPass/:accessToken', function(req, res) {
                 }
             }
         });
-
-
-    // async.waterfall([
-    //   function(done) {
-    //     User.findOne({ resetPasswordToken: req.params.accessToken, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
-    //       if (!user) {
-    //         req.flash('error', 'Password reset token is invalid or has expired.');
-    //         return res.redirect('/login');
-    //       }
-    //       if(req.body.password === req.body.confirm) {
-    //         const hashedPassword = bcrypt.hash(req.body.password, 10);
-    //         User.password = hashedPassword;
-    //         User.save().then(() => {
-    //             res.redirect('/login');
-    //         })
-    //       } else {
-    //           req.flash("error", "Passwords do not match.");
-    //           return res.redirect('/login');
-    //       }
-    //     });
-    //   },
-    //   function(user, done) {
-    //     var smtpTransport = nodemailer.createTransport({
-    //       service: 'Gmail',
-    //       auth: {
-    //         user: 'gogetmeseashells@gmail.com',
-    //         pass: process.env.GMAILPW
-    //       }
-    //     });
-    //     var mailOptions = {
-    //       to: user.email,
-    //       from: 'gogetmeseashells@gmail.com',
-    //       subject: 'Your password has been changed',
-    //       text: 'Hello,\n\n' +
-    //         'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
-    //     };
-    //     smtpTransport.sendMail(mailOptions, function(err) {
-    //       req.flash('success', 'Success! Your password has been changed.');
-    //       done(err);
-    //     });
-    //   }
-    // ], function(err) {
-    //   res.redirect('/login');
-    // });
   });
 
 //-----------------------get routes--------------------------//
@@ -559,9 +553,8 @@ router.get('/admin/download', isAdmin, async (req,res) =>{
     await Sap.find({})
         .then(result =>{
             result.forEach(sap => {
-                console.log(sap);
                 saps.addRow( {
-                    SapID: sap._id,
+                    SapID: sap._id.toString(),
                     tree: sap.tree,
                     sapVolume:sap.sapVolume,
                     harvestDate: sap.harvestDate,
@@ -573,7 +566,7 @@ router.get('/admin/download', isAdmin, async (req,res) =>{
         .then(results =>{
             results.forEach(result =>{
                 syrups.addRow({
-                    syrupID: result._id,
+                    syrupID: result._id.toString(),
                     user: result.user,
                     syrupProduced: result.syrupProduced,
                     sapProcessed: result.sapProcessed,
@@ -587,7 +580,6 @@ router.get('/admin/download', isAdmin, async (req,res) =>{
         });
     workbook.xlsx.writeFile("./Data/Data.xlsx")
         .then(function() {
-            console.log("file saved!");
             res.download("./Data/Data.xlsx");
         });
 

@@ -65,7 +65,13 @@
                 <input type="text" id="usernameRmAdmin" placeholder="username" name="username" hidden>
             </form>
             <form action="/admin/delete" method="post" id="deleteForm">
-                <span>Enter Username, Tree ID, Sap ID, Syrup ID to delete</span><br>
+                <span>Enter Username or Data ID and select data type</span><br>
+                <select id="dataType" name="dataType">
+                    <option value="User">User</option>
+                    <option value="Tree">Tree</option>
+                    <option value="Sap">Sap</option>
+                    <option value="Syrup">Syrup</option>
+                </select>
                 <input type="text" id="idDelete" placeholder="Data ID" name="idDelete" style="margin-bottom: 10px; margin-left: 55px; margin-right: auto">
                 <button class="btn btn-primary btn-block" type="submit" id="idDeleteBtn" style="background-color: #ff8c00">Delete</button>
             </form>
