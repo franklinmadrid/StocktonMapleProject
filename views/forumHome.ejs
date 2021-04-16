@@ -36,34 +36,34 @@
                             <span>A place to talk about syrup and things.</span>
                         </div>
                     </div>
-
-                    <div class="ibox-content forum-container">
-                        <div class="forum-title">
-                            <h3>Important Info</h3>
-                        </div>
-
-                        <div class="forum-item active">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <a href="" class="forum-item-title">General Discussion</a>
-                                    <div class="forum-sub-title">General talk relating to The Maple Project.</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="forum-item active">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <a href="" class="forum-item-title">Getting Started with Tapping</a>
-                                    <div class="forum-sub-title">All you need to know for beginners learning how to tap a tree.</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="ibox-content forum-container" id="forumContainer"></div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(() =>{
+            let categories = JSON.parse('<%-JSON.stringify(categories)%>');
+            let groups = JSON.parse('<%-JSON.stringify(groups)%>');
+            console.log("groups:",groups);
+            groups.forEach(group =>{
+                let groupID = group._id.replace(/\s+/g, "")
+                $("#forumContainer").append(`<div class="forum-title" id=${groupID}><h3>${group._id}</h3></div>`)
+            });
+
+            categories.forEach(category =>{
+                let groupID = category.group.replace(/\s+/g, "");
+                $("#" + groupID).append(`<div class="forum-item active">
+                                                        <div class="row">
+                                                            <div class="col-md-9">
+                                                                <a href="" class="forum-item-title"> ${category.name}</a>
+                                                                <div class="forum-sub-title">  ${category.description} </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>`)
+            });
+        });
+    </script>
 </body>
 </head>
 </html>
