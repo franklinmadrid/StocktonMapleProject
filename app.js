@@ -71,11 +71,10 @@ app.use(forumRoutes);
 app.get('/', (req, res) => {
     let loggedIn = req.isAuthenticated();
     if(loggedIn){
-        res.render('index',{message: req.flash("error"), loggedIn: loggedIn, user: req.user._id});
+        res.render('index',{loggedIn: loggedIn, user: req.user._id});
     }else{
-        res.render('index',{message: req.flash("error"), loggedIn: loggedIn});
+        res.render('index', {loggedIn: loggedIn});
     }
-
 });
 
 app.get('/about', (req, res) => {
