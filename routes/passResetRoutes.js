@@ -23,12 +23,12 @@ oAuth2Client.setCredentials({refresh_token: REFRESH_TOKEN});
 //----------------------post routes--------------------------//
 router.post('/forgotPass', async (req,res,next) => {
     let accessToken = await oAuth2Client.getAccessToken();
+    let alert = [];
     User.findOne({email: req.body.email})
         .then(result => {
             if (!result) {
-                req.flash('error', 'No account with that email address exists.');
-                return res.redirect('/forgotPass');
-                // res.render('forgotPass',{message: req.flash("error"}, '');
+                alert.push({msg: "No account with that email address exists"});
+                res.render('forgotPass', {alert});
             }else{
                 result.resetPasswordToken = accessToken.token;
                 result.resetPasswordExpires = Date.now() + 3600000; // 1 hour in ms
@@ -55,9 +55,9 @@ router.post('/forgotPass', async (req,res,next) => {
                         }
                         smtpTransport.sendMail(mailOptions, (err) => {
                             console.log('mail sent');
-                            req.flash('success', 'An email has been sent to ' + result.email);
                         });
-                        res.redirect("/");
+                        alert.push({msg: 'A password reset email has been sent to ' + result.email});
+                        res.render('forgotPass', {alert});
                     });
             }
         });
@@ -100,7 +100,8 @@ router.post('/resetPass/:accessToken', function(req, res) {
 
 //-----------------------get routes--------------------------//
 router.get('/forgotPass', (req,res) => {
-    res.render('forgotPass');
+    const errors = req.flash().error || [];
+    res.render('forgotPass', {errors});
 });
 
 router.get('/resetPass/:token', function(req, res) {
