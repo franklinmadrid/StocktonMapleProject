@@ -29,7 +29,7 @@
             <h5>Login</h5>
             <% if(typeof alert != 'undefined') { %>
                 <% console.log(alert) %>
-                <% message.forEach(function(error) { %>
+                <% alert.forEach(function(error) { %>
                     <div class="alert alert-warning alert-dismissible fade show" role="alert" id="alertNotFound">
                         <%= error.msg %>
                     </div>
