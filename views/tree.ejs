@@ -244,64 +244,70 @@
         $(document).ready(function() {
             for(let i = <%=tree.season[0]%>; i <= <%=tree.season[tree.season.length - 1]%>; i++){
                 $("#graphBtn" + i).click( ()=> {
-                    let jsonData = JSON.parse('<%-JSON.stringify(saps)%>');
-                    let data =[]
-                    let maxY = 0;
-                    jsonData.forEach(entry =>{
-                        if(entry.season == i){
-                            let date = new Date(entry.harvestDate);
-                            let vol = entry.sapVolume;
-                            if(vol > maxY){
-                                maxY = vol;
+                    if( $("#svg"+i).length > 0){
+                        $("#svg"+i).toggle();
+                    }else{
+                        let jsonData = JSON.parse('<%-JSON.stringify(saps)%>');
+                        let data =[]
+                        let maxY = 0;
+                        jsonData.forEach(entry =>{
+                            if(entry.season == i){
+                                let date = new Date(entry.harvestDate);
+                                let vol = entry.sapVolume;
+                                if(vol > maxY){
+                                    maxY = vol;
+                                }
+                                data.push({date, vol});
                             }
-                            data.push({date, vol});
-                        }
-                    });
-                    data = data.sort((a, b) => b.date - a.date);
-                    let margin = {top: 50, right: 50, bottom: 50, left: 50}
-                    let width = window.innerWidth - margin.left - margin.right // Use the window's width
-                    let height = window.innerHeight - margin.top - margin.bottom; // Use the window's height
-                    let x = d3.scaleTime().rangeRound([0, width]);
-                    let y = d3.scaleLinear().rangeRound([height, 5]);
-                    let line = d3.line()
-                        .x(function(d) { return x(d.date)})
-                        .y(function(d) { return y(d.vol)})
-                    x.domain(d3.extent(data, function(d) { return d.date }));
-                    y.domain(d3.extent(data, function(d) { return d.vol }));
+                        });
+                        data = data.sort((a, b) => b.date - a.date);
+                        let margin = {top: 50, right: 50, bottom: 50, left: 50}
+                        let width = window.innerWidth - margin.left - margin.right // Use the window's width
+                        let height = window.innerHeight - margin.top - margin.bottom; // Use the window's height
+                        let x = d3.scaleTime().rangeRound([0, width]);
+                        let y = d3.scaleLinear().rangeRound([height, 5]);
+                        let line = d3.line()
+                            .x(function(d) { return x(d.date)})
+                            .y(function(d) { return y(d.vol)})
+                        x.domain(d3.extent(data, function(d) { return d.date }));
+                        y.domain(d3.extent(data, function(d) { return d.vol }));
 
-                    let svg = d3.select("#chartContainer").append("svg")
-                        .attr("width", width + margin.left + margin.right)
-                        .attr("height", height + margin.top + margin.bottom)
-                        .append("g")
-                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                        let svg = d3.select("#chartContainer").append("svg")
+                            .attr("width", width + margin.left + margin.right)
+                            .attr("height", height + margin.top + margin.bottom)
+                            .attr("id",'svg'+i)
+                            .append("g")
+                            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-                    svg.append("g")
-                        .attr("class", "x axis")
-                        .attr("transform", "translate(0," + height + ")")
-                        .call(d3.axisBottom(x)) // Create an axis component with d3.axisBottom
-                        .select(".domain");
+                        svg.append("g")
+                            .attr("class", "x axis")
+                            .attr("transform", "translate(0," + height + ")")
+                            .call(d3.axisBottom(x)) // Create an axis component with d3.axisBottom
+                            .select(".domain");
 
 
-                    svg.append("g")
-                        .attr("class", "y axis")
-                        .call(d3.axisLeft(y)); // Create an axis component with d3.axisLeft
+                        svg.append("g")
+                            .attr("class", "y axis")
+                            .call(d3.axisLeft(y)); // Create an axis component with d3.axisLeft
 
-                    svg.append("path")
-                        .datum(data)
-                        .attr("fill", "none")
-                        .attr("stroke", "steelblue")
-                        .attr("stroke-linejoin", "round")
-                        .attr("stroke-linecap", "round")
-                        .attr("stroke-width", 1.5)
-                        .attr("d", line);
+                        svg.append("path")
+                            .datum(data)
+                            .attr("fill", "none")
+                            .attr("stroke", "steelblue")
+                            .attr("stroke-linejoin", "round")
+                            .attr("stroke-linecap", "round")
+                            .attr("stroke-width", 1.5)
+                            .attr("d", line);
 
-                    svg.selectAll(".dot")
-                        .data(data)
-                        .enter().append("circle") // Uses the enter().append() method
-                        .attr("class", "dot") // Assign a class for styling
-                        .attr("cx", function(d) { return x(d.date) })
-                        .attr("cy", function(d) { return y(d.vol) })
-                        .attr("r", 5)
+                        svg.selectAll(".dot")
+                            .data(data)
+                            .enter().append("circle") // Uses the enter().append() method
+                            .attr("class", "dot") // Assign a class for styling
+                            .attr("cx", function(d) { return x(d.date) })
+                            .attr("cy", function(d) { return y(d.vol) })
+                            .attr("r", 5)
+                    }
+
 
                 })
             }
@@ -309,5 +315,15 @@
         });
     </script>
 
+    <script>
+        //Graph
+        $(document).ready(function() {
+            for(let i = <%=tree.season[0]%>; i <= <%=tree.season[tree.season.length - 1]%>; i++) {
+                    if( $("#svg"+i).length > 0){
+                        $("#graphBtn"+i).toggle();
+                    }
+                }
+            })
+    </script>
 </body>
 </html>
