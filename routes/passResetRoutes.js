@@ -7,11 +7,11 @@ const async = require('async');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const {google} = require('googleapis');
-const flash = require('connect-flash');
 
 require('dotenv').config();
 
 // Password reset credentials (Google Mail API)
+// Can make the constants below hidden (locally) in .env, but then have to configure for remote server
 const CLIENT_ID = '967810289324-2naaq6ubumf71n5gcfeqbvd80ekqvack.apps.googleusercontent.com';
 const CLIENT_SECRET = 'OKvY4Lyk6Y-pnNMtIffYshK8';
 const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
@@ -64,11 +64,12 @@ router.post('/forgotPass', async (req,res,next) => {
     });
 
 router.post('/resetPass/:accessToken', function(req, res) {
+    let alert = [];
     User.findOne({ resetPasswordToken: req.params.accessToken, resetPasswordExpires: { $gt: Date.now() } })
         .then(async result =>{
             if (!result) {
-                req.flash('error', 'Password reset token is invalid or has expired.');
-                return res.redirect('/login');
+                alert.push({msg: "Password reset token is invalid or has expired."});
+                return res.render('login', {alert});
             }else {
                 if (req.body.password === req.body.confirm) {
                     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -84,14 +85,15 @@ router.post('/resetPass/:accessToken', function(req, res) {
                         let mailOptions = {
                             to: result.email,
                             from: 'gogetmeseashells@gmail.com',
-                            subject: 'Your password has been changed',
+                            subject: 'Your Stockton Maple password has been changed',
                             text: 'Hello,\n\n' +
                                 'This is a confirmation that the password for your account ' + result.email + ' has just been changed.\n'
                         };
                         smtpTransport.sendMail(mailOptions, () => {
-                            req.flash('success', 'Success! Your password has been changed.');
+                            console.log('mail sent');
                         });
-                        res.redirect('/login');
+                        alert.push({msg: "Success! Your password has been changed."});
+                        res.render('login', {alert});
                     });
                 }
             }
@@ -100,15 +102,15 @@ router.post('/resetPass/:accessToken', function(req, res) {
 
 //-----------------------get routes--------------------------//
 router.get('/forgotPass', (req,res) => {
-    const errors = req.flash().error || [];
-    res.render('forgotPass', {errors});
+    res.render('forgotPass');
 });
 
 router.get('/resetPass/:token', function(req, res) {
+    alert = [];
     User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
       if (!user) {
-        req.flash('error', 'Password reset token is invalid or has expired.');
-        return res.redirect('/forgotPass');
+        alert.push({msg: "Password reset token is invalid or has expired."});
+        return res.render('forgotPass', {alert});
       }
       res.render('resetPass', {token: req.params.token});
     });
