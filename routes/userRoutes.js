@@ -7,6 +7,7 @@ const Sap = require("../models/sap");
 const Syrup = require("../models/syrup");
 const router = express.Router();
 const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 const {isAuth, isAdmin} = require('./authMiddleware');
 const excel = require('exceljs');
 const Group = require("../models/group");
@@ -45,26 +46,27 @@ router.post('/login',
 // passport.use(new LocalStrategy(
 //     function(username, password, done) {
 //         User.findOne({ username: username }, function (err, user) {
-//         alert = [];
-//         if (err) { return done(err); }
-//         if (!user) {
-//             alert.push({msg: "The username doesn't exist"});
-//             return done(null, false, {alert});
-//         }
-//         if (!user.verifyPassword(password)) {
-//             alert.push({msg: "Incorrect password"})
-//             return done(null, false, {alert});
-//         }
-//         return done(null, user);
-//         });
+//             console.log(username);
+//             alert = [];
+//             if (err) { return done(err); }
+//             if (!user) {
+//                 alert.push({msg: "The username doesn't exist"});
+//                 return done(null, false, {message: "The username doesn't exist"});
+//             }
+//             if (!user.verifyPassword(password)) {
+//                 alert.push({msg: "Incorrect password"})
+//                 return done(null, false, {message: "Incorrect password"});
+//             }
+//             return done(null, user);
+//             });
 //      }
 // ));
 
 // router.post('/login', 
-//     passport.authenticate('local', ),
-//     function(req, res) {
-//         res.redirect('/');
-//     }
+//     passport.authenticate('local',
+//         (req, res) => {
+//             res.redirect('/');
+//         })
 // );
 
 // router.post('/login', 
@@ -74,31 +76,6 @@ router.post('/login',
 //     }
 // );
 
-// router.post('/login', (req, res, next) => {
-//     passport.authenticate('local',
-//     (err, user) => {
-//         alert = [];
-//         const username = req.body.username;
-//         const password = req.body.password;
-//         if (err) {
-//             return next(err);
-//         }
-//         if (!user) {
-//             alert.push("Username doesn't exist");
-//             return res.render('login', {alert});
-//         }
-//         if (!user.validPassword(req.body.password)) {
-//             alert.push("Password doesn't exist");
-//             return res.render('login', {alert});
-//         }
-//         req.logIn(user, function(err) {
-//             if (err) {
-//                 return next(err);
-//             }
-//             return res.redirect('/');
-//         });
-//     })(req, res, next);
-// });
 
 router.post('/users/registerTree',isAuth, async (req, res) => {
     try{
