@@ -31,6 +31,11 @@ const treeSchema = new Schema({
         type: Number,
         required: true
     },
+    sapCharacteristic:
+    {
+        type: String,
+        required: true
+    },
     longitude: {
         type: Number,
         required: true
