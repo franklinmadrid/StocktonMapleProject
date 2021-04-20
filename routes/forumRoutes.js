@@ -8,9 +8,13 @@ router.get("/forumHome",async (req, res) => {
         .then(async groups =>{
             await Category.find({})
                 .then(async categories =>{
+                    let profileLink = "/login";
+                    if(req.user != null){
+                        profileLink = "/users/"+ req.user._id;
+                    }
                     res.render("forumHome",{
                         link:"/",
-                        profileLink:"/users/"+ req.user._id,
+                        profileLink,
                         categories,
                         groups
                     });
