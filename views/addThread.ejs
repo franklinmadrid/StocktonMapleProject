@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title Page-->
-    <title>Register a Tree</title>
+    <title>Create A Thread</title>
 
     <!-- Main CSS-->
     <link href="/register.css" rel="stylesheet" media="all">
@@ -114,7 +114,7 @@
         <div class="card card-4">
             <div class="card-body">
                 <!--Title of Form-->
-                <h2 class="title">Add Category Group</h2>
+                <h2 class="title">Add New Thread</h2>
                 <% if(typeof alert != 'undefined') { %>
                     <% alert.forEach(function(error) { %>
                         <div class="alert alert-warning alert-dismissible fade show" role="alert" style='margin-left:auto; margin-right:auto'>
@@ -123,16 +123,36 @@
                     <% }) %>
                     <% alert = [] %>
                 <% } %>
-                <form action="/admin/addGroup" method="POST" role="form" id="addCatForm">
+                <form action="/forumHome/<%=groupID%>/<%=catName%>/addThread" method="POST" role="form" id="addThreadForm">
 
                     <!-- First row -->
                     <div class="row row-space">
                         <div class="col-2">
                             <div class="form-group">
-                                <label>Category Group</label>
+                                <label>Thread Title</label>
                                 <input type="text" class="input--style-4" id="name" name="name" required>
                             </div>
                         </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <div>
+                                    <!-- Used for spacing purposes -->
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Notes Row-->
+                    <div class="row" style="margin-left: 1px; margin-top: 10px">
+                        <div class="form-group">
+                            <label>Text</label>
+                            <br>
+                            <textarea class="text" cols="70" rows ="10" form="addThreadForm" id="text" name="text"></textarea>
+                        </div>
+                    </div>
+
                     <!--Button Row-->
                     <div class="row row-space">
                         <div class="col-2">

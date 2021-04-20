@@ -340,6 +340,7 @@ router.post('/admin/addCategory',isAdmin, (req,res) => {
                 category.threads = 0;
                 category.posts = 0;
                 category.lastPost = "";
+                category._id=category.name.replace(/\s+/g, "") + "_" + category.group;
                 category.save()
                     .then( ()=>{
                         res.render("admin",{user:req.user._id})
@@ -359,7 +360,9 @@ router.post('/admin/addCategory',isAdmin, (req,res) => {
 });
 
 router.post("/admin/addGroup",isAdmin, (req,res) => {
-    Group.findById(req.body._id)
+    const groupID = req.body.name.replace(/\s+/g, "");
+    req.body._id = groupID
+    Group.findById(groupID)
         .then(result =>{
             if(!result){
                 const group = new Group(req.body)

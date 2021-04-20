@@ -201,3 +201,32 @@ a.forum-item-title:hover {
 .m-b-sm {
     margin-bottom: 10px;
 }
+
+.btn {
+  display: inline-block;
+  line-height: 50px;
+  padding: 0 50px;
+  -webkit-transition: all 0.4s ease;
+  -o-transition: all 0.4s ease;
+  -moz-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+  cursor: pointer;
+  font-size: 18px;
+  color: #fff;
+  font-family: "Poppins", "Arial", "Helvetica Neue", sans-serif;
+}
+
+
+.btn--radius {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+
+.btn--orange {
+  background: #ff8c00;
+}
+
+.btn--orange:hover {
+  background: #3868cd;
+}
