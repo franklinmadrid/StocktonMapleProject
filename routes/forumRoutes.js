@@ -62,6 +62,18 @@ router.get("/forumHome/:group/:category/addThread", (req,res) =>{
     });
 });
 
+router.get("/forumHome/:group/:category/:threadID", (req,res) =>{
+    const groupID = req.params.group;
+    const catName = req.params.category;
+    const threadID = req.params.threadID;
+    Post.find({thread:threadID})
+        .then(result =>{
+            res.render("thread",{
+                result,
+            });
+        });
+});
+
 //-----------------Post Routes----------------//
 router.post("/forumHome/:group/:category/addThread",isAuth,(req, res) =>{
     const groupID = req.params.group;
