@@ -20,7 +20,7 @@ require('dotenv').config();
 //-------------Post routes--------------------//
 
 router.post('/login',
-    passport.authenticate('local',{failureRedirect: "/", failureFlash: true}), (req,res) => {
+    passport.authenticate('local',{failureRedirect: "/login", failureFlash: true}), (req,res) => {
         res.redirect("/users/" + req.user._id);
     }
 );
@@ -383,7 +383,9 @@ router.get('/logout',(req, res) => {
 });
 
 router.get('/login', (req, res) => {
-    res.render('login',{message: req.flash("error")});
+    let messages = req.flash("error")
+    console.log("messages",messages);
+    res.render('login',{messages});
 });
 
 router.get('/users/:id', async (req,res) =>{

@@ -8,7 +8,7 @@ const  verifyCallback =  async (username, password, done) => {
     User.findOne({_id: username})
         .then((user)  => {
            if(!user){
-               return done(null,false,{message:'incorrect username'});
+               return done(null,false,{message:'Incorrect username'});
            }
            //checks if password provided is valid
            bcrypt.compare(password, user.password, (err,result) =>{
@@ -18,7 +18,7 @@ const  verifyCallback =  async (username, password, done) => {
                    console.log(result);
                    return done(null,user);
                }else{
-                   return done(null,false, {message:'incorrect password'});
+                   return done(null,false, {message:'Incorrect password'});
                }
            });
         })

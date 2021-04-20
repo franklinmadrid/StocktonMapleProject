@@ -39,6 +39,13 @@
             <form class="form-signin col-lg-6 offset-lg-3" action="/login" method="POST">
                 <div class="row justify-content-center">
                     <div class="form-group">
+                        <%if(messages.length > 0){%>
+                            <% messages.forEach( msg=>{%>
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert" id="alertNotFound">
+                                <%=msg%>
+                            </div>
+                            <%})%>
+                        <%}%>
                         <label for="username" class="sr-only">Username</label>
                         <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
                     </div>
