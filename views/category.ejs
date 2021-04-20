@@ -43,21 +43,38 @@
                 <div class="ibox-content forum-container" id="forumContainer">
                     <%const newThreadLink = "/forumHome/" + groupID + "/" + categoryName + "/" + "addThread"%>
                     <a href="<%=newThreadLink%>" class="btn btn--radius btn--orange">Add New Thread</a>
-                    <div class="forum-title"><h3>category name</h3>
-                        <div class="forum-item active">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <a href="" class="forum-item-title"> Thread name</a>
-                                    <div class="forum-sub-title">  ${thread.description} </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="forum-title" id="forum-title"><h3><%=categoryDisplayName%></h3>
+<!--                        <div class="forum-item active">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-md-9">-->
+<!--                                    <a href="" class="forum-item-title"> Thread name</a>-->
+<!--                                    <div class="forum-sub-title">  ${thread.description} </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(() => {
+        let threads = JSON.parse('<%- JSON.stringify(threads) %>');
+        threads.forEach(thread =>{
+            let link = "/forumHome/"+ "<%=groupID%>" + "/" + "<%=categoryName%>" + "/" + thread._id;
+            console.log(thread,link);
+            $("#forum-title").append(`<div class="forum-item active">
+                                                        <div class="row">
+                                                            <div class="col-md-9">
+                                                                <a href= ` + link +`  class="forum-item-title"> ${thread.name}</a>
+                                                                <div class="forum-sub-title">  by: ${thread.originalPoster} </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>`)
+        });
+    })
+</script>
 </body>
 </head>
 </html>

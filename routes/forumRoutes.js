@@ -30,13 +30,12 @@ router.get("/forumHome/:group/:category", async (req , res) =>{
     const groupID = req.params.group;
     const catID = req.params.category + "_" + groupID;
     await Category.findById(catID)
-        .then(async result =>{
-            if(!result){
+        .then(async catResult =>{
+            if(!catResult){
                 res.redirect("/404")
             }else{
-                await Thread.find({category:result._id})
+                await Thread.find({category:catResult._id})
                     .then(result =>{
-                        console.log(result);
                         let profileLink = "/login";
                         if(req.user != null){
                             profileLink = "/users/"+ req.user._id;
@@ -46,6 +45,8 @@ router.get("/forumHome/:group/:category", async (req , res) =>{
                             profileLink,
                             categoryName: req.params.category,
                             groupID,
+                            categoryDisplayName:catResult.name,
+                            threads: result
                         });
                     });
             }
