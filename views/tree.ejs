@@ -25,6 +25,13 @@
             height: 400px;
             width: 50%;
         }
+        #chartContainer {
+            background-color: white;
+            position: absolute;
+        }
+        #specific_locations_add {
+            position: relative;
+        }
     </style>
 </head>
 <body>
@@ -86,9 +93,9 @@
         </table>
     </div>
 
-    <div id="chartContainer"></div>
+    <div id="chartContainer" class="d-inline-flex"></div>
 
-    <h3 style="text-align: center; margin-top: 100px"><%=`${treeID}'s Sap Table`%></h3>
+    <h3 style="text-align: center; margin-top: 20px"><%=`${treeID}'s Sap Table`%></h3>
 
     <script>
         let features = new ol.Feature({
@@ -242,6 +249,14 @@
     </script>
 
     <script>
+
+        function offset(el) {
+            var rect = el.getBoundingClientRect(),
+            scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
+            scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            return { top: rect.top + scrollTop, left: rect.left + scrollLeft }
+        }
+
         //Graph
         $(document).ready(function() {
             for(let i = <%=tree.season[0]%>; i <= <%=tree.season[tree.season.length - 1]%>; i++){
@@ -263,9 +278,12 @@
                             }
                         });
                         data = data.sort((a, b) => b.date - a.date);
+                        let button = document.querySelector("#graphBtn" + i);
+                        let buttonOffset = offset(button);
+                        console.log(buttonOffset);
                         let margin = {top: 50, right: 50, bottom: 50, left: 50}
-                        let width = window.innerWidth - margin.left - margin.right // Use the window's width
-                        let height = window.innerHeight - margin.top - margin.bottom; // Use the window's height
+                        let width = 400; // Use the window's width
+                        let height = 250 - margin.top - margin.bottom; // Use the window's height
                         let x = d3.scaleTime().rangeRound([0, width]);
                         let y = d3.scaleLinear().rangeRound([height, 5]);
                         let line = d3.line()

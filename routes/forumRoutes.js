@@ -70,6 +70,8 @@ router.get("/forumHome/:group/:category/:threadID", (req,res) =>{
         .then(result =>{
             res.render("thread",{
                 result,
+                groupID,
+                catName,
             });
         });
 });

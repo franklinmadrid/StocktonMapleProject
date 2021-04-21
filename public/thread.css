@@ -1,0 +1,25 @@
+#postHeader {
+    background-color: #e0e0e0;
+}
+#postHeader:after {
+    content: "";
+    display: block;
+    margin: 0 auto;
+    width: 75%;
+    padding-top: 3px;
+    border-bottom: 1px solid;
+}
+#postContainer {
+    background-color: #eee;
+    border-bottom: 3px solid black;
+}
+#postBody {
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    min-height: 80px;
+}
+#postFooter {
+    background-color: #e0e0e0;
+}

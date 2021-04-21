@@ -13,9 +13,6 @@
     <div id="navbarText">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%=link%>">Home</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%=profileLink%>">Profile</a>
             </li>
             <li class="nav-item">
@@ -24,6 +21,9 @@
                 <%}else{%>
                 <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="/logout">Logout</a>
                 <%}%>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="/forumHome">Back to Forum Home</a>
             </li>
         </ul>
     </div>
@@ -36,7 +36,7 @@
 
                 <div class="ibox-content m-b-sm border-bottom">
                     <div class="p-xs">
-                        <h2>The Maple Project Forum</h2>
+                        <h2><%=categoryName%></h2>
                         <span>A place to talk about syrup and things.</span>
                     </div>
                 </div>
