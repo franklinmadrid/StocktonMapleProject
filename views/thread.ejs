@@ -28,56 +28,7 @@
                         <div class="p-xs">
                             <h2><%=threadName%></h2>
                             <h4>by: <%=originalPoster%></h4>
-                            <a href="<!--reply page link-->" class="btn btn--radius btn--orange">Reply</a>
-                        </div>
-                    </div>
-                    <div id="postContainer">
-                        <div id="postHeader">
-                            <h6 style="display: inline; margin-left: 5px;">User name placeholder</h6>
-                            <h6 style="display: inline; float: right; margin-right: 5px;">Data and time placeholder</h6>
-                        </div>
-                        <div id="postBodyContainer">
-                            <div id="postBody">
-                                Our 2x6 evaporator runs like crap on #2 oil. We bought it used from a guy who owns an
-                                oil company in VT. Clearly, they have the nozzle size and pressures set to run on K-1.
-                                We have a stack temp of 700 degrees and a tight flame dispersion with K-1. Even running
-                                a mix of the two, it runs like crap. The stack temp climbs to 900 and the flame is wider
-                                and the whole evaporator runs worse with any #2 mixed in. Boil rates go from around 50
-                                GPH to less than 40 GPH. Last year we tried #2 at the end of the year when we ran out
-                                of K-1. This year we added a 2nd tank with K-1 in it and when we ran out, we swapped to
-                                the other tank which was 80% K-1, 20% #2 oil and it ran the same as if it was all #2.
-                                As mentioned, oil is also dirtier. It produces an oily soot compared to the dry soot
-                                from K-1 that is much easier to clean and does not build up on the pans as badly. Point
-                                is, we have learned the hard way there are nozzle and pressure settings for whatever you
-                                want to run. Fortunately, it was on the last few boils each year. I am sure we could
-                                change things to get a better boil with #2 oil but it works perfect with K-1 so why mess
-                                with it. We have chose to stick with K-1 and bare that extra cost but I am tempted to
-                                try some diesel. So the first question you should ask is what was the burner designed
-                                to run on? Maybe our evaporator is overly sensitive but we will never run another ounce
-                                of #2 in ours.
-                            </div>
-                        </div>
-                        <div id="postFooter">
-                            <h6 style="display: inline; margin-left: 5px">Post footer, i dont even know what we would put here.</h6>
-                        </div>
-                    </div>
-                    <div id="postContainer" style="background-color: #eee;">
-                        <div id="postHeader">
-                            <h6 style="display: inline; margin-left: 5px">User name placeholder</h6>
-                            <h6 style="display: inline; float: right; margin-right: 5px">Data and time placeholder</h6>
-                        </div>
-                        <div id="postBodyContainer">
-                            <div id="postBody">
-                                Had my oil fired for 3 seasons , always have run off road diesel in it . No issues and
-                                always can find it cheaper than home heating oil around here. I would suggest no matter
-                                what u get for a rig , and im gonna probly take heat for this, call cdl and have there
-                                oil guy richard come tune it in !!! Well worth the money . Or if u end up with a new
-                                cdl oil rig first time is free. Im sure theres more out there than him but hes made
-                                mine run excellent.. just my 2 cents
-                            </div>
-                        </div>
-                        <div id="postFooter">
-                            <h6 style="display: inline; margin-left: 5px">Post footer, i dont even know what we would put here.</h6>
+                            <a href="/forumHome/<%=groupID%>/<%=catName%>/<%=threadID%>/reply" class="btn btn--radius btn--orange">Reply</a>
                         </div>
                     </div>
                 </div>
@@ -91,17 +42,17 @@
         console.log(posts);
         posts.forEach(post =>{
             const date = new Date(post.createdAt).toString();
-            $("#allPostsContainer").append(`<div id="postContainer" style="background-color: #eee;">
-                        <div id="postHeader">
+            $("#allPostsContainer").append(`<div class="postContainer" style="background-color: #eee;">
+                        <div class="postHeader">
                             <h6 style="display: inline; margin-left: 5px">` + post.user + `</h6>
                             <h6 style="display: inline; float: right; margin-right: 5px">`+  date.substring(0,21) +  date.substring(34,) +`</h6>
                         </div>
                         <div id="postBodyContainer">
-                            <div id="postBody">
+                            <div class="postBody">
                                 `+ post.text +`
                             </div>
                         </div>
-                        <div id="postFooter">
+                        <div class="postFooter">
                             <h6 style="display: inline; margin-left: 5px">Post footer, i dont even know what we would put here.</h6>
                         </div>
                     </div>`)

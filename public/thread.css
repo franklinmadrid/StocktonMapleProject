@@ -1,7 +1,7 @@
-#postHeader {
+.postHeader {
     background-color: #e0e0e0;
 }
-#postHeader:after {
+.postHeader:after {
     content: "";
     display: block;
     margin: 0 auto;
@@ -9,17 +9,18 @@
     padding-top: 3px;
     border-bottom: 1px solid;
 }
-#postContainer {
+.postContainer {
     background-color: #eee;
     border-bottom: 3px solid black;
 }
-#postBody {
+.postBody {
     width: 90%;
     margin: 0 auto;
     margin-top: 5px;
     margin-bottom: 5px;
     min-height: 80px;
+    word-wrap: break-word;
 }
-#postFooter {
+.postFooter {
     background-color: #e0e0e0;
 }
