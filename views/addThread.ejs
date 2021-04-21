@@ -10,6 +10,7 @@
 
     <!-- Main CSS-->
     <link href="/register.css" rel="stylesheet" media="all">
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <style>
         .alert {
             padding: 15px;
@@ -147,9 +148,9 @@
                     <!--Notes Row-->
                     <div class="row" style="margin-left: 1px; margin-top: 10px">
                         <div class="form-group">
-                            <label>Text</label>
-                            <br>
-                            <textarea class="text" cols="70" rows ="10" form="addThreadForm" id="text" name="text"></textarea>
+                            <label>Text (optional)</label>
+                            <div id="charCount"> 20000 chars left</div>
+                            <textarea class="text" cols="70" rows ="10" form="addThreadForm" id="text" name="text"  maxlength="20000" required></textarea>
                         </div>
                     </div>
 
@@ -172,5 +173,14 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(()=>{
+        $('#text').on("input", function(){
+            var maxlength = $(this).attr("maxlength");
+            var currentLength = $(this).val().length;
+            $("#charCount").html(maxlength - currentLength + " chars left");
+        });
+    });
+</script>
 </body>
 </html>

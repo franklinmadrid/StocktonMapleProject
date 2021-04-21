@@ -108,6 +108,7 @@ router.post("/forumHome/:group/:category/addThread",isAuth,(req, res) =>{
     thread.originalPoster = req.user._id;
     thread.category = catID;
     thread.save();
+    console.log("req.body:",req.body);
     if(req.body.text.length != 0){
         let post = new Post()
         post.text = req.body.text
@@ -121,7 +122,7 @@ router.post("/forumHome/:group/:category/addThread",isAuth,(req, res) =>{
 router.post("/forumHome/:group/:category/:threadID/reply", isAuth,(req,res) =>{
     const threadID = req.params.threadID;
     const groupID = req.params.group;
-    const category = req.params.cqategory
+    const category = req.params.category
     let post = new Post({
         user:req.user._id,
         text:req.body.text,
@@ -129,7 +130,9 @@ router.post("/forumHome/:group/:category/:threadID/reply", isAuth,(req,res) =>{
     })
     post.save()
         .then( () =>{
-            res.redirect("/forumHome/"+groupID + "/" + category + "/" + threadID);
+            const link = "/forumHome/"+ groupID + "/" + category + "/" + threadID;
+            console.log(link)
+            res.redirect(link);
         })
 });
 
