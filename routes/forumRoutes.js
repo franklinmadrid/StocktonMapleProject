@@ -66,14 +66,23 @@ router.get("/forumHome/:group/:category/:threadID", (req,res) =>{
     const groupID = req.params.group;
     const catName = req.params.category;
     const threadID = req.params.threadID;
-    Post.find({thread:threadID})
-        .then(result =>{
-            res.render("thread",{
-                result,
-                groupID,
-                catName,
-            });
-        });
+    console.log(threadID);
+    Thread.findById(threadID)
+        .then(thread =>{
+            Post.find({thread:threadID})
+                .then(result =>{
+                    const threadName = thread.name;
+                    console.log(result)
+                    res.render("thread",{
+                        result,
+                        groupID,
+                        catName,
+                        threadName,
+                        originalPoster: thread.originalPoster
+                    });
+                });
+        })
+
 });
 
 //-----------------Post Routes----------------//
