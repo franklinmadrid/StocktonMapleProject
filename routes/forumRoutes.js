@@ -4,6 +4,7 @@ const Group = require("../models/group");
 const Category = require("../models/category");
 const Thread = require("../models/thread");
 const Post = require("../models/post");
+const User = require("../models/user");
 const {isAuth} = require("./authMiddleware");
 
 router.get("/forumHome",async (req, res) => {
@@ -72,7 +73,10 @@ router.get("/forumHome/:group/:category/:threadID", (req,res) =>{
             Post.find({thread:threadID})
                 .then(result =>{
                     const threadName = thread.name;
-                    console.log(result)
+                    console.log("stringify JSON",JSON.stringify(result))
+                    // result = JSON.parse(JSON.stringify(result).escape());
+                    // console.log("parsed result",result);
+                    result = JSON.stringify(result)
                     res.render("thread",{
                         result,
                         groupID,
@@ -114,7 +118,11 @@ router.post("/forumHome/:group/:category/addThread",isAuth,(req, res) =>{
         post.text = req.body.text
         post.thread = thread._id;
         post.user = req.user._id;
-        post.save();
+        User.findById(req.user._id)
+            .then(result =>{
+                post.signature = result.signature
+                    post.save();
+            })
     }
     res.redirect('/forumHome/' + groupID + "/" + req.params.category);
 });
@@ -123,16 +131,19 @@ router.post("/forumHome/:group/:category/:threadID/reply", isAuth,(req,res) =>{
     const threadID = req.params.threadID;
     const groupID = req.params.group;
     const category = req.params.category
-    let post = new Post({
-        user:req.user._id,
-        text:req.body.text,
-        thread: threadID
-    })
-    post.save()
-        .then( () =>{
-            const link = "/forumHome/"+ groupID + "/" + category + "/" + threadID;
-            console.log(link)
-            res.redirect(link);
+    User.findById(req.user._id)
+        .then(result =>{
+            let post = new Post({
+                user:req.user._id,
+                text:req.body.text,
+                thread: threadID,
+                signature: result.signature
+            })
+            post.save()
+                .then( () =>{
+                    const link = "/forumHome/"+ groupID + "/" + category + "/" + threadID;
+                    res.redirect(link);
+                })
         })
 });
 

@@ -23,4 +23,5 @@
 }
 .postFooter {
     background-color: #e0e0e0;
+    word-wrap: break-word;
 }

@@ -11,6 +11,9 @@ const postSchema = new Schema({
     thread: {
         type: String, //thread ID
     },
+    signature: {
+        type: String
+    },
 },{timestamps: true});
 
 const Post = mongoose.model('Post', postSchema);

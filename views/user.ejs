@@ -19,6 +19,34 @@
         tr.clickable-row {
             cursor: pointer;
         }
+        .btn {
+            display: inline-block;
+            line-height: 50px;
+            padding: 0 20px;
+            -webkit-transition: all 0.4s ease;
+            -o-transition: all 0.4s ease;
+            -moz-transition: all 0.4s ease;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            font-size: 16px;
+            color: #fff;
+            font-family: "Poppins", "Arial", "Helvetica Neue", sans-serif;
+        }
+
+
+        .btn--radius {
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+        }
+
+        .btn--orange {
+            background: #ff8c00;
+        }
+
+        .btn--orange:hover {
+            background: #3868cd;
+        }
     </style>
     <script type="text/javascript" class="init">
         $(document).ready(function() {
@@ -69,6 +97,7 @@
     <div style="margin-left: 20px">
         <p style="margin-top:20px">UserName: <%=user._id%></p>
         <p>Email: <%= user.email%></p>
+        <a href="/users/<%=user._id%>/addSignature" class="btn btn--radius btn--orange">Add Forum Signature</a>
     </div>
     <div class="container" style="margin-top: 30px">
         <table id="treeTable" class="display center">

@@ -38,10 +38,10 @@
 <br>
 <script>
     $(document).ready(()=>{
-        const posts = JSON.parse('<%-JSON.stringify(result)%>')
-        console.log(posts);
+       const posts = <%-result%>;
         posts.forEach(post =>{
             const date = new Date(post.createdAt).toString();
+            let text = post.text.replace(/\n/g, '<br/>')
             $("#allPostsContainer").append(`<div class="postContainer" style="background-color: #eee;">
                         <div class="postHeader">
                             <h6 style="display: inline; margin-left: 5px">` + post.user + `</h6>
@@ -49,11 +49,11 @@
                         </div>
                         <div id="postBodyContainer">
                             <div class="postBody">
-                                `+ post.text +`
+                                ${text}
                             </div>
                         </div>
                         <div class="postFooter">
-                            <h6 style="display: inline; margin-left: 5px">Post footer, i dont even know what we would put here.</h6>
+                            <h6 style="display: inline; margin-left: 5px">`+ post.signature +`</h6>
                         </div>
                     </div>`)
         })

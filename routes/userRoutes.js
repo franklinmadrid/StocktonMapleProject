@@ -378,6 +378,25 @@ router.post("/admin/addGroup",isAdmin, (req,res) => {
         })
 });
 
+router.post('/users/:id/addSignature', isAuth, async (req,res) =>{
+    const id = req.params.id;
+    await User.findById(id)
+        .then(result => {
+            if(!result){
+                res.status(404).redirect('/404') ;
+            }if (req.user._id == id) {
+                result.signature = req.body.text;
+                result.save();
+                res.redirect('/users/'+id);
+            }else{//not that persons account
+                res.send("you are not authorized to view this");
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
 //-----------------------get routes--------------------------//
 
 router.get('/logout',(req, res) => {
@@ -405,6 +424,20 @@ router.get('/users/:id', async (req,res) =>{
                 .catch((err) =>{
                     console.log(err);
                 });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
+router.get('/users/:id/addSignature', isAuth, async (req,res) =>{
+    const id = req.params.id;
+    await User.findById(id)
+        .then(result => {
+            if(!result){
+                res.status(404).redirect('/404') ;
+            }
+            res.render('addSignature',{userID: id});
         })
         .catch(err => {
             console.log(err);

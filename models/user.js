@@ -22,6 +22,9 @@ const userSchema = new Schema({
       type: Boolean,
       required: false
     },
+    signature:{
+        type:String
+    },
     modCategories:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category'
