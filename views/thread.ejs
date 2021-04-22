@@ -53,7 +53,7 @@
                             </div>
                         </div>
                         <div class="postFooter">
-                            <h6 style="display: inline; margin-left: 5px">`+ post.signature +`</h6>
+                            <h6 style="display: inline; margin-left: 5px">`+ post.signature.replace(/\n/g, '<br/>') +`</h6>
                         </div>
                     </div>`)
         })
