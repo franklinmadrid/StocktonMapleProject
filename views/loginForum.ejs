@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
+    <link rel="stylesheet" href="/bootstrap.min.css">
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+        .main {
+            height: 100%;
+            width: 100%;
+            display: table;
+        }
+        .wrapper {
+            display: table-cell;
+            height: 100%;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="text-center">
+    <div class="main">
+        <div class="wrapper">
+            <h1 class="h3 mb-3">Welcome to the Maple Project</h1><br>
+              <h3 style="color: #DC143C">In order to visit the website you must first log in</h3>
+              <br>
+            <h5>Login</h5>
+            <% if(typeof alert != 'undefined') { %>
+                <% console.log(alert) %>
+                <% alert.forEach(function(error) { %>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert" id="alertNotFound">
+                        <%= error.msg %>
+                    </div>
+                <% }) %>
+                <% alert = [] %>
+            <% } %>
+            <form class="form-signin col-lg-6 offset-lg-3" action="/login" method="POST">
+                <div class="row justify-content-center">
+                    <div class="form-group">
+                        <%if(messages.length > 0){%>
+                            <% messages.forEach( msg=>{%>
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert" id="alertNotFound">
+                                <%=msg%>
+                            </div>
+                            <%})%>
+                        <%}%>
+                        <label for="username" class="sr-only">Username</label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="form-group">
+                        <label for="password" class="sr-only">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-block" type="submit" value="login" style="background-color: #ff8c00">Sign In</button>
+                    </div>
+                </div>
+            </form>
+            <br>
+            <a href="/register">Register</a><br><br><a href="/forgotPass">Forgot Password?</a>
+        </div>
+    </div>
+</body>
+</html>

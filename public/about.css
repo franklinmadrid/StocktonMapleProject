@@ -27,6 +27,7 @@ a:hover {
 html,
 body {
   background-color: #ff7300;
+  color: #fff;
 }
 
 
@@ -80,6 +81,11 @@ body {
 
 .small-img {
 	width: 50px;
+}
+
+.medium-img {
+	height: 424px;
+	width: 175px;
 }
 
 /*
