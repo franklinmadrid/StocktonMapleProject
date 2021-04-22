@@ -39,9 +39,15 @@
 <script>
     $(document).ready(()=>{
        const posts = <%-result%>;
+       console.log(posts);
         posts.forEach(post =>{
             const date = new Date(post.createdAt).toString();
             let text = post.text.replace(/\n/g, '<br/>')
+            let signature = '';
+            if(post.signature){
+                signature = post.signature.replace(/\n/g, '<br/>')
+            }
+            console.log("post:",post);
             $("#allPostsContainer").append(`<div class="postContainer" style="background-color: #eee;">
                         <div class="postHeader">
                             <h6 style="display: inline; margin-left: 5px">` + post.user + `</h6>
@@ -53,7 +59,7 @@
                             </div>
                         </div>
                         <div class="postFooter">
-                            <h6 style="display: inline; margin-left: 5px">`+ post.signature.replace(/\n/g, '<br/>') +`</h6>
+                            <h6 style="display: inline; margin-left: 5px">`+ signature +`</h6>
                         </div>
                     </div>`)
         })

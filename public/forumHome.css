@@ -132,6 +132,7 @@ a.forum-item-title:hover {
   margin-bottom: 25px;
   margin-top: 0;
   padding: 0;
+  color:black
 }
 .ibox.collapsed .ibox-content {
   display: none;
@@ -169,6 +170,7 @@ a.forum-item-title:hover {
   border-image: none;
   border-style: solid solid none;
   border-width: 1px 0;
+  color:black;
 }
 .ibox-footer {
   color: inherit;
@@ -201,6 +203,7 @@ a.forum-item-title:hover {
 }
 .m-b-sm {
     margin-bottom: 10px;
+
 }
 
 .btn {
@@ -282,7 +285,9 @@ a.forum-item-title:hover {
 .small-img {
 	width: 50px;
 }
-
+.postContainer{
+  color:black
+}
 /*
  * Cover
  */
