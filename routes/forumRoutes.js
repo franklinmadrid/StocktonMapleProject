@@ -238,7 +238,8 @@ router.post("/banUser/:userID",isMod,async (req,res) =>{
                 await Thread.find({originalPoster:result._id})
                     .then(threads =>{
                         threads.forEach(thread =>{
-                            thread.originalPoster = "**BANNED**"
+                            thread.originalPoster = "**BANNED**";
+                            thread.lastPostUser = "**BANNED**";
                             thread.save();
                         })
                     })
