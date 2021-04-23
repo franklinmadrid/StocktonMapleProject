@@ -12,6 +12,7 @@ const {isAuth, isAdmin} = require('./authMiddleware');
 const excel = require('exceljs');
 const Group = require("../models/group");
 const Category = require("../models/category");
+const Post = require("../models/post");
 
 require('dotenv').config();
 
@@ -380,12 +381,19 @@ router.post("/admin/addGroup",isAdmin, (req,res) => {
 router.post('/users/:id/addSignature', isAuth, async (req,res) =>{
     const id = req.params.id;
     await User.findById(id)
-        .then(result => {
+        .then(async result => {
             if(!result){
                 res.status(404).redirect('/404') ;
             }if (req.user._id == id) {
                 result.signature = req.body.text;
                 result.save();
+                await Post.find({user:id})
+                    .then(posts =>{
+                        posts.forEach(post =>{
+                            post.signature = req.body.text;
+                            post.save();
+                        })
+                    })
                 res.redirect('/users/'+id);
             }else{//not that persons account
                 res.send("you are not authorized to view this");
@@ -435,8 +443,13 @@ router.get('/users/:id/addSignature', isAuth, async (req,res) =>{
         .then(result => {
             if(!result){
                 res.status(404).redirect('/404') ;
+            }else{
+                let sig = '';
+                if(result.signature){
+                    sig = result.signature;
+                }
+                res.render('addSignature',{userID: id, sig});
             }
-            res.render('addSignature',{userID: id});
         })
         .catch(err => {
             console.log(err);
