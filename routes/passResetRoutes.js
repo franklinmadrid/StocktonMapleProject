@@ -11,11 +11,10 @@ const {google} = require('googleapis');
 require('dotenv').config();
 
 // Password reset credentials (Google Mail API)
-// Can make the constants below hidden (locally) in .env, but then have to configure for remote server
 const CLIENT_ID = '967810289324-2naaq6ubumf71n5gcfeqbvd80ekqvack.apps.googleusercontent.com';
 const CLIENT_SECRET = 'OKvY4Lyk6Y-pnNMtIffYshK8';
 const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
-const REFRESH_TOKEN = '1//04ZAprT5OjSQfCgYIARAAGAQSNgF-L9IrzJI4yGXIH-_3aJploJr99Ap_EnjVY3zUF6p4NZpzi6P8tpZ1kmmjZ2cLGPUQ_AJjIw';
+const REFRESH_TOKEN = '1//042B1ehafbTekCgYIARAAGAQSNgF-L9IrnxITupOVlv6yj5hUde24YvHOisInbQWgN_PRKExgI9q269_JIkCU2dVAxuwNjINyDw';
 const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 oAuth2Client.setCredentials({refresh_token: REFRESH_TOKEN});
 
@@ -23,6 +22,7 @@ oAuth2Client.setCredentials({refresh_token: REFRESH_TOKEN});
 //----------------------post routes--------------------------//
 router.post('/forgotPass', async (req,res,next) => {
     let accessToken = await oAuth2Client.getAccessToken();
+    //console.log(accessToken);
     let alert = [];
     User.findOne({email: req.body.email})
         .then(result => {
@@ -53,7 +53,7 @@ router.post('/forgotPass', async (req,res,next) => {
                                 'Please click the following link to complete this process:\n' +
                                 'http://' + req.headers.host + '/resetPass/' + accessToken.token
                         }
-                        smtpTransport.sendMail(mailOptions, (err) => {
+                        smtpTransport.sendMail(mailOptions, () => {
                             console.log('mail sent');
                         });
                         alert.push({msg: 'A password reset email has been sent to ' + result.email});
