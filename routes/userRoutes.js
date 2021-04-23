@@ -237,8 +237,10 @@ router.post("/admin/makeMod", async (req,res) =>{
 router.post("/admin/removeMod", async (req,res) =>{
     let alert=[];
     const username = req.body.username;
+    console.log(username);
     User.findById(username)
         .then(result =>{
+            console.log(result);
             if(!result){
                 alert.push({msg:"Username not Found"})
                 res.render("admin",{user:req.user._id, alert})
@@ -268,6 +270,7 @@ router.post("/admin/removeAdmin", async (req,res) =>{
 
 router.post("/admin/delete", async (req,res) =>{
     let alert= [];
+    console.log(req.body.idDelete);
     if(req.body.dataType == 'User'){
         await User.findById(req.body.idDelete)
             .then( async result =>{
@@ -278,6 +281,7 @@ router.post("/admin/delete", async (req,res) =>{
                     await Tree.find({user:result._id})
                         .then( trees =>{
                             trees.forEach(async tree =>{
+                                console.log("inside here");
                                 await Sap.deleteMany({tree: tree._id});
                             })
                         })
@@ -329,6 +333,7 @@ router.post("/admin/delete", async (req,res) =>{
         }
 
     }
+    res.render("admin",{user:req.user._id, alert});
 });
 
 router.post('/admin/addCategory',isAdmin, (req,res) => {

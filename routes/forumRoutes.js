@@ -69,7 +69,7 @@ router.get("/forumHome/:group/:category/addThread", (req,res) =>{
     }
 });
 
-router.get("/forumHome/:group/:category/:threadID", async (req,res) =>{
+router.get("/forumHome/:group/:category/:threadID",isAuth, async (req,res) =>{
     const groupID = req.params.group;
     const catName = req.params.category;
     const threadID = req.params.threadID;
