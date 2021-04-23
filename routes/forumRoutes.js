@@ -207,45 +207,54 @@ router.post("/forumHome/:group/:category/:threadID/reply", isAuth,(req,res) =>{
 
 });
 
-router.post("/deletePost/:postID",isMod,async (req,res) =>{
-    const postID = req.params.postID;
-    const url = req.body.url;
-    console.log("url",url);
-    await Post.deleteOne({_id:postID}, (err) =>{
-        if(err){
-            console.log(error);
-        }
-        res.redirect(url);
-    });
-})
-
-router.post("/banUser/:userID",isMod,async (req,res) =>{
-    const userID = req.params.userID;
-    const url = req.body.url;
-    console.log("url",url);
-    await User.findById(userID)
-        .then(async (result)=>{
-            if(result){
-                result.banned = true;
-                result.save();
-                await Post.find({user:result._id})
-                    .then(posts =>{
-                        posts.forEach(post =>{
-                            post.user = "**BANNED**"
-                            post.save();
-                        })
-                    })
-                await Thread.find({originalPoster:result._id})
-                    .then(threads =>{
-                        threads.forEach(thread =>{
-                            thread.originalPoster = "**BANNED**";
-                            thread.lastPostUser = "**BANNED**";
-                            thread.save();
-                        })
-                    })
+router.post("/deletePost/:postID", isAuth, async (req,res) =>{
+    if(req.user.admin || req.user.moderator){
+        const postID = req.params.postID;
+        const url = req.body.url;
+        console.log("url",url);
+        await Post.deleteOne({_id:postID}, (err) =>{
+            if(err){
+                console.log(error);
             }
             res.redirect(url);
-        })
+        });
+    }else{
+        res.status(401).send("Not Authorized to view this");
+    }
+})
+
+router.post("/banUser/:userID",isAuth,async (req,res) =>{
+    if(req.user.admin || req.user.moderator){
+        const userID = req.params.userID;
+        const url = req.body.url;
+        console.log("url",url);
+        await User.findById(userID)
+            .then(async (result)=>{
+                if(result){
+                    result.banned = true;
+                    result.save();
+                    await Post.find({user:result._id})
+                        .then(posts =>{
+                            posts.forEach(post =>{
+                                post.user = "**BANNED**"
+                                post.save();
+                            })
+                        })
+                    await Thread.find({originalPoster:result._id})
+                        .then(threads =>{
+                            threads.forEach(thread =>{
+                                thread.originalPoster = "**BANNED**";
+                                thread.lastPostUser = "**BANNED**";
+                                thread.save();
+                            })
+                        })
+                }
+                res.redirect(url);
+            })
+    }else{
+        res.status(401).send("Not Authorized to view this");
+    }
+
 })
 
 module.exports = router;
