@@ -43,14 +43,37 @@ router.get("/forumHome/:group/:category", async (req , res) =>{
                             profileLink = "/users/"+ req.user._id;
                         }
                         result.sort((a,b) => (a.lastPostDate > b.lastPostDate) ? -1 : ((b.lastPostDate > a.lastPostDate) ? 1 : 0));
-                        res.render('category', {
-                            link:"/",
-                            profileLink,
-                            categoryName: req.params.category,
-                            groupID,
-                            categoryDisplayName:catResult.name,
-                            threads: result
-                        });
+                        if(req.user){
+                            if(req.user.admin || req.user.moderator){
+                                res.render('categoryMod', {
+                                    link:"/",
+                                    profileLink,
+                                    categoryName: req.params.category,
+                                    groupID,
+                                    categoryDisplayName:catResult.name,
+                                    threads: result
+                                });
+                            }else{
+                                res.render('category', {
+                                    link:"/",
+                                    profileLink,
+                                    categoryName: req.params.category,
+                                    groupID,
+                                    categoryDisplayName:catResult.name,
+                                    threads: result
+                                });
+                            }
+                        }else{
+                            res.render('category', {
+                                link:"/",
+                                profileLink,
+                                categoryName: req.params.category,
+                                groupID,
+                                categoryDisplayName:catResult.name,
+                                threads: result
+                            });
+                        }
+
                     });
             }
         })
@@ -212,14 +235,56 @@ router.post("/deletePost/:postID", isAuth, async (req,res) =>{
         const postID = req.params.postID;
         const url = req.body.url;
         console.log("url",url);
-        await Post.deleteOne({_id:postID}, (err) =>{
-            if(err){
-                console.log(error);
-            }
-            res.redirect(url);
-        });
+        await Post.findById(postID)
+            .then(async post =>{
+                Thread.findById(post.thread)
+                    .then(async result =>{
+                        result.posts--;
+                        if(result.lastPostUser == post.user){
+                            Post.find({thread:result._id})
+                                .then(async (posts) =>{
+                                    console.log( posts[posts.length - 1]);
+                                    if(posts.length > 1){
+                                        result.lastPostUser = posts[posts.length - 2].user;
+                                        result.lastPostDate = posts[posts.length - 2].createdAt;
+                                    }else{
+                                        result.lastPostUser = result.originalPoster;
+                                        result.lastPostDate = result.createdAt;
+                                    }
+                                    await result.save()
+                                    await Post.deleteOne({_id:postID}, (err) =>{
+                                        if(err){
+                                            console.log(error);
+                                        }
+                                        res.redirect(url);
+                                    });
+                                });
+                        }else{
+                            await result.save()
+                            await Post.deleteOne({_id:postID}, (err) => {
+                                if (err) {
+                                    console.log(error);
+                                }
+                                res.redirect(url);
+                            });
+                        }
+                    })
+            })
     }else{
         res.status(401).send("Not Authorized to view this");
+    }
+})
+
+router.post('/deleteThread/:threadID', isAuth, async (req,res) =>{
+    if(req.user.admin || req.user.moderator){
+        const threadID = req.params.threadID;
+        await Post.deleteMany({thread:threadID});
+        Thread.deleteOne({_id:threadID})
+            .then(()=>{
+                res.redirect(req.body.url);
+            })
+    }else{
+        res.status(401).send("Not authorized to view this");
     }
 })
 
@@ -244,6 +309,12 @@ router.post("/banUser/:userID",isAuth,async (req,res) =>{
                         .then(threads =>{
                             threads.forEach(thread =>{
                                 thread.originalPoster = "**BANNED**";
+                                thread.save();
+                            })
+                        })
+                    await Thread.find({lastPostUser:result._id})
+                        .then(threads =>{
+                            threads.forEach(thread =>{
                                 thread.lastPostUser = "**BANNED**";
                                 thread.save();
                             })

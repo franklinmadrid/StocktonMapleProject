@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Forum</title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/forumHome.css" rel="stylesheet">
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ff7300;">
+    <b class="navbar-brand">Maple Forum</b>
+    <div id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="<%=profileLink%>">Profile</a>
+            </li>
+            <li class="nav-item">
+                <%if(profileLink == "/login"){ %>
+                <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="/login">Login</a>
+                <%}else{%>
+                <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="/logout">Logout</a>
+                <%}%>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" style="color: white; opacity: 0.9; margin-right: 10px" href="/forumHome">Back to Forum Home</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="wrapper wrapper-content animated fadeInLeft">
+
+                <div class="ibox-content m-b-sm border-bottom">
+                    <div class="p-xs">
+                        <h2><%=categoryDisplayName%></h2>
+                        <span>A place to talk about syrup and things.</span>
+                    </div>
+                </div>
+                <div class="ibox-content forum-container" id="forumContainer">
+                    <%const newThreadLink = "/forumHome/" + groupID + "/" + categoryName + "/" + "addThread"%>
+                    <a href="<%=newThreadLink%>" class="btn btn--radius btn--orange">Add New Thread</a>
+                    <div class="forum-title" id="forum-title">
+                        <!--                        <div class="forum-item active">-->
+                        <!--                            <div class="row">-->
+                        <!--                                <div class="col-md-9">-->
+                        <!--                                    <a href="" class="forum-item-title"> Thread name</a>-->
+                        <!--                                    <div class="forum-sub-title">  ${thread.description} </div>-->
+                        <!--                                </div>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(() => {
+        let threads = JSON.parse('<%- JSON.stringify(threads) %>');
+        threads.forEach(thread =>{
+            let link = "/forumHome/"+ "<%=groupID%>" + "/" + "<%=categoryName%>" + "/" + thread._id;
+            let date = new Date(thread.createdAt).toString().substring(4,15);
+            let recentDate = new Date(thread.lastPostDate).toString().substring(4,21);
+            let posts = thread.posts.toLocaleString();
+            let views = thread.views.toLocaleString();
+            $("#forum-title").append(`<div class="forum-item active">
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <a href= ` + link +`  class="forum-item-title" style="word-wrap: break-word;"> ${thread.name}</a>
+                                                                <div class="forum-sub-title">  by: ${thread.originalPoster} on ${date} </div>
+                                                            </div>
+                                                                <div style="display: inline; float: left; margin-left: 0px; margin-right: auto;">
+                                                                <table >
+                                                                    <tr>
+                                                                        <td>Posts:</td>
+                                                                        <td>${posts}</td>
+                                                                        <td>&nbsp&nbsp&nbsp</td>
+                                                                        <td>${thread.lastPostUser}</td>
+                                                                    </tr>
+                                                                    <tr >
+                                                                        <td>Views:</td>
+                                                                        <td>${views}</td>
+                                                                        <td>&nbsp&nbsp&nbsp</td>
+                                                                        <td>${recentDate}</td>
+                                                                    </tr>
+                                                                </table>
+                                                                 <a data-href="/deleteThread/${thread._id}" class="btnSmall btnSmall--radius btnSmall--orange" >Delete Thread</a>
+                                                                 <a data-href="/banUser/${thread.originalPoster}" class="btnSmall btnSmall--radius btnSmall--orange" >Ban User</a>
+                                                                </div>
+                                                        </div>
+                                                    </div>`)
+        });
+    })
+</script>
+<script>
+    $(document).ready(()=>{
+        $(".btnSmall").click(function(){
+            console.log($(this).text())
+            const msg = "Are you sure you want to " + $(this).text();
+            const url =  $(this).attr("data-href");
+            if(confirm(msg)){
+                $.post(url,{url:window.location.pathname},()=>{
+                    location.reload()
+                })
+            }
+        })
+    })
+</script>
+</body>
+</head>
+</html>
