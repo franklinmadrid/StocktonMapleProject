@@ -328,7 +328,6 @@ router.post("/admin/delete", async (req,res) =>{
         }
 
     }
-    res.render("admin",{user:req.user._id, alert})
 });
 
 router.post('/admin/addCategory',isAdmin, (req,res) => {

@@ -25,10 +25,6 @@
             height: 400px;
             width: 50%;
         }
-        #chartContainer {
-            background-color: white;
-            position: absolute;
-        }
         #specific_locations_add {
             position: relative;
         }
@@ -92,8 +88,6 @@
             </tbody>
         </table>
     </div>
-
-    <div id="chartContainer" class="d-inline-flex"></div>
 
     <h3 style="text-align: center; margin-top: 20px"><%=`${treeID}'s Sap Table`%></h3>
 
@@ -260,7 +254,11 @@
         //Graph
         $(document).ready(function() {
             for(let i = <%=tree.season[0]%>; i <= <%=tree.season[tree.season.length - 1]%>; i++){
-                $("#graphBtn" + i).click( ()=> {
+                $("#graphBtn" + i).click( function(){
+                    let div = document.createElement("div");
+                    div.setAttribute("id",`graph${i}`);
+                    document.getElementById(`graphBtn${i}`).parentNode.parentNode.parentNode.prepend(div);
+                    console.log("doc getelem",document.getElementById(`graphBtn${i}`).parentNode.parentNode.parentNode);
                     if( $("#svg"+i).length > 0){
                         $("#svg"+i).toggle();
                     }else{
@@ -292,7 +290,7 @@
                         x.domain(d3.extent(data, function(d) { return d.date }));
                         y.domain(d3.extent(data, function(d) { return d.vol }));
 
-                        let svg = d3.select("#chartContainer").append("svg")
+                        let svg = d3.select(document.getElementById(`graph${i}`)).append("svg")
                             .attr("width", width + margin.left + margin.right)
                             .attr("height", height + margin.top + margin.bottom)
                             .attr("id",'svg'+i)
