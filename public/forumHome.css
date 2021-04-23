@@ -315,6 +315,10 @@ a.forum-item-title:hover {
 .postContainer{
   color:black
 }
+
+th, td {
+  padding-left: 3px;
+}
 /*
  * Cover
  */

@@ -63,13 +63,32 @@
         let threads = JSON.parse('<%- JSON.stringify(threads) %>');
         threads.forEach(thread =>{
             let link = "/forumHome/"+ "<%=groupID%>" + "/" + "<%=categoryName%>" + "/" + thread._id;
-            console.log(thread,link);
+            let date = new Date(thread.createdAt).toString().substring(4,15);
+            let recentDate = new Date(thread.lastPostDate).toString().substring(4,21);
+            let posts = thread.posts.toLocaleString();
+            let views = thread.views.toLocaleString();
             $("#forum-title").append(`<div class="forum-item active">
                                                         <div class="row">
-                                                            <div class="col-md-9">
+                                                            <div class="col-md-8">
                                                                 <a href= ` + link +`  class="forum-item-title"> ${thread.name}</a>
-                                                                <div class="forum-sub-title">  by: ${thread.originalPoster} </div>
+                                                                <div class="forum-sub-title">  by: ${thread.originalPoster} on ${date} </div>
                                                             </div>
+<div style="display: inline; float: left; margin-left: 0px; margin-right: auto;">
+<table >
+    <tr>
+        <td>Posts:</td>
+        <td>${posts}</td>
+        <td>&nbsp&nbsp&nbsp</td>
+        <td>${thread.lastPostUser}</td>
+    </tr>
+    <tr >
+        <td>Views:</td>
+        <td>${views}</td>
+        <td>&nbsp&nbsp&nbsp</td>
+        <td>${recentDate}</td>
+    </tr>
+</table>
+                                                                </div>
                                                         </div>
                                                     </div>`)
         });

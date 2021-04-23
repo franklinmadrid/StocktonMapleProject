@@ -42,6 +42,7 @@ router.get("/forumHome/:group/:category", async (req , res) =>{
                         if(req.user != null){
                             profileLink = "/users/"+ req.user._id;
                         }
+                        result.sort((a,b) => (a.lastPostDate > b.lastPostDate) ? -1 : ((b.lastPostDate > a.lastPostDate) ? 1 : 0));
                         res.render('category', {
                             link:"/",
                             profileLink,
@@ -75,9 +76,11 @@ router.get("/forumHome/:group/:category/:threadID", async (req,res) =>{
     await Thread.findById(threadID)
         .then(async thread =>{
             await Post.find({thread:threadID})
-                .then(result =>{
+                .then(async result =>{
                     const threadName = thread.name;
                     result = JSON.stringify(result)
+                    thread.views++;
+                    await thread.save()
                     if(req.user){//logged in
                         if(req.user.admin == true || req.user.moderator == true){
                             res.render("threadMod",{
@@ -131,7 +134,7 @@ router.get("/forumHome/:group/:category/:threadID/reply", isAuth,(req,res) =>{
 });
 
 //-----------------Post Routes----------------//
-router.post("/forumHome/:group/:category/addThread",isAuth,(req, res) =>{
+router.post("/forumHome/:group/:category/addThread",isAuth, async (req, res) =>{
     const groupID = req.params.group;
     if(!req.user.banned){//not banned user
         const catID = req.params.category + "_" + groupID;
@@ -140,19 +143,24 @@ router.post("/forumHome/:group/:category/addThread",isAuth,(req, res) =>{
         thread.name = req.body.name;
         thread.originalPoster = req.user._id;
         thread.category = catID;
-        thread.save();
+        thread.posts = 0;
+        thread.views = 0;
         console.log("req.body:",req.body);
         if(req.body.text.length != 0){
-            let post = new Post()
-            post.text = req.body.text
+            let post = new Post();
+            post.text = req.body.text;
             post.thread = thread._id;
             post.user = req.user._id;
-            User.findById(req.user._id)
-                .then(result =>{
+            thread.posts++;
+            thread.lastPostUser = post.user;
+            await User.findById(req.user._id)
+                .then(async result =>{
                     post.signature = result.signature
-                    post.save();
+                    await post.save();
+                    thread.lastPostDate = post.createdAt;
                 })
         }
+        await thread.save()
         res.redirect('/forumHome/' + groupID + "/" + req.params.category);
     }else{//banned user
         res.redirect('/forumHome/' + groupID + "/" + req.params.category);
@@ -175,7 +183,15 @@ router.post("/forumHome/:group/:category/:threadID/reply", isAuth,(req,res) =>{
                     signature: result.signature
                 })
                 post.save()
-                    .then( () =>{
+                    .then( async () =>{
+                        await Thread.findById(threadID)
+                            .then(async result =>{
+                                if(result){
+                                    result.lastPostUser = post.user;
+                                    result.lastPostDate = post.createdAt;
+                                    await result.save()
+                                }
+                            })
                         res.redirect(link);
                     })
             })

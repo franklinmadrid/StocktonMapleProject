@@ -17,8 +17,14 @@ const threadSchema = new Schema({
     posts:{
         type:Number
     },
-    lastPost:{
-        type:String //lastPost ID
+    views:{
+        type:Number
+    },
+    lastPostUser:{
+        type:String // user
+    },
+    lastPostDate:{
+        type:Date // date
     }
 },{timestamps: true});
 
