@@ -5,6 +5,7 @@ const Category = require("../models/category");
 const Thread = require("../models/thread");
 const Post = require("../models/post");
 const User = require("../models/user");
+const {isMod} = require("./authMiddleware");
 const {isAuth} = require("./authMiddleware");
 
 router.get("/forumHome",async (req, res) => {
@@ -57,34 +58,56 @@ router.get("/forumHome/:group/:category", async (req , res) =>{
 router.get("/forumHome/:group/:category/addThread", (req,res) =>{
     const groupID = req.params.group;
     const catName = req.params.category;
-    res.render("addThread",{
-        groupID,
-        catName
-    });
+    if(req.user.banned){
+        res.redirect("/forumHome/" + groupID + "/" + catName);
+    }else{
+        res.render("addThread",{
+            groupID,
+            catName
+        });
+    }
 });
 
-router.get("/forumHome/:group/:category/:threadID", (req,res) =>{
+router.get("/forumHome/:group/:category/:threadID", async (req,res) =>{
     const groupID = req.params.group;
     const catName = req.params.category;
     const threadID = req.params.threadID;
-    console.log(threadID);
-    Thread.findById(threadID)
-        .then(thread =>{
-            Post.find({thread:threadID})
+    await Thread.findById(threadID)
+        .then(async thread =>{
+            await Post.find({thread:threadID})
                 .then(result =>{
                     const threadName = thread.name;
-                    console.log("stringify JSON",JSON.stringify(result))
-                    // result = JSON.parse(JSON.stringify(result).escape());
-                    // console.log("parsed result",result);
                     result = JSON.stringify(result)
-                    res.render("thread",{
-                        result,
-                        groupID,
-                        threadID,
-                        catName,
-                        threadName,
-                        originalPoster: thread.originalPoster
-                    });
+                    if(req.user){//logged in
+                        if(req.user.admin == true || req.user.moderator == true){
+                            res.render("threadMod",{
+                                result,
+                                groupID,
+                                threadID,
+                                catName,
+                                threadName,
+                                originalPoster: thread.originalPoster
+                            });
+                        }else{//logged in not a mod or admin
+                            res.render("thread",{
+                                result,
+                                groupID,
+                                threadID,
+                                catName,
+                                threadName,
+                                originalPoster: thread.originalPoster
+                            });
+                        }
+                    }else{
+                        res.render("thread",{
+                            result,
+                            groupID,
+                            threadID,
+                            catName,
+                            threadName,
+                            originalPoster: thread.originalPoster
+                        });
+                    }
                 });
         })
 
@@ -94,57 +117,112 @@ router.get("/forumHome/:group/:category/:threadID/reply", isAuth,(req,res) =>{
     const threadID = req.params.threadID;
     const groupID = req.params.group;
     const category = req.params.category
-    res.render("addPost",{
-        user: req.user._id,
-        groupID,
-        category,
-        threadID
-    });
+    if(req.user.banned){
+        res.redirect("/forumHome/" + groupID + "/" + category + "/" + threadID);
+    }else{
+        res.render("addPost",{
+            user: req.user._id,
+            groupID,
+            category,
+            threadID
+        });
+    }
+
 });
 
 //-----------------Post Routes----------------//
 router.post("/forumHome/:group/:category/addThread",isAuth,(req, res) =>{
     const groupID = req.params.group;
-    const catID = req.params.category + "_" + groupID;
-    console.log(catID);
-    let thread =  new Thread()
-    thread.name = req.body.name;
-    thread.originalPoster = req.user._id;
-    thread.category = catID;
-    thread.save();
-    console.log("req.body:",req.body);
-    if(req.body.text.length != 0){
-        let post = new Post()
-        post.text = req.body.text
-        post.thread = thread._id;
-        post.user = req.user._id;
-        User.findById(req.user._id)
-            .then(result =>{
-                post.signature = result.signature
+    if(!req.user.banned){//not banned user
+        const catID = req.params.category + "_" + groupID;
+        console.log(catID);
+        let thread =  new Thread()
+        thread.name = req.body.name;
+        thread.originalPoster = req.user._id;
+        thread.category = catID;
+        thread.save();
+        console.log("req.body:",req.body);
+        if(req.body.text.length != 0){
+            let post = new Post()
+            post.text = req.body.text
+            post.thread = thread._id;
+            post.user = req.user._id;
+            User.findById(req.user._id)
+                .then(result =>{
+                    post.signature = result.signature
                     post.save();
-            })
+                })
+        }
+        res.redirect('/forumHome/' + groupID + "/" + req.params.category);
+    }else{//banned user
+        res.redirect('/forumHome/' + groupID + "/" + req.params.category);
     }
-    res.redirect('/forumHome/' + groupID + "/" + req.params.category);
+
 });
 
 router.post("/forumHome/:group/:category/:threadID/reply", isAuth,(req,res) =>{
     const threadID = req.params.threadID;
     const groupID = req.params.group;
     const category = req.params.category
-    User.findById(req.user._id)
-        .then(result =>{
-            let post = new Post({
-                user:req.user._id,
-                text:req.body.text,
-                thread: threadID,
-                signature: result.signature
-            })
-            post.save()
-                .then( () =>{
-                    const link = "/forumHome/"+ groupID + "/" + category + "/" + threadID;
-                    res.redirect(link);
+    const link = "/forumHome/"+ groupID + "/" + category + "/" + threadID;
+    if(!req.user.banned){
+        User.findById(req.user._id)
+            .then(result =>{
+                let post = new Post({
+                    user:req.user._id,
+                    text:req.body.text,
+                    thread: threadID,
+                    signature: result.signature
                 })
-        })
+                post.save()
+                    .then( () =>{
+                        res.redirect(link);
+                    })
+            })
+    }else{//banned user
+        res.redirect(link);
+    }
+
 });
+
+router.post("/deletePost/:postID",isMod,async (req,res) =>{
+    const postID = req.params.postID;
+    const url = req.body.url;
+    console.log("url",url);
+    await Post.deleteOne({_id:postID}, (err) =>{
+        if(err){
+            console.log(error);
+        }
+        res.redirect(url);
+    });
+})
+
+router.post("/banUser/:userID",isMod,async (req,res) =>{
+    const userID = req.params.userID;
+    const url = req.body.url;
+    console.log("url",url);
+    await User.findById(userID)
+        .then(async (result)=>{
+            if(result){
+                result.banned = true;
+                result.save();
+                await Post.find({user:result._id})
+                    .then(posts =>{
+                        posts.forEach(post =>{
+                            post.user = "**BANNED**"
+                            post.save();
+                        })
+                    })
+                await Thread.find({originalPoster:result._id})
+                    .then(threads =>{
+                        threads.forEach(thread =>{
+                            thread.originalPoster = "**BANNED**"
+                            thread.save();
+                        })
+                    })
+            }
+            res.redirect(url);
+        })
+})
 
 module.exports = router;

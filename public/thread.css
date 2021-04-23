@@ -25,3 +25,9 @@
     background-color: #e0e0e0;
     word-wrap: break-word;
 }
+.shrink{
+    -webkit-transform:scale(0.8);
+    -moz-transform:scale(0.8);
+    -ms-transform:scale(0.8);
+    transform:scale(0.8);
+}

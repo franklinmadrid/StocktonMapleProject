@@ -25,13 +25,12 @@ const userSchema = new Schema({
     signature:{
         type:String
     },
-    modCategories:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category'
-    }],
     admin: {
         type: Boolean,
         required: false
+    },
+    banned:{
+        type:Boolean
     }
     },{timestamps: true});
 

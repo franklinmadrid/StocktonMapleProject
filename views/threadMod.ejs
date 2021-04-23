@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%=threadName%></title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/forumHome.css" rel="stylesheet">
+    <link href="/thread.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ff8c00;">
+    <b class="navbar-brand">Maple Forum</b>
+    <div id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link, shrink" style="color: white; opacity: 0.9; margin-right: 10px" href="/forumHome/<%=groupID%>/<%=catName%>">Back to Category</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="wrapper wrapper-content animated fadeInLeft" id="allPostsContainer">
+                <div class="ibox-content m-b-sm border-bottom">
+                    <div class="p-xs">
+                        <h2><%=threadName%></h2>
+                        <h4>by: <%=originalPoster%></h4>
+                        <a href="/forumHome/<%=groupID%>/<%=catName%>/<%=threadID%>/reply" class="btn btn--radius btn--orange">Reply</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<script>
+    $(document).ready(()=>{
+        const posts = <%-result%>;
+        posts.forEach(post =>{
+            const date = new Date(post.createdAt).toString();
+            let text = post.text.replace(/\n/g, '<br/>')
+            let signature = '';
+            if(post.signature){
+                signature = post.signature.replace(/\n/g, '<br/>')
+            }
+            $("#allPostsContainer").append(`<div class="postContainer" style="background-color: #eee;">
+                        <div class="postHeader">
+                            <h6 style="display: inline; margin-left: 5px">` + post.user + `
+                            <a data-href="/deletePost/${post._id}" class="btnSmall btnSmall--radius btnSmall--orange" >Delete Post</a>
+                             <a data-href="/banUser/${post.user}" class="btnSmall btnSmall--radius btnSmall--orange" >Ban User</a>
+                            </h6>
+                            <h6 style="display: inline; float: right; margin-right: 5px">`+  date.substring(0,21) +  date.substring(34,) +`</h6>
+                        </div>
+                        <div id="postBodyContainer">
+                            <div class="postBody">
+                                ${text}
+                            </div>
+                        </div>
+                        <div class="postFooter">
+                            <h6 style="display: inline; margin-left: 5px">`+ signature +`</h6>
+                        </div>
+                    </div>`)
+        })
+    })
+</script>
+<script>
+    $(document).ready(()=>{
+        $(".btnSmall").click(function(){
+            console.log($(this).text())
+            const msg = "Are you sure you want to " + $(this).text();
+            const url =  $(this).attr("data-href");
+            if(confirm(msg)){
+                $.post(url,{url:window.location.pathname},()=>{
+                    location.reload()
+                })
+            }
+        })
+    })
+</script>
+</body>
+</html>

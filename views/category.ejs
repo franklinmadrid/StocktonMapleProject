@@ -36,14 +36,14 @@
 
                 <div class="ibox-content m-b-sm border-bottom">
                     <div class="p-xs">
-                        <h2><%=categoryName%></h2>
+                        <h2><%=categoryDisplayName%></h2>
                         <span>A place to talk about syrup and things.</span>
                     </div>
                 </div>
                 <div class="ibox-content forum-container" id="forumContainer">
                     <%const newThreadLink = "/forumHome/" + groupID + "/" + categoryName + "/" + "addThread"%>
                     <a href="<%=newThreadLink%>" class="btn btn--radius btn--orange">Add New Thread</a>
-                    <div class="forum-title" id="forum-title"><h3><%=categoryDisplayName%></h3>
+                    <div class="forum-title" id="forum-title">
 <!--                        <div class="forum-item active">-->
 <!--                            <div class="row">-->
 <!--                                <div class="col-md-9">-->
