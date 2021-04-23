@@ -68,8 +68,8 @@ router.post('/resetPass/:accessToken', function(req, res) {
     User.findOne({ resetPasswordToken: req.params.accessToken, resetPasswordExpires: { $gt: Date.now() } })
         .then(async result =>{
             if (!result) {
-                alert.push({msg: "Password reset token is invalid or has expired."});
-                return res.render('login', {alert});
+                alert.push("Password reset token is invalid or has expired.");
+                return res.render('login', {messages:alert});
             }else {
                 if (req.body.password === req.body.confirm) {
                     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -92,8 +92,8 @@ router.post('/resetPass/:accessToken', function(req, res) {
                         smtpTransport.sendMail(mailOptions, () => {
                             console.log('mail sent');
                         });
-                        alert.push({msg: "Success! Your password has been changed."});
-                        res.render('login', {alert});
+                        alert.push("Success! Your password has been changed.");
+                        res.render('login', {messages:alert});
                     });
                 }
             }
