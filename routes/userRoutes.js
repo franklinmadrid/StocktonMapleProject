@@ -607,9 +607,9 @@ router.get('/admin/download', isAdmin, async (req,res) =>{
                 syrups.addRow({
                     syrupID: result._id.toString(),
                     user: result.user,
-                    syrupProduced: result.syrupProduced,
-                    sapProcessed: result.sapProcessed,
-                    sapLost: result.sapLost,
+                    syrupProduced: result.syrupProduced + " " + result.units,
+                    sapProcessed: result.sapProcessed  + " " + result.units,
+                    sapLost: result.sapLost + " " + result.units,
                     processingDate: result.processingDate,
                     hours: result.hours,
                     minutes: result.minutes,
@@ -630,7 +630,7 @@ router.get('/trees/:id/registerHarvest',isAuth, async (req,res) => {
     await Tree.findById(id)
         .then(result => {
             res.render('registerHarvest', {
-                link: 'http://localhost:3000/users/' + req.user._id,
+                link: "/trees/"+id,
                 treeID: req.params.id,
                 coords: [result.latitude,result.longitude]})
         })

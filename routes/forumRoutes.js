@@ -145,6 +145,7 @@ router.post("/forumHome/:group/:category/addThread",isAuth, async (req, res) =>{
         thread.category = catID;
         thread.posts = 0;
         thread.views = 0;
+        thread.lastPostUser = req.user._id;
         console.log("req.body:",req.body);
         if(req.body.text.length != 0){
             let post = new Post();
@@ -161,6 +162,10 @@ router.post("/forumHome/:group/:category/addThread",isAuth, async (req, res) =>{
                 })
         }
         await thread.save()
+        if (!thread.lastPostDate){
+            thread.lastPostDate = thread.createdAt;
+            await thread.save();
+        }
         res.redirect('/forumHome/' + groupID + "/" + req.params.category);
     }else{//banned user
         res.redirect('/forumHome/' + groupID + "/" + req.params.category);
@@ -189,6 +194,7 @@ router.post("/forumHome/:group/:category/:threadID/reply", isAuth,(req,res) =>{
                                 if(result){
                                     result.lastPostUser = post.user;
                                     result.lastPostDate = post.createdAt;
+                                    result.posts++;
                                     await result.save()
                                 }
                             })
