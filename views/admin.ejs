@@ -7,7 +7,7 @@
     <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ff8c00;">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ff7300;">
         <b class="navbar-brand"><%=user%>'s Profile</b>
         <div id="navbarText">
             <ul class="navbar-nav mr-auto">
@@ -28,7 +28,7 @@
         <div class="form-group">
             <form action="/admin/download" method="get">
                 <span style="margin-left: 80px">Download database as excel</span>
-                <button class="btn btn-primary btn-block" type="submit" value="Download" style="background-color: #ff8c00">Download</button>
+                <button class="btn btn-primary btn-block" type="submit" value="Download" style="background-color: #ff7300">Download</button>
             </form><br>
             <div class="alert alert-warning alert-dismissible fade show" role="alert" id="usernameAlert" style="display: none">
                 Username is Empty
@@ -56,10 +56,10 @@
             <form action="/admin/makeAdmin" method="post" id="mkAdminForm">
                 <span>Enter username of who you want to modify privileges</span><br>
                 <input type="text" id="username" placeholder="Username" name="username" style="margin-bottom: 10px; margin-left: 55px; margin-right: auto">
-                <button class="btn btn-primary btn-block" type="submit" id="mkAdminBtn" style="background-color: #ff8c00">Make Admin</button>
-                <button class="btn btn-primary btn-block" type="button" id="mkModBtn" style="background-color: #ff8c00">Make Mod</button>
-                <button class="btn btn-primary btn-block" type="button" id="rmAdminBtn" style="background-color: #ff8c00">Remove Admin</button>
-                <button class="btn btn-primary btn-block" type="button" id="rmModBtn" style="background-color: #ff8c00">Remove Mod</button>
+                <button class="btn btn-primary btn-block" type="submit" id="mkAdminBtn" style="background-color: #ff7300">Make Admin</button>
+                <button class="btn btn-primary btn-block" type="button" id="mkModBtn" style="background-color: #ff7300">Make Mod</button>
+                <button class="btn btn-primary btn-block" type="button" id="rmAdminBtn" style="background-color: #ff7300">Remove Admin</button>
+                <button class="btn btn-primary btn-block" type="button" id="rmModBtn" style="background-color: #ff7300">Remove Mod</button>
             </form>
             <form action="/admin/makeMod" method="post" id="mkMod">
                 <input type="text" id="usernameMod" placeholder="username" name="username" hidden>
@@ -79,7 +79,7 @@
                     <option value="Syrup">Syrup</option>
                 </select>
                 <input type="text" id="idDelete" placeholder="Data ID" name="idDelete" style="margin-bottom: 10px; margin-left: 55px; margin-right: auto">
-                <button class="btn btn-primary btn-block" type="submit" id="idDeleteBtn" style="background-color: #ff8c00">Delete</button>
+                <button class="btn btn-primary btn-block" type="submit" id="idDeleteBtn" style="background-color: #ff7300">Delete</button>
             </form>
         </div>
     </div>
