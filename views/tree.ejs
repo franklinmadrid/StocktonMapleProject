@@ -284,7 +284,7 @@
                     document.getElementById(`graphBtn${i}`).parentNode.parentNode.parentNode.prepend(div);
                     console.log("doc getelem",document.getElementById(`graphBtn${i}`).parentNode.parentNode.parentNode);
                     if( $("#svg"+i).length > 0){
-                        $("#svg"+i).toggle();
+                        div.remove();
                     }else{
                         let jsonData = JSON.parse('<%-JSON.stringify(saps)%>');
                         let data =[]
@@ -324,7 +324,6 @@
                             .call(d3.axisBottom(x)) // Create an axis component with d3.axisBottom
                             .select(".domain");
 
-
                         svg.append("g")
                             .attr("class", "y axis")
                             .call(d3.axisLeft(y)); // Create an axis component with d3.axisLeft
@@ -346,14 +345,6 @@
                             .attr("cy", function(d) { return y(d.vol) })
                             .attr("r", 5)
                     }
-
-                    svg.selectAll(".dot")
-                        .data(data)
-                        .enter().append("circle") // Uses the enter().append() method
-                        .attr("class", "dot") // Assign a class for styling
-                        .attr("cx", function(d) { return x(d.date) })
-                        .attr("cy", function(d) { return y(d.vol) })
-                        .attr("r", 5)
                 })
             }
         });
