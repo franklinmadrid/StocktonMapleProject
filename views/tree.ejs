@@ -25,8 +25,22 @@
             height: 400px;
             width: 50%;
         }
-        #specific_locations_add {
+        .container {
             position: relative;
+        }
+        #close {
+            float:right;
+            display:inline-block;
+            padding:2px 5px;
+            background:#ccc;
+            cursor: pointer;
+        }
+        #close:hover {
+            float:right;
+            display:inline-block;
+            padding:2px 5px;
+            background:#ccc;
+            color:#fff;
         }
     </style>
 </head>
@@ -256,7 +270,17 @@
             for(let i = <%=tree.season[0]%>; i <= <%=tree.season[tree.season.length - 1]%>; i++){
                 $("#graphBtn" + i).click( function(){
                     let div = document.createElement("div");
+                    let close = document.createElement("span");
+                    close.setAttribute("id", "close");
+                    close.setAttribute("onclick", "this.parentNode.parentNode.removeChild(this.parentNode); return false;");
+                    close.innerHTML = "X";
                     div.setAttribute("id",`graph${i}`);
+                    div.style.position = "absolute";
+                    div.style.top = -260 + "px";
+                    div.style.left = 300 + "px";
+                    div.style.zIndex = "1";
+                    div.style.background = "white";
+                    div.appendChild(close);
                     document.getElementById(`graphBtn${i}`).parentNode.parentNode.parentNode.prepend(div);
                     console.log("doc getelem",document.getElementById(`graphBtn${i}`).parentNode.parentNode.parentNode);
                     if( $("#svg"+i).length > 0){
@@ -276,12 +300,9 @@
                             }
                         });
                         data = data.sort((a, b) => b.date - a.date);
-                        let button = document.querySelector("#graphBtn" + i);
-                        let buttonOffset = offset(button);
-                        console.log(buttonOffset);
                         let margin = {top: 50, right: 50, bottom: 50, left: 50}
-                        let width = 600; // Use the window's width
-                        let height = 450 - margin.top - margin.bottom; // Use the window's height
+                        let width = 450; // Use the window's width
+                        let height = 300 - margin.top - margin.bottom; // Use the window's height
                         let x = d3.scaleTime().rangeRound([0, width]);
                         let y = d3.scaleLinear().rangeRound([height, 5]);
                         let line = d3.line()
