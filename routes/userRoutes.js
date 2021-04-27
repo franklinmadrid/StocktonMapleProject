@@ -13,6 +13,7 @@ const excel = require('exceljs');
 const Group = require("../models/group");
 const Category = require("../models/category");
 const Post = require("../models/post");
+const Thread = require("../models/thread");
 
 require('dotenv').config();
 
@@ -80,24 +81,32 @@ router.post('/login',
 
 router.post('/users/registerTree',isAuth, async (req, res) => {
     try{
-        req.body.user= req.user._id;
-        let tapDate = req.body.tappingDate;
-        req.body.tappingDate = null;
-        let startNotes = req.body.startNotes
-        req.body.startNotes = [];
-        const tree = new Tree(req.body);
-        tree.Tapped = true;
-        tree.firstFlowDate = [];
-        tree.lastFlowDate = [];
-        tree.tappingDates.push(tapDate);
-        tree.startNotes.push(startNotes);
-        let year = tapDate.toString().substr(0,4)
-        tree.season.push(year);
-        tree.save()
-            .then((result) => {
-                res.redirect("/users/" + req.user._id);
-            })
-            .catch((err) => console.log(err));
+        Tree.findById(req.body._id)
+            .then(result =>{
+                if(!result){
+                    req.body.user= req.user._id;
+                    let tapDate = req.body.tappingDate;
+                    req.body.tappingDate = null;
+                    let startNotes = req.body.startNotes
+                    req.body.startNotes = [];
+                    const tree = new Tree(req.body);
+                    tree.Tapped = true;
+                    tree.firstFlowDate = [];
+                    tree.lastFlowDate = [];
+                    tree.tappingDates.push(tapDate);
+                    tree.startNotes.push(startNotes);
+                    let year = tapDate.toString().substr(0,4)
+                    tree.season.push(year);
+                    tree.save()
+                        .then((result) => {
+                            res.redirect("/users/" + req.user._id);
+                        })
+                        .catch((err) => console.log(err));
+                }else{
+                    let alert = 'Tree already exist';
+                    res.render("registerTree",{link:/users/+ req.user._id,alert});
+                }
+            });
     } catch{
         res.status(500);
     }
@@ -287,7 +296,10 @@ router.post("/admin/delete", async (req,res) =>{
                         })
                     await Tree.deleteMany({user:result._id})
                     await Syrup.deleteMany({user:result._id})
+                    await Post.deleteMany({user: result._id})
+                    await Thread.deleteMany({originalPoster: result._id})
                     await User.deleteOne({_id: result._id})
+                    console.log("deleted Everything");
                 }
             })
     }else if(req.body.dataType == 'Tree'){
@@ -333,6 +345,7 @@ router.post("/admin/delete", async (req,res) =>{
         }
 
     }
+    console.log("reached end of func");
     res.render("admin",{user:req.user._id, alert});
 });
 
