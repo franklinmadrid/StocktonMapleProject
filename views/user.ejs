@@ -126,8 +126,7 @@
         console.log(data);
         data.forEach(e => {
             console.log("id",e._id);
-            let url = 'http://localhost:3000/trees/' + e._id;
-            console.log(url);
+            let url = '/trees/' + e._id;
             let tr = document.createElement('tr');
             tr.setAttribute("class",'clickable-row');
             tr.setAttribute("data-href", url);
