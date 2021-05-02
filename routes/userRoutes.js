@@ -152,7 +152,7 @@ router.post('/registerSyrup',isAuth, (req, res) => {
     const syrup = new Syrup(req.body);
     syrup.save()
         .then(() =>{
-           res.redirect('http://localhost:3000/users/' + req.user._id);
+           res.redirect('/users/' + req.user._id);
         })
         .catch(err =>{
             console.log(err);
@@ -188,7 +188,7 @@ router.post('/trees/:id/endTreeSeason',isAuth, async (req, res) => {
         .catch(err => {
         console.log(err);
     })
-    res.redirect('http://localhost:3000/trees/' + id);
+    res.redirect('/trees/' + id);
 });
 
 router.post('/trees/:id/startTreeSeason',isAuth, async (req, res) => {
@@ -202,13 +202,13 @@ router.post('/trees/:id/startTreeSeason',isAuth, async (req, res) => {
             result.Tapped = true;
             result.save()
                 .then( () =>{
-                   res.redirect('http://localhost:3000/trees/' + id);
+                   res.redirect('/trees/' + id);
                 });
         })
         .catch(err => {
             console.log(err);
         })
-    res.redirect('http://localhost:3000/trees/' + id);
+    res.redirect('/trees/' + id);
 });
 
 router.post("/admin/makeAdmin", async (req,res) =>{
@@ -673,7 +673,7 @@ router.get('/trees/:id/endTreeSeason', isAuth, async (req,res) => {
     await Tree.findById(id)
         .then(result => {
             res.render('endTreeSeason', {
-                link: 'http://localhost:3000/trees/' + id,
+                link: '/trees/' + id,
                 treeID: req.params.id,
                 });
         })
@@ -685,7 +685,7 @@ router.get('/trees/:id/startTreeSeason', isAuth, async (req,res) => {
     await Tree.findById(id)
         .then(result => {
             res.render('startTreeSeason', {
-                link: 'http://localhost:3000/trees/' + id,
+                link: '/trees/' + id,
                 treeID: req.params.id,
             });
         })
@@ -694,7 +694,7 @@ router.get('/trees/:id/startTreeSeason', isAuth, async (req,res) => {
 
 router.get('/registerSyrup', isAuth,(req,res) => {
     res.render('registerSyrup',{
-            profileLink: 'http://localhost:3000/users/' + req.user._id
+            profileLink: '/users/' + req.user._id
     });
 });
 
@@ -703,7 +703,7 @@ router.get('/users/:id/syrup', isAuth, async (req,res) => {
     await Syrup.find({user: id})
         .then(result => {
             res.render('syrup', {
-                link: 'http://localhost:3000/users/' + id,
+                link: '/users/' + id,
                 user: id,
                 syrupData: result
             });
@@ -722,7 +722,7 @@ router.get('/trees/:id',isAuth, async (req,res) => {
                 await Sap.find({'tree' : id})
                     .then(sapList =>{
                         let entryLink = 'trees/' + id + 'registerHarvest';
-                        res.render('tree',{link:'http://localhost:3000/users/' + req.user._id,
+                        res.render('tree',{link:'/users/' + req.user._id,
                             entryLink: entryLink,
                             treeID: req.params.id,
                             saps: sapList,
