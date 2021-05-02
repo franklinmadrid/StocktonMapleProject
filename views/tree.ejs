@@ -106,32 +106,40 @@
     <h3 style="text-align: center; margin-top: 20px"><%=`${treeID}'s Sap Table`%></h3>
 
     <script>
-        let features = new ol.Feature({
-            geometry: new ol.geom.Point(ol.proj.fromLonLat([<%=tree.longitude%>, <%=tree.latitude%>]))
-        });
-        let map = new ol.Map({
-            target: 'map',
-            layers: [
-                new ol.layer.Tile({
-                    source: new ol.source.OSM()
-                }),
-                new ol.layer.Vector({
-                    source: new ol.source.Vector({
-                        features: [features]
-                    }),
-                    style: new ol.style.Style({
-                        image: new ol.style.Circle({
-                            radius: 3,
-                            fill: new ol.style.Fill({color: 'red'})
+        //map
+        $(document).ready(function(){
+            if(<%=tree.longitude%>){
+                let features = new ol.Feature({
+                    geometry: new ol.geom.Point(ol.proj.fromLonLat([<%=tree.longitude%>, <%=tree.latitude%>]))
+                });
+                let map = new ol.Map({
+                    target: 'map',
+                    layers: [
+                        new ol.layer.Tile({
+                            source: new ol.source.OSM()
+                        }),
+                        new ol.layer.Vector({
+                            source: new ol.source.Vector({
+                                features: [features]
+                            }),
+                            style: new ol.style.Style({
+                                image: new ol.style.Circle({
+                                    radius: 3,
+                                    fill: new ol.style.Fill({color: 'red'})
+                                })
+                            })
                         })
+                    ],
+                    view: new ol.View({
+                        center: ol.proj.fromLonLat([<%=tree.longitude%>, <%=tree.latitude%>]),
+                        zoom: 17
                     })
-                })
-            ],
-            view: new ol.View({
-                center: ol.proj.fromLonLat([<%=tree.longitude%>, <%=tree.latitude%>]),
-                zoom: 17
-            })
-        });
+                });
+            }else{
+                $("#map").hide();
+            }
+        })
+
     </script>
     <script>
         //creating sap tables
