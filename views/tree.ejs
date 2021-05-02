@@ -289,7 +289,7 @@
                         let jsonData = JSON.parse('<%-JSON.stringify(saps)%>');
                         let data =[]
                         let maxY = 0;
-                        jsonData.forEach(entry5 =>{
+                        jsonData.forEach(entry =>{
                             if(entry.season == i){
                                 let date = new Date(entry.harvestDate);
                                 let vol = entry.sapVolume;
