@@ -108,7 +108,7 @@
     <script>
         //map
         $(document).ready(function(){
-            if(<%=tree.longitude%>){
+            if(<%=tree.longitude%> != null){
                 let features = new ol.Feature({
                     geometry: new ol.geom.Point(ol.proj.fromLonLat([<%=tree.longitude%>, <%=tree.latitude%>]))
                 });
