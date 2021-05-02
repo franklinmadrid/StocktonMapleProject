@@ -11,12 +11,8 @@ const {google} = require('googleapis');
 require('dotenv').config();
 
 // Password reset credentials (Google Mail API)
-const CLIENT_ID = '967810289324-2naaq6ubumf71n5gcfeqbvd80ekqvack.apps.googleusercontent.com';
-const CLIENT_SECRET = 'OKvY4Lyk6Y-pnNMtIffYshK8';
-const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
-const REFRESH_TOKEN = '1//042B1ehafbTekCgYIARAAGAQSNgF-L9IrnxITupOVlv6yj5hUde24YvHOisInbQWgN_PRKExgI9q269_JIkCU2dVAxuwNjINyDw';
-const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
-oAuth2Client.setCredentials({refresh_token: REFRESH_TOKEN});
+oAuth2Client = new google.auth.OAuth2(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.REDIRECT_URI)
+oAuth2Client.setCredentials({refresh_token: process.env.REFRESH_TOKEN});
 
 
 //----------------------post routes--------------------------//
@@ -38,16 +34,16 @@ router.post('/forgotPass', async (req,res,next) => {
                             service: 'Gmail',
                             auth: {
                                 type: 'OAuth2',
-                                user: 'gogetmeseashells@gmail.com',
-                                clientId: CLIENT_ID,
-                                clientSecret: CLIENT_SECRET,
-                                refreshToken: REFRESH_TOKEN,
+                                user: 'StocktonMaple@gmail.com',
+                                clientId: process.env.CLIENT_ID,
+                                clientSecret: process.env.CLIENT_SECRET,
+                                refreshToken: process.env.REFRESH_TOKEN,
                                 accessToken: accessToken.token
                             }
                         });
                         let mailOptions = {
                             to: result.email,
-                            from: 'gogetmeseashells@gmail.com',
+                            from: 'StocktonMaple@gmail.com',
                             subject: 'Stockton Maple Password Reset',
                             text: 'You are receiving this email because you have requested the reset of your Stockton Maple password. ' +
                                 'Please click the following link to complete this process:\n' +
@@ -78,7 +74,7 @@ router.post('/resetPass/:accessToken', function(req, res) {
                         let smtpTransport = nodemailer.createTransport({
                             service: 'Gmail',
                             auth: {
-                                user: 'gogetmeseashells@gmail.com',
+                                user: 'StocktonMaple@gmail.com',
                                 pass: process.env.GMAILPW
                             }
                         });
