@@ -1,5 +1,5 @@
 const express = require('express');
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const Tree = require("../models/tree");
 const router = express.Router();
@@ -44,16 +44,17 @@ router.post('/register', urlencodedParser, [
     }
     else {
         try{
-            const hashedPassword = await bcrypt.hash(req.body.password, 10);
-            req.body.password = hashedPassword;
-            req.body.admin = false;
-            req.body.moderator = false;
-            const user = new User(req.body);
-            user.save()
-                .then((result) => {
-                    res.redirect("/");
-                })
-                .catch((err) => console.log(err));
+            await bcrypt.hash(req.body.password, 10, function (err,hash){
+                req.body.password = hash;
+                req.body.admin = false;
+                req.body.moderator = false;
+                const user = new User(req.body);
+                user.save()
+                    .then((result) => {
+                        res.redirect("/");
+                    })
+                    .catch((err) => console.log(err));
+            })
         } catch{
             res.status(500);
         }

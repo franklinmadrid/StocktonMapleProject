@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const express = require('express');
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const Tree = require("../models/tree");
 const Sap = require("../models/sap");
