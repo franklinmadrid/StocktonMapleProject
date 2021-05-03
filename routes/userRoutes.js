@@ -84,17 +84,17 @@ router.post('/users/registerTree',isAuth, async (req, res) => {
         Tree.findById(req.body._id)
             .then(result =>{
                 if(!result){
+                    if (req.body.latitude == ""){
+                        req.body.latitude = 200
+                    }
+                    if (req.body.longitude == ''){
+                        req.body.longitude = 200
+                    }
                     req.body.user= req.user._id;
                     let tapDate = req.body.tappingDate;
                     req.body.tappingDate = null;
                     let startNotes = req.body.startNotes
                     req.body.startNotes = [];
-                    if (req.body.latitude == ""){
-                        req.body.latitude = null
-                    }
-                    if (req.body.longitude == ''){
-                        req.body.longitude = null
-                    }
                     const tree = new Tree(req.body);
                     tree.Tapped = true;
                     tree.firstFlowDate = [];

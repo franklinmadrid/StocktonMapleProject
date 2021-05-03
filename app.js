@@ -78,7 +78,16 @@ app.get('/', (req, res) => {
 });
 
 app.get('/about', (req, res) => {
-    res.render('about');
+    let user = '';
+    let loggedIn = false;
+    if(req.user){
+        user = req.user.id
+        loggedIn = true
+    }
+    res.render('about',{
+        user: user,
+        loggedIn
+    });
 });
 
 app.use((req, res) => {
