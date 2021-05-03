@@ -84,12 +84,6 @@ router.post('/users/registerTree',isAuth, async (req, res) => {
         Tree.findById(req.body._id)
             .then(result =>{
                 if(!result){
-                    if (req.body.latitude == ""){
-                        req.body.latitude = 200
-                    }
-                    if (req.body.longitude == ''){
-                        req.body.longitude = 200
-                    }
                     req.body.user= req.user._id;
                     let tapDate = req.body.tappingDate;
                     req.body.tappingDate = null;
@@ -101,8 +95,6 @@ router.post('/users/registerTree',isAuth, async (req, res) => {
                     tree.lastFlowDate = [];
                     tree.tappingDates.push(tapDate);
                     tree.startNotes.push(startNotes);
-                    console.log("latitude :",req.body.latitude)
-                    console.log(req.body.latitude == '');
                     let year = tapDate.toString().substr(0,4)
                     tree.season.push(year);
                     tree.save()
