@@ -86,7 +86,7 @@ app.get('/about', (req, res) => {
     }
     res.render('about',{
         user: user,
-        loggedIn
+        loggedIn: loggedIn
     });
 });
 
