@@ -95,6 +95,7 @@ router.post('/users/registerTree',isAuth, async (req, res) => {
                     tree.lastFlowDate = [];
                     tree.tappingDates.push(tapDate);
                     tree.startNotes.push(startNotes);
+                    tree.startNotes.push(startNotes);
                     let year = tapDate.toString().substr(0,4)
                     tree.season.push(year);
                     tree.save()
